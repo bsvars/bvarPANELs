@@ -1,12 +1,12 @@
 
 # bvarPANELs
 
+Forecasting with Bayesian Hierarchical Panel Vector Autoregressions.
+
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/bsvars/bvarPANELs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bsvars/bvarPANELs/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
-
-Forecasting with Bayesian Hierarchical Panel Vector Autoregressions.
 
 An R package by Tomasz Woźniak and Miguel Sanchez-Martinez. Copyright
 2024 International Labour Organization
