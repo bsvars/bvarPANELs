@@ -31,6 +31,7 @@
 #' @docType package
 #' @useDynLib bvarPANELs, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
+#' @importFrom R6 R6Class
 #' @note This package is currently in active development.
 #' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
 #' @keywords package models ts

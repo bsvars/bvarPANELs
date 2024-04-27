@@ -7,7 +7,9 @@ Date: 2024-04-27
 Author: c(person(given="Tomasz", family="Woźniak", email="wozniak.tom@pm.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-2212-2378")), person(given="Miguel", family="Sanchez-Martinez", role = "ctb"), person(given="International Labour Organization", role = "cph"))
 Maintainer: Tomasz Woźniak <wozniak.tom@pm.me>
 License: GPL (>= 3)
-Imports: Rcpp (>= 1.0.12)
+Imports: 
+    R6,
+    Rcpp (>= 1.0.12)
 LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
 RoxygenNote: 7.3.1
