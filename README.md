@@ -2,6 +2,8 @@
 # bvarPANELs
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/bsvars/bvarPANELs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bsvars/bvarPANELs/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Forecasting with Bayesian Hierarchical Panel Vector Autoregressions.

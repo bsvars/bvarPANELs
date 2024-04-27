@@ -2,14 +2,14 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 rmn_cpp <- function(A, S, V) {
-    .Call('_bvarPANELs_rmn_cpp', PACKAGE = 'bvarPANELs', A, S, V)
+    .Call(`_bvarPANELs_rmn_cpp`, A, S, V)
 }
 
 riw1_cpp <- function(S, nu) {
-    .Call('_bvarPANELs_riw1_cpp', PACKAGE = 'bvarPANELs', S, nu)
+    .Call(`_bvarPANELs_riw1_cpp`, S, nu)
 }
 
 riw2_cpp <- function(S, nu) {
-    .Call('_bvarPANELs_riw2_cpp', PACKAGE = 'bvarPANELs', S, nu)
+    .Call(`_bvarPANELs_riw2_cpp`, S, nu)
 }
 
