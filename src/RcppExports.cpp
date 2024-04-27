@@ -11,48 +11,23 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// rmn_cpp
-arma::mat rmn_cpp(const arma::mat& A, const arma::mat& S, const arma::mat& V);
-RcppExport SEXP _bvarPANELs_rmn_cpp(SEXP ASEXP, SEXP SSEXP, SEXP VSEXP) {
+// rmniw1
+arma::field<arma::mat> rmniw1(const arma::mat& A, const arma::mat& V, const arma::mat& S, const double& nu);
+RcppExport SEXP _bvarPANELs_rmniw1(SEXP ASEXP, SEXP VSEXP, SEXP SSEXP, SEXP nuSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type S(SSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type V(VSEXP);
-    rcpp_result_gen = Rcpp::wrap(rmn_cpp(A, S, V));
-    return rcpp_result_gen;
-END_RCPP
-}
-// riw1_cpp
-arma::mat riw1_cpp(const arma::mat& S, const double& nu);
-RcppExport SEXP _bvarPANELs_riw1_cpp(SEXP SSEXP, SEXP nuSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type S(SSEXP);
     Rcpp::traits::input_parameter< const double& >::type nu(nuSEXP);
-    rcpp_result_gen = Rcpp::wrap(riw1_cpp(S, nu));
-    return rcpp_result_gen;
-END_RCPP
-}
-// riw2_cpp
-arma::mat riw2_cpp(const arma::mat& S, const double& nu);
-RcppExport SEXP _bvarPANELs_riw2_cpp(SEXP SSEXP, SEXP nuSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type S(SSEXP);
-    Rcpp::traits::input_parameter< const double& >::type nu(nuSEXP);
-    rcpp_result_gen = Rcpp::wrap(riw2_cpp(S, nu));
+    rcpp_result_gen = Rcpp::wrap(rmniw1(A, V, S, nu));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_bvarPANELs_rmn_cpp", (DL_FUNC) &_bvarPANELs_rmn_cpp, 3},
-    {"_bvarPANELs_riw1_cpp", (DL_FUNC) &_bvarPANELs_riw1_cpp, 2},
-    {"_bvarPANELs_riw2_cpp", (DL_FUNC) &_bvarPANELs_riw2_cpp, 2},
+    {"_bvarPANELs_rmniw1", (DL_FUNC) &_bvarPANELs_rmniw1, 4},
     {NULL, NULL, 0}
 };
 
