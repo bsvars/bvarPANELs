@@ -1,5 +1,5 @@
 #  #####################################################################################
-#  R package bvarPANELs by Tomasz Woźniak 
+#  R package bvarPANELs by Tomasz Woźniak and Miguel Sanchez-Martinez
 #  Copyright (C) 2024 International Labour Organization
 #
 #  This file is part of the R package bvarPANELs: Forecasting with Bayesian 
