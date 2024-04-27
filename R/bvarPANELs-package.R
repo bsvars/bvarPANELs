@@ -1,0 +1,37 @@
+#  #####################################################################################
+#  R package bvarPANELs by Tomasz Woźniak 
+#  Copyright (C) 2024 International Labour Organization
+#
+#  This file is part of the R package bvarPANELs: Forecasting with Bayesian 
+#  Hierarchical Panel Vector Autoregressions
+#
+#  The R package bvarPANELs is free software: you can redistribute it
+#  and/or modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation, either version 3 or
+#  any later version of the License.
+#
+#  The R package bvarPANELs is distributed in the hope that it will be
+#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+#  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+#  General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with the R package bvarPANELs If that is not the case, please
+#  refer to <http://www.gnu.org/licenses/>.
+#  #####################################################################################
+#
+#' @title Forecasting with Bayesian Hierarchical Panel Vector Autoregressions
+#'
+#' @description Forecasting a multi-country time series panel data using 
+#' Bayesian Vector Autoregressions with a three-level country-global 
+#' hierarchical prior structure. Copyright: 2024 International Labour Organization.
+#' 
+#' @name bvarPANELs-package
+#' @aliases bvarPANELs-package bvarPANELs
+#' @docType package
+#' @useDynLib bvarPANELs, .registration = TRUE
+#' @importFrom Rcpp sourceCpp
+#' @note This package is currently in active development.
+#' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
+#' @keywords package models ts
+"_PACKAGE"
