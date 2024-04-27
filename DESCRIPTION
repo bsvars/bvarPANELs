@@ -1,11 +1,13 @@
 Package: bvarPANELs
 Type: Package
-Title: What the package does (short line)
-Version: 1.0
+Title: Forecasting with Bayesian Hierarchical Panel Vector Autoregressions
+Description: Forecasting a multi-country time series panel data using Bayesian Vector Autoregressions with a three-level country-global hierarchical prior structure.
+Version: 1.0.0.9000
 Date: 2024-04-27
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: c(person(given="Tomasz", family="Woźniak", email="wozniak.tom@pm.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-2212-2378")), person(given="Miguel", family="Sanchez-Martinez", role = "ctb"), person(given="International Labour Organization", role = "cph"))
+Maintainer: Tomasz Woźniak <wozniak.tom@pm.me>
+License: GPL (>= 3)
 Imports: Rcpp (>= 1.0.12)
 LinkingTo: Rcpp, RcppArmadillo
+Encoding: UTF-8
+RoxygenNote: 7.3.1
