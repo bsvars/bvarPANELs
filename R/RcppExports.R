@@ -13,3 +13,7 @@ sample_w <- function(aux_V, prior) {
     .Call(`_bvarPANELs_sample_w`, aux_V, prior)
 }
 
+sample_s <- function(aux_A, aux_V, aux_Sigma, aux_m, prior) {
+    .Call(`_bvarPANELs_sample_s`, aux_A, aux_V, aux_Sigma, aux_m, prior)
+}
+

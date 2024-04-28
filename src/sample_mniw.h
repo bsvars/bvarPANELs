@@ -29,4 +29,14 @@ double sample_w (
     const Rcpp::List&   prior
 );
 
+
+double sample_s (
+    const arma::mat&    aux_A,      // KxN
+    const arma::mat&    aux_V,      // KxK
+    const arma::mat&    aux_Sigma,  // NxN
+    const double&       aux_m,      // scalar
+    const Rcpp::List&   prior
+);
+
+
 #endif  // _SAMPLE_MNIW_H_
