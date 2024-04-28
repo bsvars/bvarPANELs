@@ -39,8 +39,8 @@ specify_prior_bvarPANEL = R6::R6Class(
     #' and \eqn{\mathbf{V}}
     eta = NA,
     
-    #' @field mu_Sigma a positive shape parameter of the second-level Wishart prior distribution
-    #'  for the global parameter matrix \eqn{\mathbf{\Sigma}}.
+    #' @field mu_Sigma a positive shape parameter of the second-level Wishart prior 
+    #' distribution  for the global parameter matrix \eqn{\mathbf{\Sigma}}.
     mu_Sigma  = NA,
     
     #' @field lambda a positive shape of the second-level exp prior distribution 
@@ -51,8 +51,8 @@ specify_prior_bvarPANEL = R6::R6Class(
     #' for the global average persistence parameter \eqn{m}.
     mu_m   = NA,
     
-    #' @field sigma2_m a positive scalar variance of the third-level normal prior distribution
-    #' for the global average persistence parameter \eqn{m}.
+    #' @field sigma2_m a positive scalar variance of the third-level normal prior 
+    #' distribution for the global average persistence parameter \eqn{m}.
     sigma2_m  = NA,
     
     #' @field s_w a positive scalar scale of the third-level gamma prior 
@@ -76,22 +76,20 @@ specify_prior_bvarPANEL = R6::R6Class(
     #' @param C a positive integer - the number of countries in the data.
     #' @param N a positive integer - the number of dependent variables in the model.
     #' @param p a positive integer - the autoregressive lag order of the SVAR model.
-    #' @param d a positive integer - the number of \code{exogenous} variables in the model.
     #' @return A new prior specification PriorBVARPANEL.
     #' @examples 
     #' # a prior for 2-country, 3-variable example with one lag and stationary data
     #' prior = specify_prior_bvarPANEL$new(C = 2, N = 3, p = 1)
     #' prior$M
     #' 
-    initialize = function(C, N, p, d = 0){
+    initialize = function(C, N, p){
       stopifnot("Argument C must be a positive integer number." = C > 0 & C %% 1 == 0)
       stopifnot("Argument N must be a positive integer number." = N > 0 & N %% 1 == 0)
       stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
-      stopifnot("Argument d must be a non-negative integer number." = d >= 0 & d %% 1 == 0)
-
-      K                 = N * p + 1 + d
+    
+      K                 = N * p + 1
       self$M            = cbind(diag(N), matrix(0, N, K - N))
-      self$W            = diag(c(kronecker((1:p)^2, rep(1, N) ), rep(10, d + 1)))
+      self$W            = diag(c(kronecker((1:p)^2, rep(1, N) ), rep(10, 1)))
       self$S_inv        = diag(N)
       self$S_Sigma_inv  = diag(N)
       self$eta          = N + 1
@@ -130,7 +128,6 @@ specify_prior_bvarPANEL = R6::R6Class(
         nu_s     = self$nu_s
       )
     } # END get_prior
-    
   ) # END public
 ) # END specify_prior_bvarPANEL
 
@@ -197,19 +194,17 @@ specify_starting_values_bvarPANEL = R6::R6Class(
     #' @param C a positive integer - the number of countries in the data.
     #' @param N a positive integer - the number of dependent variables in the model.
     #' @param p a positive integer - the autoregressive lag order of the SVAR model.
-    #' @param d a positive integer - the number of \code{exogenous} variables in the model.
     #' @return Starting values StartingValuesBVARPANEL
     #' @examples 
     #' # starting values for Bayesian Panel VAR 2-country model with 4 lags for a 3-variable system.
     #' sv = specify_starting_values_bvarPANEL$new(C = 2, N = 3, p = 4)
     #' 
-    initialize = function(C, N, p, d = 0){
+    initialize = function(C, N, p){
       stopifnot("Argument C must be a positive integer number." = C > 0 & C %% 1 == 0)
       stopifnot("Argument N must be a positive integer number." = N > 0 & N %% 1 == 0)
       stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
-      stopifnot("Argument d must be a non-negative integer number." = d >= 0 & d %% 1 == 0)
       
-      K               = N * p + 1 + d
+      K               = N * p + 1
       self$A_c        = matrix(stats::rnorm(C * K * N, sd = 0.001), c(K, N, C))
       self$Sigma_c    = stats::rWishart(C, N + 1, diag(N))
       self$A          = matrix(stats::rnorm(K * N, sd = 0.001), K, N) + diag(K)[,1:N]
@@ -222,7 +217,8 @@ specify_starting_values_bvarPANEL = R6::R6Class(
     }, # END initialize
     
     #' @description
-    #' Returns the elements of the starting values StartingValuesBVARPANEL as a \code{list}.
+    #' Returns the elements of the starting values StartingValuesBVARPANEL as 
+    #' a \code{list}.
     #' 
     #' @examples 
     #' # starting values for a homoskedastic bsvar with 1 lag for a 3-variable system
@@ -250,5 +246,67 @@ specify_starting_values_bvarPANEL = R6::R6Class(
 
 
 
-
+#' R6 Class Representing DataMatricesBVARPANEL
+#'
+#' @description
+#' The class DataMatricesBVARPANEL presents the data matrices of dependent 
+#' variables, \eqn{\mathbf{Y}_c}, and regressors, \eqn{\mathbf{X}_c}, for the 
+#' Bayesian Panel VAR model for all countries \eqn{c = 1, ..., C}.
+#' 
+#' @export
+specify_panel_data_matrices = R6::R6Class(
+  "DataMatricesBVARPANEL",
+  
+  public = list(
+    
+    #' @field Y a list with \code{C} elements with \code{T_c x N} matrices of 
+    #' dependent variables, \eqn{\mathbf{Y}_c}. 
+    Y     = list(),
+    
+    #' @field X a list with \code{C} elements with \code{T_c x K} matrices of 
+    #' regressors, \eqn{\mathbf{X}_c}. 
+    X     = list(),
+    
+    #' @description
+    #' Create new data matrices DataMatricesBVARPANEL
+    #' @param data a list containing \code{(T_c+p)xN} matrices with country-specific
+    #' time series data.
+    #' @param p a positive integer providing model's autoregressive lag order.
+    #' @return New data matrices DataMatricesBVARPANEL
+    initialize = function(data, p = 1L) {
+      if (missing(data)) {
+        stop("Argument data has to be specified")
+      } else {
+        stopifnot("Argument data has to be a list of matrices." = is.list(data) & all(simplify2array(lapply(data, function(x){is.matrix(x) & is.numeric(x)}))))
+        stopifnot("Argument data has to contain matrices with the same number of columns." = length(unique(simplify2array(lapply(data, ncol)))) == 1)
+        stopifnot("Argument data cannot include missing values." = all(simplify2array(lapply(dd, function(x){!any(is.na(x))}))))
+      }
+      stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
+      
+      C             = length(data)
+      for (c in 1:C) {
+        TT            = nrow(data[[c]])
+        T_c           = TT - p
+        self$Y[[c]]   = data[[c]][(p + 1):TT,]
+        
+        X             = matrix(0, T_c, 0)
+        for (i in 1:p) {
+          X           = cbind(X, data[[c]][(p + 1):TT - i,])
+        }
+        X             = cbind(X, rep(1, T_c))
+        self$X        = X
+      } # END c loop
+      names(self$Y)   = names(self$X) = names(data)
+    }, # END initialize
+    
+    #' @description
+    #' Returns the data matrices DataMatricesBVARPANEL as a \code{list}.
+    get_data_matrices = function() {
+      list(
+        Y = self$Y,
+        X = self$X
+      )
+    } # END get_data_matrices
+  ) # END public
+) # END specify_panel_data_matrices
 

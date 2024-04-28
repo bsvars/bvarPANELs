@@ -52,8 +52,8 @@ Wishart prior distribution for the global parameter matrix \eqn{\mathbf{\Sigma}}
 for the global parameter matrices \eqn{\mathbf{A}}
 and \eqn{\mathbf{V}}}
 
-\item{\code{mu_Sigma}}{a positive shape parameter of the second-level Wishart prior distribution
-for the global parameter matrix \eqn{\mathbf{\Sigma}}.}
+\item{\code{mu_Sigma}}{a positive shape parameter of the second-level Wishart prior 
+distribution  for the global parameter matrix \eqn{\mathbf{\Sigma}}.}
 
 \item{\code{lambda}}{a positive shape of the second-level exp prior distribution 
 for the shape parameter \eqn{\nu}.}
@@ -61,8 +61,8 @@ for the shape parameter \eqn{\nu}.}
 \item{\code{mu_m}}{a scalar mean of the third-level normal prior distribution
 for the global average persistence parameter \eqn{m}.}
 
-\item{\code{sigma2_m}}{a positive scalar variance of the third-level normal prior distribution
-for the global average persistence parameter \eqn{m}.}
+\item{\code{sigma2_m}}{a positive scalar variance of the third-level normal prior 
+distribution for the global average persistence parameter \eqn{m}.}
 
 \item{\code{s_w}}{a positive scalar scale of the third-level gamma prior 
 distribution for parameter \eqn{w}.}
@@ -92,7 +92,7 @@ inverted-gamma 2 prior distribution for parameter \eqn{s}.}
 \subsection{Method \code{new()}}{
 Create a new prior specification PriorBVARPANEL.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{specify_prior_bvarPANEL$new(C, N, p, d = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{specify_prior_bvarPANEL$new(C, N, p)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -103,8 +103,6 @@ Create a new prior specification PriorBVARPANEL.
 \item{\code{N}}{a positive integer - the number of dependent variables in the model.}
 
 \item{\code{p}}{a positive integer - the autoregressive lag order of the SVAR model.}
-
-\item{\code{d}}{a positive integer - the number of \code{exogenous} variables in the model.}
 }
 \if{html}{\out{</div>}}
 }
