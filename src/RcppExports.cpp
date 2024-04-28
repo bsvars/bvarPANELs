@@ -25,9 +25,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sample_m
+double sample_m(const arma::mat& aux_A, const arma::mat& aux_V, const double& aux_s, const double& aux_w, const Rcpp::List& aux_prior);
+RcppExport SEXP _bvarPANELs_sample_m(SEXP aux_ASEXP, SEXP aux_VSEXP, SEXP aux_sSEXP, SEXP aux_wSEXP, SEXP aux_priorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type aux_A(aux_ASEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type aux_V(aux_VSEXP);
+    Rcpp::traits::input_parameter< const double& >::type aux_s(aux_sSEXP);
+    Rcpp::traits::input_parameter< const double& >::type aux_w(aux_wSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type aux_prior(aux_priorSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_m(aux_A, aux_V, aux_s, aux_w, aux_prior));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bvarPANELs_rmniw1", (DL_FUNC) &_bvarPANELs_rmniw1, 4},
+    {"_bvarPANELs_sample_m", (DL_FUNC) &_bvarPANELs_sample_m, 5},
     {NULL, NULL, 0}
 };
 
