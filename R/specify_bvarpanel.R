@@ -88,7 +88,7 @@ specify_prior_bvarPANEL = R6::R6Class(
       stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
     
       K                 = N * p + 1
-      self$M            = cbind(diag(N), matrix(0, N, K - N))
+      self$M            = t(cbind(diag(N), matrix(0, N, K - N)))
       self$W            = diag(c(kronecker((1:p)^2, rep(1, N) ), rep(10, 1)))
       self$S_inv        = diag(N)
       self$S_Sigma_inv  = diag(N)
