@@ -28,6 +28,18 @@ sv = specify_starting_values_bvarPANEL$new(C = 2, N = 3, p = 4)
 sv = specify_starting_values_bvarPANEL$new(C = 2, N = 3, p = 1)
 sv$get_starting_values()   # show starting values as list
 
+
+## ------------------------------------------------
+## Method `specify_starting_values_bvarPANEL$set_starting_values`
+## ------------------------------------------------
+
+sv = specify_starting_values_bvarPANEL$new(C = 2, N = 3, p = 1)
+
+# Modify the starting values by:
+sv_list = sv$get_starting_values()   # getting them as list
+sv_list$A <- matrix(rnorm(12), 3, 4) # modifying the entry
+sv$set_starting_values(sv_list)      # providing to the class object
+
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -66,6 +78,7 @@ parameter \eqn{\mathbf{\Sigma}_c}.}
 \itemize{
 \item \href{#method-StartingValuesBVARPANEL-new}{\code{specify_starting_values_bvarPANEL$new()}}
 \item \href{#method-StartingValuesBVARPANEL-get_starting_values}{\code{specify_starting_values_bvarPANEL$get_starting_values()}}
+\item \href{#method-StartingValuesBVARPANEL-set_starting_values}{\code{specify_starting_values_bvarPANEL$set_starting_values()}}
 \item \href{#method-StartingValuesBVARPANEL-clone}{\code{specify_starting_values_bvarPANEL$clone()}}
 }
 }
@@ -118,6 +131,42 @@ a \code{list}.
 \preformatted{# starting values for a homoskedastic bsvar with 1 lag for a 3-variable system
 sv = specify_starting_values_bvarPANEL$new(C = 2, N = 3, p = 1)
 sv$get_starting_values()   # show starting values as list
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-StartingValuesBVARPANEL-set_starting_values"></a>}}
+\if{latex}{\out{\hypertarget{method-StartingValuesBVARPANEL-set_starting_values}{}}}
+\subsection{Method \code{set_starting_values()}}{
+Returns the elements of the starting values StartingValuesBVARPANEL as a \code{list}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{specify_starting_values_bvarPANEL$set_starting_values(last_draw)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{last_draw}}{a list containing the same elements as object StartingValuesBVARPANEL.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+An object of class StartingValuesBVARPANEL including the last draw 
+of the current MCMC as the starting value to be passed to the continuation 
+of the MCMC estimation.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{sv = specify_starting_values_bvarPANEL$new(C = 2, N = 3, p = 1)
+
+# Modify the starting values by:
+sv_list = sv$get_starting_values()   # getting them as list
+sv_list$A <- matrix(rnorm(12), 3, 4) # modifying the entry
+sv$set_starting_values(sv_list)      # providing to the class object
 
 }
 \if{html}{\out{</div>}}

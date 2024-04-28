@@ -237,7 +237,34 @@ specify_starting_values_bvarPANEL = R6::R6Class(
         w             = self$w,
         s             = self$s
       )
-    } # END get_starting_values
+    }, # END get_starting_values
+    
+    #' @description
+    #' Returns the elements of the starting values StartingValuesBVARPANEL as a \code{list}.
+    #' @param last_draw a list containing the same elements as object StartingValuesBVARPANEL.
+    #' @return An object of class StartingValuesBVARPANEL including the last draw 
+    #' of the current MCMC as the starting value to be passed to the continuation 
+    #' of the MCMC estimation.
+    #' 
+    #' @examples
+    #' sv = specify_starting_values_bvarPANEL$new(C = 2, N = 3, p = 1)
+    #' 
+    #' # Modify the starting values by:
+    #' sv_list = sv$get_starting_values()   # getting them as list
+    #' sv_list$A <- matrix(rnorm(12), 3, 4) # modifying the entry
+    #' sv$set_starting_values(sv_list)      # providing to the class object
+    #' 
+    set_starting_values   = function(last_draw) {
+      self$A_c            = last_draw$A_c
+      self$Sigma_c        = last_draw$Sigma_c
+      self$A              = last_draw$A
+      self$V              = last_draw$V
+      self$Sigma          = last_draw$Sigma
+      self$nu             = last_draw$nu
+      self$m              = last_draw$m
+      self$w              = last_draw$w
+      self$s              = last_draw$s
+    } # END set_starting_values
   ) # END public
 ) # END specify_starting_values_bvarPANEL
 
@@ -309,4 +336,115 @@ specify_panel_data_matrices = R6::R6Class(
     } # END get_data_matrices
   ) # END public
 ) # END specify_panel_data_matrices
+
+
+
+
+
+
+
+#' R6 Class representing the specification of the BVARPANEL model
+#'
+#' @description
+#' The class BVARPANEL presents complete specification for the Bayesian Panel
+#' Vector Autoregression.
+#' 
+#' @examples 
+#' \dontrun{
+#' data(us_fiscal_lsuw)
+#' spec = specify_bvarPANEL$new(
+#'    data = us_fiscal_lsuw,
+#'    p = 4
+#' )
+#' }
+#' 
+#' @export
+specify_bvarPANEL = R6::R6Class(
+  "BVARPANEL",
+  
+  public = list(
+    
+    #' @field p a non-negative integer specifying the autoregressive lag order of the model. 
+    p                      = numeric(),
+    
+    #' @field prior an object PriorBSVAR with the prior specification. 
+    prior                  = list(),
+    
+    #' @field data_matrices an object DataMatricesBVARPANEL with the data matrices.
+    data_matrices          = list(),
+    
+    #' @field starting_values an object StartingValuesBVARPANEL with the starting values.
+    starting_values        = list(),
+    
+    #' @description
+    #' Create a new specification of the Bayesian Panel VAR model BVARPANEL.
+    #' @param data a list with \code{C} elements of \code{(T_c+p)xN} matrices 
+    #' with time series data.
+    #' @param p a positive integer providing model's autoregressive lag order.
+    #' @return A new complete specification for the Bayesian Panel VAR model BVARPANEL.
+    initialize = function(
+    data,
+    p = 1L
+    ) {
+      stopifnot("Argument data has to contain matrices with the same number of columns." = length(unique(simplify2array(lapply(data, ncol)))) == 1)
+      stopifnot("Argument p has to be a positive integer." = ((p %% 1) == 0 & p > 0))
+      
+      self$p    = p
+      C         = length(data)
+      N         = unique(simplify2array(lapply(data, ncol)))
+      
+      self$data_matrices   = specify_panel_data_matrices$new(data, self$p)
+      self$prior           = specify_prior_bvarPANEL$new(C, N, self$p)
+      self$starting_values = specify_starting_values_bvarPANEL$new(C, N, self$p)
+    }, # END initialize
+    
+    #' @description
+    #' Returns the data matrices as the DataMatricesBVARPANEL object.
+    #' 
+    #' @examples
+    #' \dontrun{ 
+    #' data(us_fiscal_lsuw)
+    #' spec = specify_bsvar$new(
+    #'    data = us_fiscal_lsuw,
+    #'    p = 4
+    #' )
+    #' spec$get_data_matrices()
+    #' }
+    get_data_matrices = function() {
+      self$data_matrices$clone()
+    }, # END get_data_matrices
+    
+    #' @description
+    #' Returns the prior specification as the PriorBVARPANEL object.
+    #' 
+    #' @examples 
+    #' \dontrun{
+    #' data(us_fiscal_lsuw)
+    #' spec = specify_bsvar$new(
+    #'    data = us_fiscal_lsuw,
+    #'    p = 4
+    #' )
+    #' spec$get_prior()
+    #' }
+    get_prior = function() {
+      self$prior$clone()
+    }, # END get_prior
+    
+    #' @description
+    #' Returns the starting values as the StartingValuesBVARPANEL object.
+    #' 
+    #' @examples 
+    #' \dontrun{
+    #' data(us_fiscal_lsuw)
+    #' spec = specify_bsvar$new(
+    #'    data = us_fiscal_lsuw,
+    #'    p = 4
+    #' )
+    #' spec$get_starting_values()
+    #' }
+    get_starting_values = function() {
+      self$starting_values$clone()
+    } # END get_starting_values
+  ) # END public
+) # END specify_bvarPANEL
 
