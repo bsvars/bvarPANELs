@@ -15,7 +15,7 @@ arma::field<arma::mat> rmniw1(
 ) {
   mat Sigma     = iwishrnd(S, nu);
   mat X_tmp     = mat(size(A), fill::randn);
-  mat X         = A + chol(S).t() * X_tmp * chol(V);
+  mat X         = A + chol(V).t() * X_tmp * chol(Sigma);
   
   field<mat> out(2);
   out(0)        = X;
