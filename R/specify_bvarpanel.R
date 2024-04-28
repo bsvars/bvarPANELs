@@ -448,3 +448,100 @@ specify_bvarPANEL = R6::R6Class(
   ) # END public
 ) # END specify_bvarPANEL
 
+
+
+
+#' R6 Class Representing PosteriorBVARPANEL
+#'
+#' @description
+#' The class PosteriorBVARPANEL contains posterior output and the specification 
+#' including the last MCMC draw for the Bayesian Panel VAR model. 
+#' Note that due to the thinning of the MCMC output the starting value in element 
+#' \code{last_draw} might not be equal to the last draw provided in 
+#' element \code{posterior}.
+#' 
+#' @seealso \code{\link{specify_bvarPANEL}}
+#' 
+#' @examples 
+#' \dontrun{
+#' # This is a function that is used within estimate()
+#' data(us_fiscal_lsuw)
+#' specification  = specify_bsvar$new(us_fiscal_lsuw, p = 4)
+#' set.seed(123)
+#' estimate       = estimate(specification, 50)
+#' class(estimate)
+#' }
+#' @export
+specify_posterior_bvarPANEL = R6::R6Class(
+  "PosteriorBVARPANEL",
+  
+  private = list(
+    normalised = FALSE
+  ), # END private
+  
+  public = list(
+    
+    #' @field last_draw an object of class BVARPANEL with the last draw of the 
+    #' current MCMC run as the starting value to be passed to the continuation 
+    #' of the MCMC estimation using \code{estimate()}. 
+    last_draw = list(),
+    
+    #' @field posterior a list containing Bayesian estimation output.
+    posterior = list(),
+    
+    #' @description
+    #' Create a new posterior output PosteriorBVARPANEL.
+    #' @param specification_bvarPANEL an object of class BVARPANEL with the last 
+    #' draw of the current MCMC run as the starting value.
+    #' @param posterior_bvarPANEL a list containing Bayesian estimation output.
+    #' @return A posterior output PosteriorBVARPANEL.
+    initialize = function(specification_bvarPANEL, posterior_bvarPANEL) {
+      
+      stopifnot("Argument specification_bvarPANEL must be of class BVARPANEL." = any(class(specification_bvarPANEL) == "BVARPANEL"))
+      stopifnot("Argument posterior_bvarPANEL must must contain MCMC output." = is.list(posterior_bvarPANEL) & is.array(posterior_bvarPANEL$A) & is.array(posterior_bvarPANEL$Sigma) & is.vector(posterior_bvarPANEL$w))
+      
+      self$last_draw    = specification_bvarPANEL
+      self$posterior    = posterior_bvarPANEL
+    }, # END initialize
+    
+    #' @description
+    #' Returns a list containing Bayesian estimation output.
+    #' 
+    #' @examples 
+    #' \dontrun{
+    #' data(us_fiscal_lsuw)
+    #' specification  = specify_bsvar$new(us_fiscal_lsuw)
+    #' set.seed(123)
+    #' estimate       = estimate(specification, 50)
+    #' estimate$get_posterior()
+    #' }
+    get_posterior       = function(){
+      self$posterior
+    }, # END get_posterior
+    
+    #' @description
+    #' Returns an object of class BVARPANEL with the last draw of the current 
+    #' MCMC run as the starting value to be passed to the continuation of the 
+    #' MCMC estimation using \code{estimate()}.
+    #' 
+    #' @examples
+    #' \dontrun{
+    #' data(us_fiscal_lsuw)
+    #' 
+    #' # specify the model and set seed
+    #' specification  = specify_bsvar$new(us_fiscal_lsuw, p = 4)
+    #' set.seed(123)
+    #' 
+    #' # run the burn-in
+    #' burn_in        = estimate(specification, 10)
+    #' 
+    #' # estimate the model
+    #' posterior      = estimate(burn_in, 10)
+    #' }
+    get_last_draw      = function(){
+      self$last_draw$clone()
+    } # END get_last_draw
+    
+  ) # END public
+) # END specify_posterior_bvarPANEL
+
