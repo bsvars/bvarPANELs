@@ -34,47 +34,47 @@ prior$get_prior() # show the prior as list
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{M}}{an \code{KxN} matrix, the mean of the second-level MNIW prior
-distribution for the global parameter matrices \eqn{\undelline{\mathbf{A}}} 
-and \eqn{\undelline{\mathbf{V}}}}
+distribution for the global parameter matrices \eqn{\mathbf{A}} 
+and \eqn{\mathbf{V}}}
 
 \item{\code{W}}{a \code{KxK} column-specific covariance matrix of the second-level
-MNIW prior distribution for the global parameter matrices \eqn{\undelline{\mathbf{A}}}
-and \eqn{\undelline{\mathbf{V}}}}
+MNIW prior distribution for the global parameter matrices \eqn{\mathbf{A}}
+and \eqn{\mathbf{V}}}
 
 \item{\code{S_inv}}{an \code{NxN} row-specific precision matrix of the second-level
-MNIW prior distribution for the global parameter matrices \eqn{\undelline{\mathbf{A}}}
-and \eqn{\undelline{\mathbf{V}}}}
+MNIW prior distribution for the global parameter matrices \eqn{\mathbf{A}}
+and \eqn{\mathbf{V}}}
 
 \item{\code{S_Sigma_inv}}{an \code{NxN} precision matrix of the second-level 
-Wishart prior distribution for the global parameter matrix \eqn{\undelline{\mathbf{\Sigma}}}.}
+Wishart prior distribution for the global parameter matrix \eqn{\mathbf{\Sigma}}.}
 
 \item{\code{eta}}{a positive shape parameter of the second-level MNIW prior distribution
-for the global parameter matrices \eqn{\undelline{\mathbf{A}}}
-and \eqn{\undelline{\mathbf{V}}}}
+for the global parameter matrices \eqn{\mathbf{A}}
+and \eqn{\mathbf{V}}}
 
-\item{\code{mu}}{a positive shape parameter of the second-level Wishart prior distribution
-for the global parameter matrix \eqn{\undelline{\mathbf{\Sigma}}}.}
+\item{\code{mu_Sigma}}{a positive shape parameter of the second-level Wishart prior distribution
+for the global parameter matrix \eqn{\mathbf{\Sigma}}.}
 
 \item{\code{lambda}}{a positive shape of the second-level exp prior distribution 
-for the shape parameter \eqn{\undelline{\nu}}.}
+for the shape parameter \eqn{\nu}.}
 
 \item{\code{mu_m}}{a scalar mean of the third-level normal prior distribution
-for the global average persistence parameter \eqn{\undelline{m}}.}
+for the global average persistence parameter \eqn{m}.}
 
 \item{\code{sigma2_m}}{a positive scalar variance of the third-level normal prior distribution
-for the global average persistence parameter \eqn{\undelline{m}}.}
+for the global average persistence parameter \eqn{m}.}
 
 \item{\code{s_w}}{a positive scalar scale of the third-level gamma prior 
-distribution for parameter \eqn{\underline{w}}.}
+distribution for parameter \eqn{w}.}
 
 \item{\code{a_w}}{a positive scalar shape of the third-level gamma prior 
-distribution for parameter \eqn{\underline{w}}.}
+distribution for parameter \eqn{w}.}
 
 \item{\code{s_s}}{a positive scalar scale parameter of the third-level 
-inverted-gamma 2 prior distribution for parameter \eqn{\underline{s}}.}
+inverted-gamma 2 prior distribution for parameter \eqn{s}.}
 
 \item{\code{nu_s}}{a positive scalar shape parameter of the third-level 
-inverted-gamma 2 prior distribution for parameter \eqn{\underline{s}}.}
+inverted-gamma 2 prior distribution for parameter \eqn{s}.}
 }
 \if{html}{\out{</div>}}
 }
