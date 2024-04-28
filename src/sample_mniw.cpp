@@ -52,3 +52,25 @@ double sample_m (
   double out        = randn( distr_param(mu_m_bar, pow(sigma2_m_bar, 0.5)) );
   return out;
 } // END sample_m
+
+
+// [[Rcpp:interface(cpp)]]
+// [[Rcpp::export]]
+double sample_w (
+    const arma::mat&    aux_V,    // KxK
+    const Rcpp::List&   prior
+) {
+  
+  int K             = aux_V.n_cols;
+  mat prior_W       = as<mat>(prior["W"]);
+  double prior_s_w  = as<double>(prior["s_w"]);
+  double prior_a_w  = as<double>(prior["a_w"]);
+  double prior_eta  = as<double>(prior["eta"]);
+  
+  mat aux_V_inv     = inv_sympd(aux_V);
+  double s_w_bar    = prior_s_w + 0.5 * trace(aux_V_inv * prior_W);
+  double a_w_bar    = prior_a_w + 0.5 * K * prior_eta;
+  
+  double out        = randg( distr_param(a_w_bar, s_w_bar) );
+  return out;
+} // END sample_w

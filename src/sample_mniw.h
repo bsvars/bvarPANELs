@@ -24,4 +24,9 @@ double sample_m (
 );
 
 
+double sample_w (
+    const arma::mat&    aux_V,    // KxK
+    const Rcpp::List&   prior
+);
+
 #endif  // _SAMPLE_MNIW_H_
