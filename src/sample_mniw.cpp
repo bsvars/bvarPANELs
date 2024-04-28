@@ -130,3 +130,45 @@ arma::mat sample_Sigma (
   mat out           = wishrnd( S_Sigma_bar, mu_bar );
   return out;
 } // END sample_Sigma
+
+
+// [[Rcpp:interface(cpp)]]
+// [[Rcpp::export]]
+arma::field<arma::mat> sample_AV (
+    const arma::cube&   aux_A_c,          // KxNxC
+    const arma::cube&   aux_Sigma_c_inv,  // NxNxC
+    const double&       aux_s,            // scalar
+    const double&       aux_m,            // scalar
+    const double&       aux_w,            // scalar
+    const Rcpp::List&   prior
+) {
+  
+  int C             = aux_A_c.n_slices;
+  int N             = aux_A_c.n_cols;
+  int K             = aux_A_c.n_rows;
+  
+  mat prior_S_inv   = as<mat>(prior["S_inv"]);
+  mat prior_M       = as<mat>(prior["M"]);
+  mat prior_W       = as<mat>(prior["W"]);
+  double prior_eta  = as<double>(prior["eta"]);
+  
+  mat sum_Sc_inv(N, N);
+  mat sum_Sc_invAt(N, K);
+  mat sum_ASc_invAt(K, K);
+  for (int c = 0; c < C; c++) {
+    sum_Sc_inv     += aux_Sigma_c_inv.slice(c);
+    mat Sc_invAt    = aux_Sigma_c_inv.slice(c) * aux_A_c.slice(c).t();
+    sum_Sc_invAt   += Sc_invAt;
+    sum_ASc_invAt  += aux_A_c.slice(c) * Sc_invAt;
+  } // END c loop
+
+  mat S_bar_inv     = (prior_S_inv / aux_s) + sum_Sc_inv;
+  mat S_bar         = inv_sympd(S_bar_inv);
+  mat M_bar_trans   = S_bar * ( (aux_m / aux_s) * (prior_S_inv * prior_M.t()) + sum_Sc_invAt);
+  mat W_bar         = (aux_w * prior_W) + (pow(aux_m, 2) / aux_s) * (prior_M * prior_S_inv * prior_M.t())
+    + sum_ASc_invAt - M_bar_trans.t() * S_bar_inv * M_bar_trans;
+  double eta_bar    = C * N + prior_eta;  
+  
+  arma::field<arma::mat> aux_AV = rmniw1( M_bar_trans.t(), W_bar, S_bar, eta_bar );
+  return aux_AV;
+} // END sample_AV

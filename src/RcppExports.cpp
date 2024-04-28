@@ -81,6 +81,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sample_AV
+arma::field<arma::mat> sample_AV(const arma::cube& aux_A_c, const arma::cube& aux_Sigma_c_inv, const double& aux_s, const double& aux_m, const double& aux_w, const Rcpp::List& prior);
+RcppExport SEXP _bvarPANELs_sample_AV(SEXP aux_A_cSEXP, SEXP aux_Sigma_c_invSEXP, SEXP aux_sSEXP, SEXP aux_mSEXP, SEXP aux_wSEXP, SEXP priorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::cube& >::type aux_A_c(aux_A_cSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type aux_Sigma_c_inv(aux_Sigma_c_invSEXP);
+    Rcpp::traits::input_parameter< const double& >::type aux_s(aux_sSEXP);
+    Rcpp::traits::input_parameter< const double& >::type aux_m(aux_mSEXP);
+    Rcpp::traits::input_parameter< const double& >::type aux_w(aux_wSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type prior(priorSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_AV(aux_A_c, aux_Sigma_c_inv, aux_s, aux_m, aux_w, prior));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bvarPANELs_rmniw1", (DL_FUNC) &_bvarPANELs_rmniw1, 4},
@@ -88,6 +104,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bvarPANELs_sample_w", (DL_FUNC) &_bvarPANELs_sample_w, 2},
     {"_bvarPANELs_sample_s", (DL_FUNC) &_bvarPANELs_sample_s, 5},
     {"_bvarPANELs_sample_Sigma", (DL_FUNC) &_bvarPANELs_sample_Sigma, 4},
+    {"_bvarPANELs_sample_AV", (DL_FUNC) &_bvarPANELs_sample_AV, 6},
     {NULL, NULL, 0}
 };
 
