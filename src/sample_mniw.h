@@ -39,4 +39,12 @@ double sample_s (
 );
 
 
+arma::mat sample_Sigma (
+    const arma::cube&   aux_Sigma_c_inv,  // NxNxC
+    const double&       aux_s,            // scalar
+    const double&       aux_nu,           // scalar
+    const Rcpp::List&   prior
+);
+
+
 #endif  // _SAMPLE_MNIW_H_

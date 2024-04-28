@@ -103,3 +103,30 @@ double sample_s (
   double out        = s_s_bar / chi2rnd( nu_s_bar );
   return out;
 } // END sample_s
+
+
+// [[Rcpp:interface(cpp)]]
+// [[Rcpp::export]]
+arma::mat sample_Sigma (
+    const arma::cube&   aux_Sigma_c_inv,  // NxNxC
+    const double&       aux_s,            // scalar
+    const double&       aux_nu,           // scalar
+    const Rcpp::List&   prior
+) {
+  
+  int C             = aux_Sigma_c_inv.n_slices;
+  int N             = aux_Sigma_c_inv.n_rows;
+  mat prior_S_Sigma_inv = as<mat>(prior["S_Sigma_inv"]);
+  double prior_mu_Sigma = as<double>(prior["mu_Sigma"]);
+  
+  mat sum_aux_Sigma_c_inv(N, N);
+  for (int c = 0; c < C; c++) {
+    sum_aux_Sigma_c_inv += aux_Sigma_c_inv.slice(c);
+  }
+  
+  mat S_Sigma_bar   = (prior_S_Sigma_inv / aux_s) + sum_aux_Sigma_c_inv;
+  double mu_bar     = C * aux_nu + prior_mu_Sigma;
+  
+  mat out           = wishrnd( S_Sigma_bar, mu_bar );
+  return out;
+} // END sample_Sigma
