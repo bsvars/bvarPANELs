@@ -545,3 +545,4 @@ specify_posterior_bvarPANEL = R6::R6Class(
   ) # END public
 ) # END specify_posterior_bvarPANEL
 
+
