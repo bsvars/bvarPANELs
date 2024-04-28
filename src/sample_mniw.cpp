@@ -24,7 +24,7 @@ arma::field<arma::mat> rmniw1(
 } // END rmniw1
 
 
-
+// [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 double sample_m (
     const arma::mat&    aux_A,    // KxN

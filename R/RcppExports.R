@@ -5,7 +5,7 @@ rmniw1 <- function(A, V, S, nu) {
     .Call(`_bvarPANELs_rmniw1`, A, V, S, nu)
 }
 
-sample_m <- function(aux_A, aux_V, aux_s, aux_w, aux_prior) {
-    .Call(`_bvarPANELs_sample_m`, aux_A, aux_V, aux_s, aux_w, aux_prior)
+sample_m <- function(aux_A, aux_V, aux_s, aux_w, prior) {
+    .Call(`_bvarPANELs_sample_m`, aux_A, aux_V, aux_s, aux_w, prior)
 }
 

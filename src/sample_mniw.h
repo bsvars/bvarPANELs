@@ -15,4 +15,13 @@ arma::field<arma::mat> rmniw1(
 );
 
 
+double sample_m (
+    const arma::mat&    aux_A,    // KxN
+    const arma::mat&    aux_V,    // KxK
+    const double&       aux_s,   // scalar
+    const double&       aux_w,   // scalar
+    const Rcpp::List&   prior
+);
+
+
 #endif  // _SAMPLE_MNIW_H_
