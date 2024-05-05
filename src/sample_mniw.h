@@ -57,4 +57,14 @@ arma::field<arma::mat> sample_AV (
 );
 
 
+arma::field<arma::mat> sample_A_c_Sigma_c (
+    const arma::mat&    Y_c,              // T_cxN
+    const arma::mat&    X_c,              // T_cxK
+    const arma::mat&    aux_A,            // KxN
+    const arma::mat&    aux_V,            // KxK
+    const arma::mat&    aux_Sigma,        // NxN
+    const double&       aux_nu            // scalar
+);
+
+
 #endif  // _SAMPLE_MNIW_H_

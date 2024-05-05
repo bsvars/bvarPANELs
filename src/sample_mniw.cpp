@@ -161,7 +161,7 @@ arma::field<arma::mat> sample_AV (
     sum_Sc_invAt   += Sc_invAt;
     sum_ASc_invAt  += aux_A_c.slice(c) * Sc_invAt;
   } // END c loop
-
+  
   mat S_bar_inv     = (prior_S_inv / aux_s) + sum_Sc_inv;
   mat S_bar         = inv_sympd(S_bar_inv);
   mat M_bar_trans   = S_bar * ( (aux_m / aux_s) * (prior_S_inv * prior_M.t()) + sum_Sc_invAt);
@@ -169,6 +169,32 @@ arma::field<arma::mat> sample_AV (
     + sum_ASc_invAt - M_bar_trans.t() * S_bar_inv * M_bar_trans;
   double eta_bar    = C * N + prior_eta;  
   
-  arma::field<arma::mat> aux_AV = rmniw1( M_bar_trans.t(), W_bar, S_bar, eta_bar );
+  arma::field<arma::mat> aux_AV = rmniw1( M_bar_trans, S_bar, W_bar, eta_bar );
+  aux_AV(0)         = trans(aux_AV(0));
   return aux_AV;
 } // END sample_AV
+
+
+
+// [[Rcpp:interface(cpp)]]
+// [[Rcpp::export]]
+arma::field<arma::mat> sample_A_c_Sigma_c (
+    const arma::mat&    Y_c,              // T_cxN
+    const arma::mat&    X_c,              // T_cxK
+    const arma::mat&    aux_A,            // KxN
+    const arma::mat&    aux_V,            // KxK
+    const arma::mat&    aux_Sigma,        // NxN
+    const double&       aux_nu            // scalar
+) {
+  int T_c           = Y_c.n_rows;
+  
+  mat aux_V_inv     = inv_sympd( aux_V );
+  mat V_bar_inv     = X_c.t() * X_c + aux_V_inv;
+  mat V_bar         = inv_sympd( V_bar_inv );
+  mat A_bar         = V_bar * ( X_c.t() * Y_c + aux_V_inv * aux_A );
+  mat Sigma_bar     = aux_Sigma + Y_c.t() * Y_c + aux_A.t() * aux_V_inv * aux_A - A_bar.t() * V_bar_inv * A_bar;
+  double nu_bar     = T_c + aux_nu;
+  
+  arma::field<arma::mat> aux_A_c_Sigma_c = rmniw1( A_bar, V_bar, Sigma_bar, nu_bar );
+  return aux_A_c_Sigma_c;
+} // END sample_A_c_Sigma_c
