@@ -21,6 +21,10 @@ log_kernel_nu <- function(aux_nu, aux_Sigma_c, aux_Sigma, prior_lambda, C, N, K)
     .Call(`_bvarPANELs_log_kernel_nu`, aux_nu, aux_Sigma_c, aux_Sigma, prior_lambda, C, N, K)
 }
 
+sample_nu <- function(aux_nu, aux_Sigma_c, aux_Sigma, prior) {
+    .Call(`_bvarPANELs_sample_nu`, aux_nu, aux_Sigma_c, aux_Sigma, prior)
+}
+
 sample_Sigma <- function(aux_Sigma_c_inv, aux_s, aux_nu, prior) {
     .Call(`_bvarPANELs_sample_Sigma`, aux_Sigma_c_inv, aux_s, aux_nu, prior)
 }

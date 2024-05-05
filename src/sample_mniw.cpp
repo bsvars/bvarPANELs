@@ -141,11 +141,45 @@ double log_kernel_nu (
 
 
 
-
-
-
-
-
+// [[Rcpp:interface(cpp)]]
+// [[Rcpp::export]]
+double sample_nu (
+    const double&       aux_nu,     // scalar
+    const arma::cube&   aux_Sigma_c,// NxNxC
+    const arma::mat&    aux_Sigma,  // NxN
+    const Rcpp::List&   prior
+) {
+  
+  double prior_lambda = as<double>(prior["lambda"]);
+  mat prior_M         = as<mat>(prior["M"]);
+  int K               = prior_M.n_rows;
+  int C               = aux_Sigma_c.n_slices;
+  int N               = aux_Sigma.n_rows;
+  
+  
+  double Cov_nu       = 4 / C;
+  double Cov_nu_tmp   = 0;
+  for (int n = 1; n < N + 1; n++) {
+    Cov_nu_tmp       += R::psigamma( 0.5 * (aux_nu + 1 - n), 1);
+  } // END n loop
+  Cov_nu             += 1 / Cov_nu_tmp;  
+  
+  // Metropolis-Hastings
+  double aux_nu_star  = RcppTN::rtn1( aux_nu, Cov_nu, N + 1, R_PosInf );
+  double lk_nu_star   = log_kernel_nu ( aux_nu_star, aux_Sigma_c, aux_Sigma, prior_lambda, C, N, K );
+  double lk_nu_old    = log_kernel_nu ( aux_nu, aux_Sigma_c, aux_Sigma, prior_lambda, C, N, K );
+  double cgd_ratio    = RcppTN::dtn1( aux_nu_star, aux_nu, Cov_nu, N + 1, R_PosInf ) / RcppTN::dtn1( aux_nu, aux_nu_star, Cov_nu, N + 1, R_PosInf );
+  
+  double u            = randu();
+  double out          = 0;
+  if (u < exp(lk_nu_star - lk_nu_old) * cgd_ratio) {
+    out               = aux_nu_star;
+  } else {
+    out               = aux_nu;
+  } // 
+  
+  return out;
+} // END sample_nu
 
 
 
