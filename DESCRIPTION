@@ -8,10 +8,11 @@ Author: c(person(given="Tomasz", family="Woźniak", email="wozniak.tom@pm.me", r
 Maintainer: Tomasz Woźniak <wozniak.tom@pm.me>
 License: GPL (>= 3)
 Imports: 
+    bsvars,
     R6,
     Rcpp (>= 1.0.12),
     RcppProgress,
     RcppTN
-LinkingTo: Rcpp, RcppArmadillo, RcppProgress, RcppTN
+LinkingTo: bsvars, Rcpp, RcppArmadillo, RcppProgress, RcppTN
 Encoding: UTF-8
 RoxygenNote: 7.3.1

@@ -30,6 +30,7 @@
 #' @aliases bvarPANELs-package bvarPANELs
 #' @docType package
 #' @useDynLib bvarPANELs, .registration = TRUE
+#' @importFrom bsvars estimate
 #' @importFrom Rcpp sourceCpp
 #' @importFrom R6 R6Class
 #' @importFrom RcppTN rtn dtn

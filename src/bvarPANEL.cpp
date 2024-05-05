@@ -1,8 +1,8 @@
 #include <RcppArmadillo.h>
 #include "progress.hpp"
+#include "bsvars.h"
 
 #include "sample_mniw.h"
-#include "utils.h"
 
 using namespace Rcpp;
 using namespace arma;
@@ -25,7 +25,7 @@ Rcpp::List bvarPANEL(
   
   std::string oo      = "";
   if ( thin != 1 ) {
-    oo                = ordinal(thin) + " ";
+    oo                = bsvars::ordinal(thin) + " ";
   }
   
   if (show_progress) {
