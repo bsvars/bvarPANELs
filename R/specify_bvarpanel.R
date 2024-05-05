@@ -205,7 +205,7 @@ specify_starting_values_bvarPANEL = R6::R6Class(
       stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
       
       K               = N * p + 1
-      self$A_c        = matrix(stats::rnorm(C * K * N, sd = 0.001), c(K, N, C))
+      self$A_c        = array(stats::rnorm(C * K * N, sd = 0.001), c(K, N, C))
       self$Sigma_c    = stats::rWishart(C, N + 1, diag(N))
       self$A          = matrix(stats::rnorm(K * N, sd = 0.001), K, N) + diag(K)[,1:N]
       self$V          = stats::rWishart(1, K + 1, diag(K))[,,1]
@@ -306,7 +306,7 @@ specify_panel_data_matrices = R6::R6Class(
       } else {
         stopifnot("Argument data has to be a list of matrices." = is.list(data) & all(simplify2array(lapply(data, function(x){is.matrix(x) & is.numeric(x)}))))
         stopifnot("Argument data has to contain matrices with the same number of columns." = length(unique(simplify2array(lapply(data, ncol)))) == 1)
-        stopifnot("Argument data cannot include missing values." = all(simplify2array(lapply(dd, function(x){!any(is.na(x))}))))
+        stopifnot("Argument data cannot include missing values." = all(simplify2array(lapply(data, function(x){!any(is.na(x))}))))
       }
       stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
       
@@ -321,7 +321,7 @@ specify_panel_data_matrices = R6::R6Class(
           X           = cbind(X, data[[c]][(p + 1):TT - i,])
         }
         X             = cbind(X, rep(1, T_c))
-        self$X        = X
+        self$X[[c]]   = X
       } # END c loop
       names(self$Y)   = names(self$X) = names(data)
     }, # END initialize
