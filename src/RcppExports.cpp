@@ -12,17 +12,19 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // bvarPANEL
-Rcpp::List bvarPANEL(const int& S, const Rcpp::List& prior, const Rcpp::List& starting_values, const int thin, const bool show_progress);
-RcppExport SEXP _bvarPANELs_bvarPANEL(SEXP SSEXP, SEXP priorSEXP, SEXP starting_valuesSEXP, SEXP thinSEXP, SEXP show_progressSEXP) {
+Rcpp::List bvarPANEL(const int& S, const Rcpp::List& Y, const Rcpp::List& X, const Rcpp::List& prior, const Rcpp::List& starting_values, const int thin, const bool show_progress);
+RcppExport SEXP _bvarPANELs_bvarPANEL(SEXP SSEXP, SEXP YSEXP, SEXP XSEXP, SEXP priorSEXP, SEXP starting_valuesSEXP, SEXP thinSEXP, SEXP show_progressSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const int& >::type S(SSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List& >::type prior(priorSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List& >::type starting_values(starting_valuesSEXP);
     Rcpp::traits::input_parameter< const int >::type thin(thinSEXP);
     Rcpp::traits::input_parameter< const bool >::type show_progress(show_progressSEXP);
-    rcpp_result_gen = Rcpp::wrap(bvarPANEL(S, prior, starting_values, thin, show_progress));
+    rcpp_result_gen = Rcpp::wrap(bvarPANEL(S, Y, X, prior, starting_values, thin, show_progress));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -161,7 +163,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_bvarPANELs_bvarPANEL", (DL_FUNC) &_bvarPANELs_bvarPANEL, 5},
+    {"_bvarPANELs_bvarPANEL", (DL_FUNC) &_bvarPANELs_bvarPANEL, 7},
     {"_bvarPANELs_rmniw1", (DL_FUNC) &_bvarPANELs_rmniw1, 4},
     {"_bvarPANELs_sample_m", (DL_FUNC) &_bvarPANELs_sample_m, 5},
     {"_bvarPANELs_sample_w", (DL_FUNC) &_bvarPANELs_sample_w, 2},

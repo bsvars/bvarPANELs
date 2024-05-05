@@ -498,7 +498,7 @@ specify_posterior_bvarPANEL = R6::R6Class(
     initialize = function(specification_bvarPANEL, posterior_bvarPANEL) {
       
       stopifnot("Argument specification_bvarPANEL must be of class BVARPANEL." = any(class(specification_bvarPANEL) == "BVARPANEL"))
-      stopifnot("Argument posterior_bvarPANEL must must contain MCMC output." = is.list(posterior_bvarPANEL) & is.array(posterior_bvarPANEL$A) & is.array(posterior_bvarPANEL$Sigma) & is.vector(posterior_bvarPANEL$w))
+      stopifnot("Argument posterior_bvarPANEL must must contain MCMC output." = is.list(posterior_bvarPANEL) & is.array(posterior_bvarPANEL$A) & is.array(posterior_bvarPANEL$Sigma) & is.array(posterior_bvarPANEL$V))
       
       self$last_draw    = specification_bvarPANEL
       self$posterior    = posterior_bvarPANEL

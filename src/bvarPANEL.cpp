@@ -12,13 +12,13 @@ using namespace arma;
 // [[Rcpp::export]]
 Rcpp::List bvarPANEL(
     const int&                    S,          // No. of posterior draws
+    const Rcpp::List&             Y,          // a C-list of T_cxN elements
+    const Rcpp::List&             X,          // a C-list of T_cxK elements
     const Rcpp::List&             prior,      // a list of priors
     const Rcpp::List&             starting_values, 
     const int                     thin = 100, // introduce thinning
     const bool                    show_progress = true
 ) {
-    // const Rcpp::List&             Y,          // a C-list of T_cxN elements
-    // const Rcpp::List&             X,          // a C-list of T_cxK elements
   
   // Progress bar setup
   vec prog_rep_points = arma::round(arma::linspace(0, S, 50));
@@ -66,17 +66,58 @@ Rcpp::List bvarPANEL(
   vec         posterior_w(S);
   vec         posterior_s(S);
   
+  field<mat> y(C);
+  field<mat> x(C);
+  cube aux_Sigma_c_inv(N, N, C);
+  for (int c=0; c<C; c++) {
+    y(c)                  = as<mat>(Y[c]);
+    x(c)                  = as<mat>(X[c]);
+    aux_Sigma_c_inv.slice(c) = inv_sympd( aux_Sigma_c.slice(c) );
+  } // END c loop
+  
   int   ss = 0;
   
   for (int s=0; s<S; s++) {
+    // Rcout << "Iteration: " << s << endl;
     
     // Increment progress bar
     if (any(prog_rep_points == s)) p.increment();
     // Check for user interrupts
     if (s % 200 == 0) checkUserInterrupt();
     
-    // sample aux_hyper
+    // sample aux_m, aux_w, aux_s
+    // Rcout << "  sample m" << endl;
+    aux_m       = sample_m( aux_A, aux_V, aux_s, aux_w, prior );
     
+    // Rcout << "  sample w" << endl;
+    aux_w       = sample_w( aux_V, prior );
+    
+    // Rcout << "  sample s" << endl;
+    aux_s       = sample_s( aux_A, aux_V, aux_Sigma, aux_m, prior );
+    
+    // sample aux_nu
+    // Rcout << "  sample nu" << endl;
+    aux_nu      = sample_nu( aux_nu, aux_Sigma_c, aux_Sigma, prior );
+    
+    // sample aux_Sigma
+    // Rcout << "  sample Sigma" << endl;
+    aux_Sigma   = sample_Sigma( aux_Sigma_c_inv, aux_s, aux_nu, prior );
+    
+    // sample aux_A, aux_V
+    // Rcout << "  sample AV" << endl;
+    field<mat> tmp_AV     = sample_AV( aux_A_c, aux_Sigma_c_inv, aux_s, aux_m, aux_w, prior );
+    aux_A       = tmp_AV(0);  
+    aux_V       = tmp_AV(1);
+    
+    // sample aux_A_c, aux_Sigma_c
+    // Rcout << "  sample A_c Sigma_c" << endl;
+    // Rcout << "  aux_nu: " << aux_nu << endl;
+    for (int c=0; c<C; c++) {
+      field<mat> tmp_A_c_Sigma_c  = sample_A_c_Sigma_c( y(c), x(c), aux_A, aux_V, aux_Sigma, aux_nu );
+      aux_A_c.slice(c)            = tmp_A_c_Sigma_c(0);
+      aux_Sigma_c.slice(c)        = tmp_A_c_Sigma_c(1);
+      aux_Sigma_c_inv.slice(c)    = inv_sympd( aux_Sigma_c.slice(c) );
+    } // END c loop
     
     if (s % thin == 0) {
       posterior_A_c(ss)         = aux_A_c;

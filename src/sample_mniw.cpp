@@ -13,7 +13,13 @@ arma::field<arma::mat> rmniw1(
     const arma::mat& S,     // NxN
     const double&    nu     // scalar
 ) {
-  mat Sigma     = iwishrnd(S, nu);
+  // Rcout << "  A: " << A << std::endl;
+  // Rcout << "  V: " << V.is_sympd() << std::endl;
+  // Rcout << "  S: " << S.is_sympd() << std::endl;
+  // Rcout << "  nu: " << nu << std::endl;
+  
+  mat SS        = 0.5 * (S + S.t());
+  mat Sigma     = iwishrnd(SS, nu);
   mat X_tmp     = mat(size(A), fill::randn);
   mat X         = A + chol(V).t() * X_tmp * chol(Sigma);
   
@@ -272,6 +278,8 @@ arma::field<arma::mat> sample_A_c_Sigma_c (
   mat Sigma_bar     = aux_Sigma + Y_c.t() * Y_c + aux_A.t() * aux_V_inv * aux_A - A_bar.t() * V_bar_inv * A_bar;
   double nu_bar     = T_c + aux_nu;
   
+  // Rcout << "  nu_bar: " << nu_bar << std::endl;
+  // Rcout << "  Sigma_bar: " << Sigma_bar.is_sympd() << std::endl;
   arma::field<arma::mat> aux_A_c_Sigma_c = rmniw1( A_bar, V_bar, Sigma_bar, nu_bar );
   return aux_A_c_Sigma_c;
 } // END sample_A_c_Sigma_c
