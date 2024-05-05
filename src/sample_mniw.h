@@ -39,6 +39,17 @@ double sample_s (
 );
 
 
+double log_kernel_nu (
+    const double&       aux_nu,       // scalar
+    const arma::cube&   aux_Sigma_c,  // NxNxC
+    const arma::mat&    aux_Sigma,    // NxN
+    const double&       prior_lambda, // scalar
+    const int&          C,            // scalar
+    const int&          N,            // scalar
+    const int&          K             // scalar
+);
+
+
 arma::mat sample_Sigma (
     const arma::cube&   aux_Sigma_c_inv,  // NxNxC
     const double&       aux_s,            // scalar

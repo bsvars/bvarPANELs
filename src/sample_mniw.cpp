@@ -105,6 +105,48 @@ double sample_s (
 } // END sample_s
 
 
+
+// [[Rcpp:interface(cpp)]]
+// [[Rcpp::export]]
+double log_kernel_nu (
+    const double&       aux_nu,       // scalar
+    const arma::cube&   aux_Sigma_c,  // NxNxC
+    const arma::mat&    aux_Sigma,    // NxN
+    const double&       prior_lambda, // scalar
+    const int&          C,            // scalar
+    const int&          N,            // scalar
+    const int&          K             // scalar
+) {
+  
+  double log_kernel_nu = 0;
+  
+  log_kernel_nu      -= 0.5 * C * N * (K + aux_nu);
+  log_kernel_nu      -= prior_lambda * aux_nu;
+  double ldS          = log_det_sympd(aux_Sigma);
+  log_kernel_nu      += 0.5 * C * aux_nu * ldS;
+  
+  for (int n = 1; n < N + 1; n++) {
+    log_kernel_nu    -= C * R::lgammafn(0.5 * (aux_nu + 1 - n));
+  } // EDN n loop
+  
+  for (int c = 0; c < C; c++) {
+    double ldSc       = log_det_sympd(aux_Sigma_c.slice(c));
+    log_kernel_nu    -= 0.5 * (aux_nu + N + K + 1) * ldSc;
+  } // END c loop
+  
+  return log_kernel_nu;
+} // END log_kernel_nu
+
+
+
+
+
+
+
+
+
+
+
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 arma::mat sample_Sigma (
@@ -173,7 +215,6 @@ arma::field<arma::mat> sample_AV (
   aux_AV(0)         = trans(aux_AV(0));
   return aux_AV;
 } // END sample_AV
-
 
 
 // [[Rcpp:interface(cpp)]]
