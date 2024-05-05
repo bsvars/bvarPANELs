@@ -33,6 +33,7 @@
 #' @importFrom Rcpp sourceCpp
 #' @importFrom R6 R6Class
 #' @importFrom RcppTN rtn dtn
+#' @import RcppProgress
 #' @note This package is currently in active development.
 #' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
 #' @keywords package models ts
