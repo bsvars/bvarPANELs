@@ -1,5 +1,5 @@
 #include <RcppArmadillo.h>
-
+#include <RcppTN.h>
 
 using namespace Rcpp;
 using namespace arma;
@@ -136,6 +136,8 @@ double log_kernel_nu (
   
   return log_kernel_nu;
 } // END log_kernel_nu
+
+
 
 
 
