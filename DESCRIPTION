@@ -9,7 +9,12 @@ Maintainer: Tomasz Woźniak <wozniak.tom@pm.me>
 License: GPL (>= 3)
 Imports: 
     R6,
-    Rcpp (>= 1.0.12)
-LinkingTo: Rcpp, RcppArmadillo
+    Rcpp (>= 1.0.12),
+    RcppProgress,
+    RcppTN
+LinkingTo: bsvars, Rcpp, RcppArmadillo, RcppProgress, RcppTN
+LazyData: true
 Encoding: UTF-8
 RoxygenNote: 7.3.1
+Depends: 
+    R (>= 2.10)
