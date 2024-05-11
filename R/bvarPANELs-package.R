@@ -30,9 +30,18 @@
 #' @aliases bvarPANELs-package bvarPANELs
 #' @docType package
 #' @useDynLib bvarPANELs, .registration = TRUE
+#' @importFrom bsvars estimate
 #' @importFrom Rcpp sourceCpp
 #' @importFrom R6 R6Class
+#' @importFrom RcppTN rtn dtn
+#' @import RcppProgress
 #' @note This package is currently in active development.
 #' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
 #' @keywords package models ts
+#' #' @examples
+#' data(ilo_cubic_panel)                                   # load the data
+#' set.seed(123)
+#' specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
+#' burn_in       = estimate(specification, 10)             # run the burn-in
+#' posterior     = estimate(burn_in, 10)                   # estimate the model
 "_PACKAGE"
