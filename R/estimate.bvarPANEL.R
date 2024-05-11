@@ -36,6 +36,13 @@
 #' 
 #' @method estimate BVARPANEL
 #' 
+#' @examples
+#' data(ilo_cubic_panel)                                   # load the data
+#' set.seed(123)
+#' specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
+#' burn_in       = estimate(specification, 10)             # run the burn-in
+#' posterior     = estimate(burn_in, 10)                   # estimate the model
+#' 
 #' @export
 estimate.BVARPANEL <- function(
     specification, 

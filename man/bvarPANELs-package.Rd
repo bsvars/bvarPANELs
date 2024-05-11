@@ -16,6 +16,27 @@ This package is currently in active development.
 \author{
 Tomasz Woźniak \email{wozniak.tom@pm.me}
 }
+\keyword{#}
+\keyword{#'}
+\keyword{10)}
+\keyword{=}
+\keyword{@examples}
+\keyword{burn-in}
+\keyword{burn_in}
+\keyword{data}
+\keyword{data(ilo_cubic_panel)}
+\keyword{estimate}
+\keyword{estimate(burn_in,}
+\keyword{estimate(specification,}
+\keyword{load}
+\keyword{model}
 \keyword{models}
 \keyword{package}
+\keyword{posterior}
+\keyword{run}
+\keyword{set.seed(123)}
+\keyword{specification}
+\keyword{specify}
+\keyword{specify_bvarPANEL$new(ilo_cubic_panel)}
+\keyword{the}
 \keyword{ts}

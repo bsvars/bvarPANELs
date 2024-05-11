@@ -43,6 +43,14 @@ variables, \eqn{E_c} is an \code{T_c x N} matrix of error terms, and
 \eqn{A_c} is an \code{NxK} matrix of country-specific autoregressive slope 
 coefficients and parameters on deterministic terms in \eqn{X_c}.
 }
+\examples{
+data(ilo_cubic_panel)                                   # load the data
+set.seed(123)
+specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
+burn_in       = estimate(specification, 10)             # run the burn-in
+posterior     = estimate(burn_in, 10)                   # estimate the model
+
+}
 \seealso{
 \code{\link{specify_bvarPANEL}}, \code{\link{specify_posterior_bvarPANEL}}
 }
