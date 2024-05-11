@@ -8,6 +8,21 @@ The class DataMatricesBVARPANEL presents the data matrices of dependent
 variables, \eqn{\mathbf{Y}_c}, and regressors, \eqn{\mathbf{X}_c}, for the 
 Bayesian Panel VAR model for all countries \eqn{c = 1, ..., C}.
 }
+\examples{
+data(ilo_cubic_panel)
+YX = specify_panel_data_matrices$new(data = ilo_cubic_panel, p = 4)
+length(YX$Y); names(YX$Y)
+
+
+## ------------------------------------------------
+## Method `specify_panel_data_matrices$get_data_matrices`
+## ------------------------------------------------
+
+data(ilo_cubic_panel)
+YX = specify_panel_data_matrices$new(ilo_cubic_panel)
+YX$get_data_matrices()
+
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
@@ -57,6 +72,17 @@ New data matrices DataMatricesBVARPANEL
 Returns the data matrices DataMatricesBVARPANEL as a \code{list}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{specify_panel_data_matrices$get_data_matrices()}\if{html}{\out{</div>}}
+}
+
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{data(ilo_cubic_panel)
+YX = specify_panel_data_matrices$new(ilo_cubic_panel)
+YX$get_data_matrices()
+
+}
+\if{html}{\out{</div>}}
+
 }
 
 }

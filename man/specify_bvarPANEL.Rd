@@ -8,53 +8,48 @@ The class BVARPANEL presents complete specification for the Bayesian Panel
 Vector Autoregression.
 }
 \examples{
-\dontrun{
-data(us_fiscal_lsuw)
+data(ilo_cubic_panel)
 spec = specify_bvarPANEL$new(
-   data = us_fiscal_lsuw,
+   data = ilo_cubic_panel,
    p = 4
 )
-}
 
 
 ## ------------------------------------------------
 ## Method `specify_bvarPANEL$get_data_matrices`
 ## ------------------------------------------------
 
-\dontrun{ 
-data(us_fiscal_lsuw)
-spec = specify_bsvar$new(
-   data = us_fiscal_lsuw,
+data(ilo_cubic_panel)
+spec = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
    p = 4
 )
 spec$get_data_matrices()
-}
+
 
 ## ------------------------------------------------
 ## Method `specify_bvarPANEL$get_prior`
 ## ------------------------------------------------
 
-\dontrun{
-data(us_fiscal_lsuw)
-spec = specify_bsvar$new(
-   data = us_fiscal_lsuw,
+data(ilo_cubic_panel)
+spec = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
    p = 4
 )
 spec$get_prior()
-}
+
 
 ## ------------------------------------------------
 ## Method `specify_bvarPANEL$get_starting_values`
 ## ------------------------------------------------
 
-\dontrun{
-data(us_fiscal_lsuw)
-spec = specify_bsvar$new(
-   data = us_fiscal_lsuw,
+data(ilo_cubic_panel)
+spec = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
    p = 4
 )
 spec$get_starting_values()
-}
+
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -113,14 +108,13 @@ Returns the data matrices as the DataMatricesBVARPANEL object.
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{ 
-data(us_fiscal_lsuw)
-spec = specify_bsvar$new(
-   data = us_fiscal_lsuw,
+\preformatted{data(ilo_cubic_panel)
+spec = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
    p = 4
 )
 spec$get_data_matrices()
-}
+
 }
 \if{html}{\out{</div>}}
 
@@ -138,14 +132,13 @@ Returns the prior specification as the PriorBVARPANEL object.
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-data(us_fiscal_lsuw)
-spec = specify_bsvar$new(
-   data = us_fiscal_lsuw,
+\preformatted{data(ilo_cubic_panel)
+spec = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
    p = 4
 )
 spec$get_prior()
-}
+
 }
 \if{html}{\out{</div>}}
 
@@ -163,14 +156,13 @@ Returns the starting values as the StartingValuesBVARPANEL object.
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-data(us_fiscal_lsuw)
-spec = specify_bsvar$new(
-   data = us_fiscal_lsuw,
+\preformatted{data(ilo_cubic_panel)
+spec = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
    p = 4
 )
 spec$get_starting_values()
-}
+
 }
 \if{html}{\out{</div>}}
 

@@ -271,8 +271,6 @@ specify_starting_values_bvarPANEL = R6::R6Class(
 
 
 
-
-
 #' R6 Class Representing DataMatricesBVARPANEL
 #'
 #' @description
@@ -280,6 +278,11 @@ specify_starting_values_bvarPANEL = R6::R6Class(
 #' variables, \eqn{\mathbf{Y}_c}, and regressors, \eqn{\mathbf{X}_c}, for the 
 #' Bayesian Panel VAR model for all countries \eqn{c = 1, ..., C}.
 #' 
+#' @examples 
+#' data(ilo_cubic_panel)
+#' YX = specify_panel_data_matrices$new(data = ilo_cubic_panel, p = 4)
+#' length(YX$Y); names(YX$Y)
+#'
 #' @export
 specify_panel_data_matrices = R6::R6Class(
   "DataMatricesBVARPANEL",
@@ -328,6 +331,12 @@ specify_panel_data_matrices = R6::R6Class(
     
     #' @description
     #' Returns the data matrices DataMatricesBVARPANEL as a \code{list}.
+    #' 
+    #' @examples 
+    #' data(ilo_cubic_panel)
+    #' YX = specify_panel_data_matrices$new(ilo_cubic_panel)
+    #' YX$get_data_matrices()
+    #' 
     get_data_matrices = function() {
       list(
         Y = self$Y,
@@ -350,13 +359,11 @@ specify_panel_data_matrices = R6::R6Class(
 #' Vector Autoregression.
 #' 
 #' @examples 
-#' \dontrun{
-#' data(us_fiscal_lsuw)
+#' data(ilo_cubic_panel)
 #' spec = specify_bvarPANEL$new(
-#'    data = us_fiscal_lsuw,
+#'    data = ilo_cubic_panel,
 #'    p = 4
 #' )
-#' }
 #' 
 #' @export
 specify_bvarPANEL = R6::R6Class(
@@ -402,14 +409,13 @@ specify_bvarPANEL = R6::R6Class(
     #' Returns the data matrices as the DataMatricesBVARPANEL object.
     #' 
     #' @examples
-    #' \dontrun{ 
-    #' data(us_fiscal_lsuw)
-    #' spec = specify_bsvar$new(
-    #'    data = us_fiscal_lsuw,
+    #' data(ilo_cubic_panel)
+    #' spec = specify_bvarPANEL$new(
+    #'    data = ilo_cubic_panel,
     #'    p = 4
     #' )
     #' spec$get_data_matrices()
-    #' }
+    #' 
     get_data_matrices = function() {
       self$data_matrices$clone()
     }, # END get_data_matrices
@@ -418,14 +424,13 @@ specify_bvarPANEL = R6::R6Class(
     #' Returns the prior specification as the PriorBVARPANEL object.
     #' 
     #' @examples 
-    #' \dontrun{
-    #' data(us_fiscal_lsuw)
-    #' spec = specify_bsvar$new(
-    #'    data = us_fiscal_lsuw,
+    #' data(ilo_cubic_panel)
+    #' spec = specify_bvarPANEL$new(
+    #'    data = ilo_cubic_panel,
     #'    p = 4
     #' )
     #' spec$get_prior()
-    #' }
+    #' 
     get_prior = function() {
       self$prior$clone()
     }, # END get_prior
@@ -434,14 +439,13 @@ specify_bvarPANEL = R6::R6Class(
     #' Returns the starting values as the StartingValuesBVARPANEL object.
     #' 
     #' @examples 
-    #' \dontrun{
-    #' data(us_fiscal_lsuw)
-    #' spec = specify_bsvar$new(
-    #'    data = us_fiscal_lsuw,
+    #' data(ilo_cubic_panel)
+    #' spec = specify_bvarPANEL$new(
+    #'    data = ilo_cubic_panel,
     #'    p = 4
     #' )
     #' spec$get_starting_values()
-    #' }
+    #' 
     get_starting_values = function() {
       self$starting_values$clone()
     } # END get_starting_values
@@ -463,14 +467,17 @@ specify_bvarPANEL = R6::R6Class(
 #' @seealso \code{\link{specify_bvarPANEL}}
 #' 
 #' @examples 
-#' \dontrun{
 #' # This is a function that is used within estimate()
-#' data(us_fiscal_lsuw)
-#' specification  = specify_bsvar$new(us_fiscal_lsuw, p = 4)
+#' data(ilo_cubic_panel)
 #' set.seed(123)
-#' estimate       = estimate(specification, 50)
-#' class(estimate)
-#' }
+#' specification = specify_bvarPANEL$new(
+#'    data = ilo_cubic_panel,
+#'    p = 4
+#' )
+#' 
+#' posterior       = estimate(specification, 50)
+#' class(posterior)
+#' 
 #' @export
 specify_posterior_bvarPANEL = R6::R6Class(
   "PosteriorBVARPANEL",
@@ -508,13 +515,16 @@ specify_posterior_bvarPANEL = R6::R6Class(
     #' Returns a list containing Bayesian estimation output.
     #' 
     #' @examples 
-    #' \dontrun{
-    #' data(us_fiscal_lsuw)
-    #' specification  = specify_bsvar$new(us_fiscal_lsuw)
+    #' data(ilo_cubic_panel)
     #' set.seed(123)
-    #' estimate       = estimate(specification, 50)
-    #' estimate$get_posterior()
-    #' }
+    #' specification = specify_bvarPANEL$new(
+    #'    data = ilo_cubic_panel,
+    #'    p = 4
+    #' )
+    #' 
+    #' posterior       = estimate(specification, 50)
+    #' posterior$get_posterior()
+    #' 
     get_posterior       = function(){
       self$posterior
     }, # END get_posterior
@@ -525,19 +535,19 @@ specify_posterior_bvarPANEL = R6::R6Class(
     #' MCMC estimation using \code{estimate()}.
     #' 
     #' @examples
-    #' \dontrun{
-    #' data(us_fiscal_lsuw)
-    #' 
-    #' # specify the model and set seed
-    #' specification  = specify_bsvar$new(us_fiscal_lsuw, p = 4)
+    #' data(ilo_cubic_panel)
     #' set.seed(123)
+    #' specification = specify_bvarPANEL$new(
+    #'    data = ilo_cubic_panel,
+    #'    p = 4
+    #' )
     #' 
     #' # run the burn-in
     #' burn_in        = estimate(specification, 10)
     #' 
     #' # estimate the model
     #' posterior      = estimate(burn_in, 10)
-    #' }
+    #' 
     get_last_draw      = function(){
       self$last_draw$clone()
     } # END get_last_draw

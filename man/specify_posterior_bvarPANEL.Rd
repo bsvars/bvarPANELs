@@ -11,44 +11,50 @@ Note that due to the thinning of the MCMC output the starting value in element
 element \code{posterior}.
 }
 \examples{
-\dontrun{
 # This is a function that is used within estimate()
-data(us_fiscal_lsuw)
-specification  = specify_bsvar$new(us_fiscal_lsuw, p = 4)
+data(ilo_cubic_panel)
 set.seed(123)
-estimate       = estimate(specification, 50)
-class(estimate)
-}
+specification = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
+   p = 4
+)
+
+posterior       = estimate(specification, 50)
+class(posterior)
+
 
 ## ------------------------------------------------
 ## Method `specify_posterior_bvarPANEL$get_posterior`
 ## ------------------------------------------------
 
-\dontrun{
-data(us_fiscal_lsuw)
-specification  = specify_bsvar$new(us_fiscal_lsuw)
+data(ilo_cubic_panel)
 set.seed(123)
-estimate       = estimate(specification, 50)
-estimate$get_posterior()
-}
+specification = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
+   p = 4
+)
+
+posterior       = estimate(specification, 50)
+posterior$get_posterior()
+
 
 ## ------------------------------------------------
 ## Method `specify_posterior_bvarPANEL$get_last_draw`
 ## ------------------------------------------------
 
-\dontrun{
-data(us_fiscal_lsuw)
-
-# specify the model and set seed
-specification  = specify_bsvar$new(us_fiscal_lsuw, p = 4)
+data(ilo_cubic_panel)
 set.seed(123)
+specification = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
+   p = 4
+)
 
 # run the burn-in
 burn_in        = estimate(specification, 10)
 
 # estimate the model
 posterior      = estimate(burn_in, 10)
-}
+
 }
 \seealso{
 \code{\link{specify_bvarPANEL}}
@@ -107,13 +113,16 @@ Returns a list containing Bayesian estimation output.
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-data(us_fiscal_lsuw)
-specification  = specify_bsvar$new(us_fiscal_lsuw)
+\preformatted{data(ilo_cubic_panel)
 set.seed(123)
-estimate       = estimate(specification, 50)
-estimate$get_posterior()
-}
+specification = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
+   p = 4
+)
+
+posterior       = estimate(specification, 50)
+posterior$get_posterior()
+
 }
 \if{html}{\out{</div>}}
 
@@ -133,19 +142,19 @@ MCMC estimation using \code{estimate()}.
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-data(us_fiscal_lsuw)
-
-# specify the model and set seed
-specification  = specify_bsvar$new(us_fiscal_lsuw, p = 4)
+\preformatted{data(ilo_cubic_panel)
 set.seed(123)
+specification = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
+   p = 4
+)
 
 # run the burn-in
 burn_in        = estimate(specification, 10)
 
 # estimate the model
 posterior      = estimate(burn_in, 10)
-}
+
 }
 \if{html}{\out{</div>}}
 
