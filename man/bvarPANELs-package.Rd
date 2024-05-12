@@ -13,30 +13,28 @@ hierarchical prior structure. Copyright: 2024 International Labour Organization.
 \note{
 This package is currently in active development.
 }
+\examples{
+data(ilo_cubic_panel)                                   # load the data
+set.seed(123)
+specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
+burn_in       = estimate(specification, 10)             # run the burn-in
+posterior     = estimate(burn_in, 10)                   # estimate the model
+predictive    = forecast(posterior, 2)                  # forecast 2 years ahead
+
+# workflow with the pipe |>
+############################################################
+set.seed(123)
+ilo_cubic_panel |>
+  specify_bvarPANEL$new() |>
+  estimate(S = 10) |> 
+  estimate(S = 20) |> 
+  forecast(horizon = 2) -> predictive
+}
 \author{
 Tomasz Woźniak \email{wozniak.tom@pm.me}
 }
-\keyword{#}
 \keyword{#'}
-\keyword{10)}
-\keyword{=}
 \keyword{@examples}
-\keyword{burn-in}
-\keyword{burn_in}
-\keyword{data}
-\keyword{data(ilo_cubic_panel)}
-\keyword{estimate}
-\keyword{estimate(burn_in,}
-\keyword{estimate(specification,}
-\keyword{load}
-\keyword{model}
 \keyword{models}
 \keyword{package}
-\keyword{posterior}
-\keyword{run}
-\keyword{set.seed(123)}
-\keyword{specification}
-\keyword{specify}
-\keyword{specify_bvarPANEL$new(ilo_cubic_panel)}
-\keyword{the}
 \keyword{ts}
