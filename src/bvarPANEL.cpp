@@ -56,15 +56,17 @@ Rcpp::List bvarPANEL(
   const int N         = aux_A.n_cols;
   const int K         = aux_A.n_rows;
   
-  field<cube> posterior_A_c(S);
-  field<cube> posterior_Sigma_c(S);
-  cube        posterior_A(K, N, S);
-  cube        posterior_V(K, K, S);
-  cube        posterior_Sigma(N, N, S);
-  vec         posterior_nu(S);
-  vec         posterior_m(S);
-  vec         posterior_w(S);
-  vec         posterior_s(S);
+  const int   SS    = floor(S / thin);
+  
+  field<cube> posterior_A_c_cpp(SS);
+  field<cube> posterior_Sigma_c_cpp(SS);
+  cube        posterior_A(K, N, SS);
+  cube        posterior_V(K, K, SS);
+  cube        posterior_Sigma(N, N, SS);
+  vec         posterior_nu(SS);
+  vec         posterior_m(SS);
+  vec         posterior_w(SS);
+  vec         posterior_s(SS);
   
   field<mat> y(C);
   field<mat> x(C);
@@ -120,8 +122,8 @@ Rcpp::List bvarPANEL(
     } // END c loop
     
     if (s % thin == 0) {
-      posterior_A_c(ss)         = aux_A_c;
-      posterior_Sigma_c(ss)     = aux_Sigma_c;
+      posterior_A_c_cpp(ss)     = aux_A_c;
+      posterior_Sigma_c_cpp(ss) = aux_Sigma_c;
       posterior_A.slice(ss)     = aux_A;
       posterior_V.slice(ss)     = aux_V;
       posterior_Sigma.slice(ss) = aux_Sigma;
@@ -147,8 +149,8 @@ Rcpp::List bvarPANEL(
       _["s"]        = aux_s
     ),
     _["posterior"]  = List::create(
-      _["A_c"]      = posterior_A_c,
-      _["Sigma_c"]  = posterior_Sigma_c,
+      _["A_c_cpp"]  = posterior_A_c_cpp,
+      _["Sigma_c_cpp"]  = posterior_Sigma_c_cpp,
       _["A"]        = posterior_A,
       _["V"]        = posterior_V,
       _["Sigma"]    = posterior_Sigma,

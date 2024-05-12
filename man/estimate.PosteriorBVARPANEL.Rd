@@ -32,7 +32,7 @@ the MCMC estimation using the \code{estimate()} method.
 }
 \description{
 Estimates the Bayesian Hierarchical Panel VAR using the Gibbs 
-sampler proposed by Woźniak (2024).
+sampler proposed by Sanchez-Martinez & Woźniak (2024).
 }
 \details{
 The homoskedastic SVAR model is given by the reduced form equation:

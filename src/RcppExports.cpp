@@ -85,33 +85,33 @@ BEGIN_RCPP
 END_RCPP
 }
 // log_kernel_nu
-double log_kernel_nu(const double& aux_nu, const arma::cube& aux_Sigma_c, const arma::mat& aux_Sigma, const double& prior_lambda, const int& C, const int& N, const int& K);
-RcppExport SEXP _bvarPANELs_log_kernel_nu(SEXP aux_nuSEXP, SEXP aux_Sigma_cSEXP, SEXP aux_SigmaSEXP, SEXP prior_lambdaSEXP, SEXP CSEXP, SEXP NSEXP, SEXP KSEXP) {
+double log_kernel_nu(const double& aux_nu, const arma::cube& aux_Sigma_c_cpp, const arma::mat& aux_Sigma, const double& prior_lambda, const int& C, const int& N, const int& K);
+RcppExport SEXP _bvarPANELs_log_kernel_nu(SEXP aux_nuSEXP, SEXP aux_Sigma_c_cppSEXP, SEXP aux_SigmaSEXP, SEXP prior_lambdaSEXP, SEXP CSEXP, SEXP NSEXP, SEXP KSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const double& >::type aux_nu(aux_nuSEXP);
-    Rcpp::traits::input_parameter< const arma::cube& >::type aux_Sigma_c(aux_Sigma_cSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type aux_Sigma_c_cpp(aux_Sigma_c_cppSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type aux_Sigma(aux_SigmaSEXP);
     Rcpp::traits::input_parameter< const double& >::type prior_lambda(prior_lambdaSEXP);
     Rcpp::traits::input_parameter< const int& >::type C(CSEXP);
     Rcpp::traits::input_parameter< const int& >::type N(NSEXP);
     Rcpp::traits::input_parameter< const int& >::type K(KSEXP);
-    rcpp_result_gen = Rcpp::wrap(log_kernel_nu(aux_nu, aux_Sigma_c, aux_Sigma, prior_lambda, C, N, K));
+    rcpp_result_gen = Rcpp::wrap(log_kernel_nu(aux_nu, aux_Sigma_c_cpp, aux_Sigma, prior_lambda, C, N, K));
     return rcpp_result_gen;
 END_RCPP
 }
 // sample_nu
-double sample_nu(const double& aux_nu, const arma::cube& aux_Sigma_c, const arma::mat& aux_Sigma, const Rcpp::List& prior);
-RcppExport SEXP _bvarPANELs_sample_nu(SEXP aux_nuSEXP, SEXP aux_Sigma_cSEXP, SEXP aux_SigmaSEXP, SEXP priorSEXP) {
+double sample_nu(const double& aux_nu, const arma::cube& aux_Sigma_c_cpp, const arma::mat& aux_Sigma, const Rcpp::List& prior);
+RcppExport SEXP _bvarPANELs_sample_nu(SEXP aux_nuSEXP, SEXP aux_Sigma_c_cppSEXP, SEXP aux_SigmaSEXP, SEXP priorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const double& >::type aux_nu(aux_nuSEXP);
-    Rcpp::traits::input_parameter< const arma::cube& >::type aux_Sigma_c(aux_Sigma_cSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type aux_Sigma_c_cpp(aux_Sigma_c_cppSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type aux_Sigma(aux_SigmaSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List& >::type prior(priorSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_nu(aux_nu, aux_Sigma_c, aux_Sigma, prior));
+    rcpp_result_gen = Rcpp::wrap(sample_nu(aux_nu, aux_Sigma_c_cpp, aux_Sigma, prior));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -130,18 +130,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // sample_AV
-arma::field<arma::mat> sample_AV(const arma::cube& aux_A_c, const arma::cube& aux_Sigma_c_inv, const double& aux_s, const double& aux_m, const double& aux_w, const Rcpp::List& prior);
-RcppExport SEXP _bvarPANELs_sample_AV(SEXP aux_A_cSEXP, SEXP aux_Sigma_c_invSEXP, SEXP aux_sSEXP, SEXP aux_mSEXP, SEXP aux_wSEXP, SEXP priorSEXP) {
+arma::field<arma::mat> sample_AV(const arma::cube& aux_A_c_cpp, const arma::cube& aux_Sigma_c_inv, const double& aux_s, const double& aux_m, const double& aux_w, const Rcpp::List& prior);
+RcppExport SEXP _bvarPANELs_sample_AV(SEXP aux_A_c_cppSEXP, SEXP aux_Sigma_c_invSEXP, SEXP aux_sSEXP, SEXP aux_mSEXP, SEXP aux_wSEXP, SEXP priorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::cube& >::type aux_A_c(aux_A_cSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type aux_A_c_cpp(aux_A_c_cppSEXP);
     Rcpp::traits::input_parameter< const arma::cube& >::type aux_Sigma_c_inv(aux_Sigma_c_invSEXP);
     Rcpp::traits::input_parameter< const double& >::type aux_s(aux_sSEXP);
     Rcpp::traits::input_parameter< const double& >::type aux_m(aux_mSEXP);
     Rcpp::traits::input_parameter< const double& >::type aux_w(aux_wSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List& >::type prior(priorSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_AV(aux_A_c, aux_Sigma_c_inv, aux_s, aux_m, aux_w, prior));
+    rcpp_result_gen = Rcpp::wrap(sample_AV(aux_A_c_cpp, aux_Sigma_c_inv, aux_s, aux_m, aux_w, prior));
     return rcpp_result_gen;
 END_RCPP
 }

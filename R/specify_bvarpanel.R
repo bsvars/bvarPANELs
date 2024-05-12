@@ -509,6 +509,22 @@ specify_posterior_bvarPANEL = R6::R6Class(
       
       self$last_draw    = specification_bvarPANEL
       self$posterior    = posterior_bvarPANEL
+      
+      N = dim(specification_bvarPANEL$starting_values$A_c)[2]
+      K = dim(specification_bvarPANEL$starting_values$A_c)[1]
+      C = dim(specification_bvarPANEL$starting_values$A_c)[3]
+      S = dim(posterior_bvarPANEL$A)[3]
+      
+      Sigma_c           = array(NA, c(N, N, C, S))
+      A_c               = array(NA, c(K, N, C, S))
+      for (s in 1:S) {
+        A_c[,,,s]       = posterior_bvarPANEL$A_c_cpp[s,1][[1]]
+        Sigma_c[,,,s]   = posterior_bvarPANEL$Sigma_c_cpp[s,1][[1]]
+      }
+      self$posterior$Sigma_c   = Sigma_c
+      self$posterior$A_c       = A_c
+      
+      
     }, # END initialize
     
     #' @description
