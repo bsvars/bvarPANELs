@@ -115,13 +115,13 @@ double sample_s (
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 double log_kernel_nu (
-    const double&       aux_nu,       // scalar
-    const arma::cube&   aux_Sigma_c,  // NxNxC
-    const arma::mat&    aux_Sigma,    // NxN
-    const double&       prior_lambda, // scalar
-    const int&          C,            // scalar
-    const int&          N,            // scalar
-    const int&          K             // scalar
+    const double&       aux_nu,           // scalar
+    const arma::cube&   aux_Sigma_c_cpp,  // NxNxC
+    const arma::mat&    aux_Sigma,        // NxN
+    const double&       prior_lambda,     // scalar
+    const int&          C,                // scalar
+    const int&          N,                // scalar
+    const int&          K                 // scalar
 ) {
   
   double log_kernel_nu = 0;
@@ -136,7 +136,7 @@ double log_kernel_nu (
   } // EDN n loop
   
   for (int c = 0; c < C; c++) {
-    double ldSc       = log_det_sympd(aux_Sigma_c.slice(c));
+    double ldSc       = log_det_sympd(aux_Sigma_c_cpp.slice(c));
     log_kernel_nu    -= 0.5 * (aux_nu + N + K + 1) * ldSc;
   } // END c loop
   
@@ -150,16 +150,16 @@ double log_kernel_nu (
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 double sample_nu (
-    const double&       aux_nu,     // scalar
-    const arma::cube&   aux_Sigma_c,// NxNxC
-    const arma::mat&    aux_Sigma,  // NxN
+    const double&       aux_nu,           // scalar
+    const arma::cube&   aux_Sigma_c_cpp,  // NxNxC
+    const arma::mat&    aux_Sigma,        // NxN
     const Rcpp::List&   prior
 ) {
   
   double prior_lambda = as<double>(prior["lambda"]);
   mat prior_M         = as<mat>(prior["M"]);
   int K               = prior_M.n_rows;
-  int C               = aux_Sigma_c.n_slices;
+  int C               = aux_Sigma_c_cpp.n_slices;
   int N               = aux_Sigma.n_rows;
   
   
@@ -172,8 +172,8 @@ double sample_nu (
   
   // Metropolis-Hastings
   double aux_nu_star  = RcppTN::rtn1( aux_nu, Cov_nu, N + 1, R_PosInf );
-  double lk_nu_star   = log_kernel_nu ( aux_nu_star, aux_Sigma_c, aux_Sigma, prior_lambda, C, N, K );
-  double lk_nu_old    = log_kernel_nu ( aux_nu, aux_Sigma_c, aux_Sigma, prior_lambda, C, N, K );
+  double lk_nu_star   = log_kernel_nu ( aux_nu_star, aux_Sigma_c_cpp, aux_Sigma, prior_lambda, C, N, K );
+  double lk_nu_old    = log_kernel_nu ( aux_nu, aux_Sigma_c_cpp, aux_Sigma, prior_lambda, C, N, K );
   double cgd_ratio    = RcppTN::dtn1( aux_nu_star, aux_nu, Cov_nu, N + 1, R_PosInf ) / RcppTN::dtn1( aux_nu, aux_nu_star, Cov_nu, N + 1, R_PosInf );
   
   double u            = randu();
@@ -219,7 +219,7 @@ arma::mat sample_Sigma (
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
 arma::field<arma::mat> sample_AV (
-    const arma::cube&   aux_A_c,          // KxNxC
+    const arma::cube&   aux_A_c_cpp,      // KxNxC
     const arma::cube&   aux_Sigma_c_inv,  // NxNxC
     const double&       aux_s,            // scalar
     const double&       aux_m,            // scalar
@@ -227,9 +227,9 @@ arma::field<arma::mat> sample_AV (
     const Rcpp::List&   prior
 ) {
   
-  int C             = aux_A_c.n_slices;
-  int N             = aux_A_c.n_cols;
-  int K             = aux_A_c.n_rows;
+  int C             = aux_A_c_cpp.n_slices;
+  int N             = aux_A_c_cpp.n_cols;
+  int K             = aux_A_c_cpp.n_rows;
   
   mat prior_S_inv   = as<mat>(prior["S_inv"]);
   mat prior_M       = as<mat>(prior["M"]);
@@ -241,9 +241,9 @@ arma::field<arma::mat> sample_AV (
   mat sum_ASc_invAt(K, K);
   for (int c = 0; c < C; c++) {
     sum_Sc_inv     += aux_Sigma_c_inv.slice(c);
-    mat Sc_invAt    = aux_Sigma_c_inv.slice(c) * aux_A_c.slice(c).t();
+    mat Sc_invAt    = aux_Sigma_c_inv.slice(c) * aux_A_c_cpp.slice(c).t();
     sum_Sc_invAt   += Sc_invAt;
-    sum_ASc_invAt  += aux_A_c.slice(c) * Sc_invAt;
+    sum_ASc_invAt  += aux_A_c_cpp.slice(c) * Sc_invAt;
   } // END c loop
   
   mat S_bar_inv     = (prior_S_inv / aux_s) + sum_Sc_inv;

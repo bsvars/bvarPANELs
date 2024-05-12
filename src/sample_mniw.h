@@ -40,20 +40,20 @@ double sample_s (
 
 
 double log_kernel_nu (
-    const double&       aux_nu,       // scalar
-    const arma::cube&   aux_Sigma_c,  // NxNxC
-    const arma::mat&    aux_Sigma,    // NxN
-    const double&       prior_lambda, // scalar
-    const int&          C,            // scalar
-    const int&          N,            // scalar
-    const int&          K             // scalar
+    const double&       aux_nu,           // scalar
+    const arma::cube&   aux_Sigma_c_cpp,  // NxNxC
+    const arma::mat&    aux_Sigma,        // NxN
+    const double&       prior_lambda,     // scalar
+    const int&          C,                // scalar
+    const int&          N,                // scalar
+    const int&          K                 // scalar
 );
 
 
 double sample_nu (
-    const double&       aux_nu,     // scalar
-    const arma::cube&   aux_Sigma_c,// NxNxC
-    const arma::mat&    aux_Sigma,  // NxN
+    const double&       aux_nu,           // scalar
+    const arma::cube&   aux_Sigma_c_cpp,  // NxNxC
+    const arma::mat&    aux_Sigma,        // NxN
     const Rcpp::List&   prior
 );
 
@@ -67,7 +67,7 @@ arma::mat sample_Sigma (
 
 
 arma::field<arma::mat> sample_AV (
-    const arma::cube&   aux_A_c,          // KxNxC
+    const arma::cube&   aux_A_c_cpp,      // KxNxC
     const arma::cube&   aux_Sigma_c_inv,  // NxNxC
     const double&       aux_s,            // scalar
     const double&       aux_m,            // scalar
