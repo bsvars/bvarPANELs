@@ -41,3 +41,7 @@ sample_A_c_Sigma_c <- function(Y_c, X_c, aux_A, aux_V, aux_Sigma, aux_nu) {
     .Call(`_bvarPANELs_sample_A_c_Sigma_c`, Y_c, X_c, aux_A, aux_V, aux_Sigma, aux_nu)
 }
 
+# Register entry points for exported C++ functions
+methods::setLoadAction(function(ns) {
+    .Call(`_bvarPANELs_RcppExport_registerCCallable`)
+})
