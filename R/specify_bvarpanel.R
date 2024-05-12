@@ -94,7 +94,7 @@ specify_prior_bvarPANEL = R6::R6Class(
       self$S_Sigma_inv  = diag(N)
       self$eta          = N + 1
       self$mu_Sigma     = N + 1
-      self$lambda       = 0.1
+      self$lambda       = 0.01385
       self$mu_m         = 1
       self$sigma2_m     = 1
       self$s_w          = 1
@@ -210,7 +210,7 @@ specify_starting_values_bvarPANEL = R6::R6Class(
       self$A          = matrix(stats::rnorm(K * N, sd = 0.001), K, N) + diag(K)[,1:N]
       self$V          = stats::rWishart(1, K + 1, diag(K))[,,1]
       self$Sigma      = stats::rWishart(1, N + 1, diag(N))[,,1]
-      self$nu         = stats::rgamma(1, 3)
+      self$nu         = 30 #stats::rgamma(1, shape = 1, scale = 30)
       self$m          = stats::rnorm(1, sd = 0.001)
       self$w          = stats::rgamma(1, 1)
       self$s          = stats::rgamma(1, 1)

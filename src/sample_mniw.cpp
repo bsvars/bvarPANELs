@@ -169,6 +169,7 @@ double sample_nu (
     Cov_nu_tmp       += R::psigamma( 0.5 * (aux_nu + 1 - n), 1);
   } // END n loop
   Cov_nu             += 1 / Cov_nu_tmp;  
+  Cov_nu              = sqrt(Cov_nu);
   
   // Metropolis-Hastings
   double aux_nu_star  = RcppTN::rtn1( aux_nu, Cov_nu, N + 1, R_PosInf );
