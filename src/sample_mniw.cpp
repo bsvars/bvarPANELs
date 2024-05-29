@@ -173,13 +173,13 @@ double sample_nu (
   int N               = aux_Sigma.n_rows;
   
   
-  double Cov_nu       = 4 / C;
-  double Cov_nu_tmp   = 0;
+  double Cov_nu       = 0;
   for (int n = 1; n < N + 1; n++) {
-    Cov_nu_tmp       += R::psigamma( 0.5 * (aux_nu + 1 - n), 1);
+    Cov_nu           += R::psigamma( 0.5 * (aux_nu + 1 - n), 1);
   } // END n loop
-  Cov_nu             += 1 / Cov_nu_tmp;  
-  Cov_nu              = sqrt(Cov_nu);
+  Cov_nu             *= (C / 4);  
+  Cov_nu             += (C * N * (N + 2)) * (2 * (aux_nu - N -1));
+  Cov_nu              = sqrt(1 / Cov_nu);
   
   // Metropolis-Hastings
   double aux_nu_star  = RcppTN::rtn1( aux_nu, Cov_nu, N + 1, R_PosInf );
