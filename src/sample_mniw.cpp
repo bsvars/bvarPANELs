@@ -271,12 +271,13 @@ arma::field<arma::mat> sample_A_c_Sigma_c (
     const double&       aux_nu            // scalar
 ) {
   int T_c           = Y_c.n_rows;
+  int N             = Y_c.n_cols;
   
   mat aux_V_inv     = inv_sympd( aux_V );
   mat V_bar_inv     = X_c.t() * X_c + aux_V_inv;
   mat V_bar         = inv_sympd( V_bar_inv );
   mat A_bar         = V_bar * ( X_c.t() * Y_c + aux_V_inv * aux_A );
-  mat Sigma_bar     = aux_Sigma + Y_c.t() * Y_c + aux_A.t() * aux_V_inv * aux_A - A_bar.t() * V_bar_inv * A_bar;
+  mat Sigma_bar     = (aux_nu - N - 1) * aux_Sigma + Y_c.t() * Y_c + aux_A.t() * aux_V_inv * aux_A - A_bar.t() * V_bar_inv * A_bar;
   double nu_bar     = T_c + aux_nu;
   
   // Rcout << "  nu_bar: " << nu_bar << std::endl;
