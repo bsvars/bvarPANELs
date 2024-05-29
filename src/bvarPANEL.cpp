@@ -99,7 +99,7 @@ Rcpp::List bvarPANEL(
     
     // sample aux_nu
     // Rcout << "  sample nu" << endl;
-    aux_nu      = sample_nu( aux_nu, aux_Sigma_c, aux_Sigma, prior );
+    aux_nu      = sample_nu( aux_nu, aux_Sigma_c, aux_Sigma_c_inv, aux_Sigma, prior );
     
     // sample aux_Sigma
     // Rcout << "  sample Sigma" << endl;
