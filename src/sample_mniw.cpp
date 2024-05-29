@@ -209,7 +209,7 @@ arma::mat sample_Sigma (
     sum_aux_Sigma_c_inv += aux_Sigma_c_inv.slice(c);
   }
   
-  mat S_Sigma_bar   = (prior_S_Sigma_inv / aux_s) + sum_aux_Sigma_c_inv;
+  mat S_Sigma_bar   = (prior_S_Sigma_inv / aux_s) + (aux_nu - N - 1) * sum_aux_Sigma_c_inv;
   double mu_bar     = C * aux_nu + prior_mu_Sigma;
   
   mat out           = wishrnd( S_Sigma_bar, mu_bar );
