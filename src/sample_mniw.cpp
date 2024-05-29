@@ -128,7 +128,7 @@ double log_kernel_nu (
   double log_kernel_nu = 0;
   
   log_kernel_nu      -= 0.5 * C * N * (K + aux_nu) * log(2);
-  log_kernel_nu      -= 0.5 * C * N * aux_nu * log(aux_nu - N - 1);
+  log_kernel_nu      += 0.5 * C * N * aux_nu * log(aux_nu - N - 1);
   log_kernel_nu      -= prior_lambda * aux_nu;
   
   double ldS          = log_det_sympd(aux_Sigma);
@@ -178,8 +178,8 @@ double sample_nu (
     Cov_nu           += R::psigamma( 0.5 * (aux_nu + 1 - n), 1);
   } // END n loop
   Cov_nu             *= (C / 4);  
-  Cov_nu             += (C * N * (N + 2)) * (2 * (aux_nu - N -1));
-  Cov_nu              = sqrt(1 / Cov_nu);
+  Cov_nu             -= (C * N * (N + 2)) * (2 * (aux_nu - N -1));
+  Cov_nu              = sqrt(0.01 / Cov_nu);
   
   // Metropolis-Hastings
   double aux_nu_star  = RcppTN::rtn1( aux_nu, Cov_nu, N + 1, R_PosInf );
@@ -219,7 +219,8 @@ arma::mat sample_Sigma (
     sum_aux_Sigma_c_inv += aux_Sigma_c_inv.slice(c);
   }
   
-  mat S_Sigma_bar   = (prior_S_Sigma_inv / aux_s) + (aux_nu - N - 1) * sum_aux_Sigma_c_inv;
+  mat S_Sigma_inv_  = (prior_S_Sigma_inv / aux_s) + (aux_nu - N - 1) * sum_aux_Sigma_c_inv;
+  mat S_Sigma_bar   = inv_sympd(S_Sigma_inv_);
   double mu_bar     = C * aux_nu + prior_mu_Sigma;
   
   mat out           = wishrnd( S_Sigma_bar, mu_bar );
