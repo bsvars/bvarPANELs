@@ -117,6 +117,7 @@ double sample_s (
 double log_kernel_nu (
     const double&       aux_nu,           // scalar
     const arma::cube&   aux_Sigma_c_cpp,  // NxNxC
+    const arma::cube&   aux_Sigma_c_inv,  // NxNxC
     const arma::mat&    aux_Sigma,        // NxN
     const double&       prior_lambda,     // scalar
     const int&          C,                // scalar
@@ -126,10 +127,18 @@ double log_kernel_nu (
   
   double log_kernel_nu = 0;
   
-  log_kernel_nu      -= 0.5 * C * N * (K + aux_nu);
+  log_kernel_nu      -= 0.5 * C * N * (K + aux_nu) * log(2);
+  log_kernel_nu      -= 0.5 * C * N * aux_nu * log(aux_nu - N - 1);
   log_kernel_nu      -= prior_lambda * aux_nu;
+  
   double ldS          = log_det_sympd(aux_Sigma);
   log_kernel_nu      += 0.5 * C * aux_nu * ldS;
+  
+  mat sum_aux_Sigma_c_inv(N, N);
+  for (int c = 0; c < C; c++) {
+    sum_aux_Sigma_c_inv += aux_Sigma_c_inv.slice(c);
+  }
+  log_kernel_nu      -= 0.5 * (aux_nu - N - 1) * trace(aux_Sigma * sum_aux_Sigma_c_inv);
   
   for (int n = 1; n < N + 1; n++) {
     log_kernel_nu    -= C * R::lgammafn(0.5 * (aux_nu + 1 - n));
@@ -152,6 +161,7 @@ double log_kernel_nu (
 double sample_nu (
     const double&       aux_nu,           // scalar
     const arma::cube&   aux_Sigma_c_cpp,  // NxNxC
+    const arma::cube&   aux_Sigma_c_inv,  // NxNxC
     const arma::mat&    aux_Sigma,        // NxN
     const Rcpp::List&   prior
 ) {
@@ -173,8 +183,8 @@ double sample_nu (
   
   // Metropolis-Hastings
   double aux_nu_star  = RcppTN::rtn1( aux_nu, Cov_nu, N + 1, R_PosInf );
-  double lk_nu_star   = log_kernel_nu ( aux_nu_star, aux_Sigma_c_cpp, aux_Sigma, prior_lambda, C, N, K );
-  double lk_nu_old    = log_kernel_nu ( aux_nu, aux_Sigma_c_cpp, aux_Sigma, prior_lambda, C, N, K );
+  double lk_nu_star   = log_kernel_nu ( aux_nu_star, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior_lambda, C, N, K );
+  double lk_nu_old    = log_kernel_nu ( aux_nu, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior_lambda, C, N, K );
   double cgd_ratio    = RcppTN::dtn1( aux_nu_star, aux_nu, Cov_nu, N + 1, R_PosInf ) / RcppTN::dtn1( aux_nu, aux_nu_star, Cov_nu, N + 1, R_PosInf );
   
   double u            = randu();
