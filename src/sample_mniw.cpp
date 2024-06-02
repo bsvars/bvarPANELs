@@ -136,6 +136,9 @@ double log_kernel_nu (
   
   mat sum_aux_Sigma_c_inv(N, N);
   for (int c = 0; c < C; c++) {
+    double ldSc       = log_det_sympd(aux_Sigma_c_cpp.slice(c));
+    log_kernel_nu    -= 0.5 * (aux_nu + N + K + 1) * ldSc;
+    
     sum_aux_Sigma_c_inv += aux_Sigma_c_inv.slice(c);
   }
   log_kernel_nu      -= 0.5 * (aux_nu - N - 1) * trace(aux_Sigma * sum_aux_Sigma_c_inv);
@@ -143,11 +146,6 @@ double log_kernel_nu (
   for (int n = 1; n < N + 1; n++) {
     log_kernel_nu    -= C * R::lgammafn(0.5 * (aux_nu + 1 - n));
   } // EDN n loop
-  
-  for (int c = 0; c < C; c++) {
-    double ldSc       = log_det_sympd(aux_Sigma_c_cpp.slice(c));
-    log_kernel_nu    -= 0.5 * (aux_nu + N + K + 1) * ldSc;
-  } // END c loop
   
   return log_kernel_nu;
 } // END log_kernel_nu
@@ -178,7 +176,7 @@ double sample_nu (
     Cov_nu           += R::psigamma( 0.5 * (aux_nu + 1 - n), 1);
   } // END n loop
   Cov_nu             *= (C / 4);  
-  Cov_nu             -= (C * N * (N + 2)) * (2 * (aux_nu - N -1));
+  Cov_nu             -= (C * N * aux_nu) * (2 * pow(aux_nu - N - 1, 2));
   Cov_nu              = sqrt(0.01 / Cov_nu);
   
   // Metropolis-Hastings
