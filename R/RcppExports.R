@@ -25,6 +25,10 @@ log_kernel_nu <- function(aux_nu, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, p
     .Call(`_bvarPANELs_log_kernel_nu`, aux_nu, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior_lambda, C, N, K)
 }
 
+mcmc_accpetance_rate1 <- function(mcmc) {
+    .Call(`_bvarPANELs_mcmc_accpetance_rate1`, mcmc)
+}
+
 sample_nu <- function(aux_nu, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior) {
     .Call(`_bvarPANELs_sample_nu`, aux_nu, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior)
 }

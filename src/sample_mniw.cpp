@@ -156,6 +156,25 @@ double log_kernel_nu (
 
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
+double mcmc_accpetance_rate1 (
+    arma::vec& mcmc
+) {
+  const int N = mcmc.n_elem;
+  double acc = 0;
+  for (int i=1; i<N; i++) {
+    if (mcmc(i) == mcmc(i-1)) {
+      acc++;
+    }
+  }
+  return 1 - (acc / (N - 1));
+} // END mcmc_accpetance_rate1
+
+
+
+
+
+// [[Rcpp:interface(cpp)]]
+// [[Rcpp::export]]
 double sample_nu (
     const double&       aux_nu,           // scalar
     const arma::cube&   aux_Sigma_c_cpp,  // NxNxC

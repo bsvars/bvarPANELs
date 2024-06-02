@@ -51,6 +51,11 @@ double log_kernel_nu (
 );
 
 
+double mcmc_accpetance_rate1 (
+    arma::vec& mcmc
+);
+
+
 double sample_nu (
     const double&       aux_nu,           // scalar
     const arma::cube&   aux_Sigma_c_cpp,  // NxNxC

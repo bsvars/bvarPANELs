@@ -142,6 +142,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mcmc_accpetance_rate1
+double mcmc_accpetance_rate1(arma::vec& mcmc);
+RcppExport SEXP _bvarPANELs_mcmc_accpetance_rate1(SEXP mcmcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type mcmc(mcmcSEXP);
+    rcpp_result_gen = Rcpp::wrap(mcmc_accpetance_rate1(mcmc));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sample_nu
 double sample_nu(const double& aux_nu, const arma::cube& aux_Sigma_c_cpp, const arma::cube& aux_Sigma_c_inv, const arma::mat& aux_Sigma, const Rcpp::List& prior);
 RcppExport SEXP _bvarPANELs_sample_nu(SEXP aux_nuSEXP, SEXP aux_Sigma_c_cppSEXP, SEXP aux_Sigma_c_invSEXP, SEXP aux_SigmaSEXP, SEXP priorSEXP) {
@@ -228,6 +239,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bvarPANELs_sample_w", (DL_FUNC) &_bvarPANELs_sample_w, 2},
     {"_bvarPANELs_sample_s", (DL_FUNC) &_bvarPANELs_sample_s, 5},
     {"_bvarPANELs_log_kernel_nu", (DL_FUNC) &_bvarPANELs_log_kernel_nu, 8},
+    {"_bvarPANELs_mcmc_accpetance_rate1", (DL_FUNC) &_bvarPANELs_mcmc_accpetance_rate1, 1},
     {"_bvarPANELs_sample_nu", (DL_FUNC) &_bvarPANELs_sample_nu, 5},
     {"_bvarPANELs_sample_Sigma", (DL_FUNC) &_bvarPANELs_sample_Sigma, 4},
     {"_bvarPANELs_sample_AV", (DL_FUNC) &_bvarPANELs_sample_AV, 6},
