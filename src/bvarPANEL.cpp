@@ -16,8 +16,9 @@ Rcpp::List bvarPANEL(
     const Rcpp::List&             X,          // a C-list of T_cxK elements
     const Rcpp::List&             prior,      // a list of priors
     const Rcpp::List&             starting_values, 
-    const int                     thin = 100, // introduce thinning
-    const bool                    show_progress = true
+    const int                     thin, // introduce thinning
+    const bool                    show_progress,
+    const arma::vec&              rate_target_start_initial
 ) {
   
   // Progress bar setup
@@ -64,6 +65,7 @@ Rcpp::List bvarPANEL(
   cube        posterior_V(K, K, SS);
   cube        posterior_Sigma(N, N, SS);
   vec         posterior_nu(SS);
+  vec         posterior_nu_S(S);
   vec         posterior_m(SS);
   vec         posterior_w(SS);
   vec         posterior_s(SS);
@@ -77,6 +79,7 @@ Rcpp::List bvarPANEL(
     aux_Sigma_c_inv.slice(c) = inv_sympd( aux_Sigma_c.slice(c) );
   } // END c loop
   
+  vec   scale(S);
   int   ss = 0;
   
   for (int s=0; s<S; s++) {
@@ -99,8 +102,8 @@ Rcpp::List bvarPANEL(
     
     // sample aux_nu
     // Rcout << "  sample nu" << endl;
-    aux_nu      = sample_nu( aux_nu, aux_Sigma_c, aux_Sigma_c_inv, aux_Sigma, prior );
-    
+    aux_nu      = sample_nu( aux_nu, posterior_nu_S, aux_Sigma_c, aux_Sigma_c_inv, aux_Sigma, prior , s, scale, rate_target_start_initial);
+
     // sample aux_Sigma
     // Rcout << "  sample Sigma" << endl;
     aux_Sigma   = sample_Sigma( aux_Sigma_c_inv, aux_s, aux_nu, prior );
@@ -120,6 +123,8 @@ Rcpp::List bvarPANEL(
       aux_Sigma_c.slice(c)        = tmp_A_c_Sigma_c(1);
       aux_Sigma_c_inv.slice(c)    = inv_sympd( aux_Sigma_c.slice(c) );
     } // END c loop
+    
+    posterior_nu_S(s) = aux_nu;
     
     if (s % thin == 0) {
       posterior_A_c_cpp(ss)     = aux_A_c;
@@ -157,7 +162,8 @@ Rcpp::List bvarPANEL(
       _["nu"]       = posterior_nu,
       _["m"]        = posterior_m,
       _["w"]        = posterior_w,
-      _["s"]        = posterior_s
+      _["s"]        = posterior_s,
+      _["scale"]    = scale
     )
   );
 } // END bvarPANEL
