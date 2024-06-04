@@ -383,6 +383,11 @@ specify_bvarPANEL = R6::R6Class(
     #' @field starting_values an object StartingValuesBVARPANEL with the starting values.
     starting_values        = list(),
     
+    #' @field adaptiveMH a vector of four values setting the adaptive MH sampler 
+    #' for nu: adaptive rate, target acceptance rate, the iteration at which to 
+    #' start adapting, the initial scaling rate
+    adaptiveMH             = numeric(),
+    
     #' @description
     #' Create a new specification of the Bayesian Panel VAR model BVARPANEL.
     #' @param data a list with \code{C} elements of \code{(T_c+p)xN} matrices 
@@ -403,6 +408,7 @@ specify_bvarPANEL = R6::R6Class(
       self$data_matrices   = specify_panel_data_matrices$new(data, self$p)
       self$prior           = specify_prior_bvarPANEL$new(C, N, self$p)
       self$starting_values = specify_starting_values_bvarPANEL$new(C, N, self$p)
+      self$adaptiveMH      = c(0.6, 0.4, 10, 0.1)
     }, # END initialize
     
     #' @description
@@ -448,7 +454,31 @@ specify_bvarPANEL = R6::R6Class(
     #' 
     get_starting_values = function() {
       self$starting_values$clone()
-    } # END get_starting_values
+    }, # END get_starting_values
+    
+    #' @description
+    #' Sets the parameters of adaptive Metropolis-Hastings sampler for the parameter nu.
+    #' 
+    #' @param x a vector of four values setting the adaptive MH sampler for nu:
+    #' adaptive rate, target acceptance rate, the iteration at which to 
+    #' start adapting, the initial scaling rate
+    #' 
+    #' @examples 
+    #' data(ilo_cubic_panel)
+    #' spec = specify_bvarPANEL$new(
+    #'    data = ilo_cubic_panel,
+    #'    p = 4
+    #' )
+    #' spec$set_adaptiveMH(c(0.6, 0.4, 10, 0.1))
+    #' 
+    set_adaptiveMH = function(x) {
+      stopifnot("Argument x has to be a numeric vector of length 4." = length(x) == 4 & is.numeric(x))
+      stopifnot("Argument x must contain positive values." = all(x > 0))
+      stopifnot("The second element of argument x must be less than 1." = x[2] < 1)
+      stopifnot("The third element of argument x must greater or equal to 1." = x[3] >= 1)
+      x[3]            = floor(x[3])
+      self$adaptiveMH = x
+    } # END set_adaptiveMH
   ) # END public
 ) # END specify_bvarPANEL
 
