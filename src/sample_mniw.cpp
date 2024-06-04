@@ -177,10 +177,14 @@ double mcmc_accpetance_rate1 (
 // [[Rcpp::export]]
 double sample_nu (
     const double&       aux_nu,           // scalar
+    const arma::vec&    posterior_nu,     // sx1
     const arma::cube&   aux_Sigma_c_cpp,  // NxNxC
     const arma::cube&   aux_Sigma_c_inv,  // NxNxC
     const arma::mat&    aux_Sigma,        // NxN
-    const Rcpp::List&   prior
+    const Rcpp::List&   prior,
+    const int&          iteration,        // MCMC iteration passed
+    arma::vec&          scale,            // (Sx1) adaptive scaling
+    const arma::vec&    rate_target_start_initial
 ) {
   
   double prior_lambda = as<double>(prior["lambda"]);
@@ -189,7 +193,7 @@ double sample_nu (
   int C               = aux_Sigma_c_cpp.n_slices;
   int N               = aux_Sigma.n_rows;
   
-  
+  // negative inverted Hessian of full conditional log-kernel
   double Cov_nu       = 0;
   for (int n = 1; n < N + 1; n++) {
     Cov_nu           += R::psigamma( 0.5 * (aux_nu + 1 - n), 1);
@@ -198,11 +202,21 @@ double sample_nu (
   Cov_nu             -= (C * N * aux_nu) * (2 * pow(aux_nu - N - 1, 2));
   Cov_nu              = sqrt(0.01 / Cov_nu);
   
+  // Adaptive MH scaling
+  double scale_s      = rate_target_start_initial(3);
+  if (iteration > rate_target_start_initial(2)) {
+    vec    nu_to_s    = posterior_nu.head(iteration - 1);
+    double alpha_s    = mcmc_accpetance_rate1( nu_to_s );
+    scale_s           = scale(iteration - 1) + pow(iteration, - rate_target_start_initial(0)) * (alpha_s - rate_target_start_initial(1));
+  }
+  scale(iteration)    = scale_s;
+  
   // Metropolis-Hastings
-  double aux_nu_star  = RcppTN::rtn1( aux_nu, Cov_nu, N + 1, R_PosInf );
+  double aux_nu_star  = RcppTN::rtn1( aux_nu, pow(scale_s, 2) * Cov_nu, N + 1, R_PosInf );
   double lk_nu_star   = log_kernel_nu ( aux_nu_star, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior_lambda, C, N, K );
   double lk_nu_old    = log_kernel_nu ( aux_nu, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior_lambda, C, N, K );
-  double cgd_ratio    = RcppTN::dtn1( aux_nu_star, aux_nu, Cov_nu, N + 1, R_PosInf ) / RcppTN::dtn1( aux_nu, aux_nu_star, Cov_nu, N + 1, R_PosInf );
+  double cgd_ratio    = RcppTN::dtn1( aux_nu_star, aux_nu, pow(scale_s, 2) * Cov_nu, N + 1, R_PosInf ) / 
+                          RcppTN::dtn1( aux_nu, aux_nu_star, pow(scale_s, 2) * Cov_nu, N + 1, R_PosInf );
   
   double u            = randu();
   double out          = 0;
