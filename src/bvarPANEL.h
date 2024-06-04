@@ -13,8 +13,9 @@ Rcpp::List bvarPANEL(
     const Rcpp::List&             X,          // a C-list of T_cxK elements
     const Rcpp::List&             prior,      // a list of priors
     const Rcpp::List&             starting_values, 
-    const int                     thin = 100, // introduce thinning
-    const bool                    show_progress = true
+    const int                     thin, // introduce thinning
+    const bool                    show_progress,
+    const arma::vec&              rate_target_start_initial
 );
 
 

@@ -50,6 +50,18 @@ spec = specify_bvarPANEL$new(
 )
 spec$get_starting_values()
 
+
+## ------------------------------------------------
+## Method `specify_bvarPANEL$set_adaptiveMH`
+## ------------------------------------------------
+
+data(ilo_cubic_panel)
+spec = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
+   p = 4
+)
+spec$set_adaptiveMH(c(0.6, 0.4, 10, 0.1))
+
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -61,6 +73,10 @@ spec$get_starting_values()
 \item{\code{data_matrices}}{an object DataMatricesBVARPANEL with the data matrices.}
 
 \item{\code{starting_values}}{an object StartingValuesBVARPANEL with the starting values.}
+
+\item{\code{adaptiveMH}}{a vector of four values setting the adaptive MH sampler 
+for nu: adaptive rate, target acceptance rate, the iteration at which to 
+start adapting, the initial scaling rate}
 }
 \if{html}{\out{</div>}}
 }
@@ -71,6 +87,7 @@ spec$get_starting_values()
 \item \href{#method-BVARPANEL-get_data_matrices}{\code{specify_bvarPANEL$get_data_matrices()}}
 \item \href{#method-BVARPANEL-get_prior}{\code{specify_bvarPANEL$get_prior()}}
 \item \href{#method-BVARPANEL-get_starting_values}{\code{specify_bvarPANEL$get_starting_values()}}
+\item \href{#method-BVARPANEL-set_adaptiveMH}{\code{specify_bvarPANEL$set_adaptiveMH()}}
 \item \href{#method-BVARPANEL-clone}{\code{specify_bvarPANEL$clone()}}
 }
 }
@@ -162,6 +179,39 @@ spec = specify_bvarPANEL$new(
    p = 4
 )
 spec$get_starting_values()
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-BVARPANEL-set_adaptiveMH"></a>}}
+\if{latex}{\out{\hypertarget{method-BVARPANEL-set_adaptiveMH}{}}}
+\subsection{Method \code{set_adaptiveMH()}}{
+Sets the parameters of adaptive Metropolis-Hastings sampler for the parameter nu.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{specify_bvarPANEL$set_adaptiveMH(x)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{a vector of four values setting the adaptive MH sampler for nu:
+adaptive rate, target acceptance rate, the iteration at which to 
+start adapting, the initial scaling rate}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{data(ilo_cubic_panel)
+spec = specify_bvarPANEL$new(
+   data = ilo_cubic_panel,
+   p = 4
+)
+spec$set_adaptiveMH(c(0.6, 0.4, 10, 0.1))
 
 }
 \if{html}{\out{</div>}}

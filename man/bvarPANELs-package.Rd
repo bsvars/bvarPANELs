@@ -17,8 +17,8 @@ This package is currently in active development.
 data(ilo_cubic_panel)                                   # load the data
 set.seed(123)
 specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
-burn_in       = estimate(specification, 10)             # run the burn-in
-posterior     = estimate(burn_in, 10)                   # estimate the model
+burn_in       = estimate(specification, 20)             # run the burn-in
+posterior     = estimate(burn_in, 20)                   # estimate the model
 predictive    = forecast(posterior, 2)                  # forecast 2 years ahead
 
 # workflow with the pipe |>
@@ -26,7 +26,7 @@ predictive    = forecast(posterior, 2)                  # forecast 2 years ahead
 set.seed(123)
 ilo_cubic_panel |>
   specify_bvarPANEL$new() |>
-  estimate(S = 10) |> 
+  estimate(S = 20) |> 
   estimate(S = 20) |> 
   forecast(horizon = 2) -> predictive
 }

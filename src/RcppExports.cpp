@@ -15,8 +15,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // bvarPANEL
-Rcpp::List bvarPANEL(const int& S, const Rcpp::List& Y, const Rcpp::List& X, const Rcpp::List& prior, const Rcpp::List& starting_values, const int thin, const bool show_progress);
-RcppExport SEXP _bvarPANELs_bvarPANEL(SEXP SSEXP, SEXP YSEXP, SEXP XSEXP, SEXP priorSEXP, SEXP starting_valuesSEXP, SEXP thinSEXP, SEXP show_progressSEXP) {
+Rcpp::List bvarPANEL(const int& S, const Rcpp::List& Y, const Rcpp::List& X, const Rcpp::List& prior, const Rcpp::List& starting_values, const int thin, const bool show_progress, const arma::vec& rate_target_start_initial);
+RcppExport SEXP _bvarPANELs_bvarPANEL(SEXP SSEXP, SEXP YSEXP, SEXP XSEXP, SEXP priorSEXP, SEXP starting_valuesSEXP, SEXP thinSEXP, SEXP show_progressSEXP, SEXP rate_target_start_initialSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -27,7 +27,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::List& >::type starting_values(starting_valuesSEXP);
     Rcpp::traits::input_parameter< const int >::type thin(thinSEXP);
     Rcpp::traits::input_parameter< const bool >::type show_progress(show_progressSEXP);
-    rcpp_result_gen = Rcpp::wrap(bvarPANEL(S, Y, X, prior, starting_values, thin, show_progress));
+    Rcpp::traits::input_parameter< const arma::vec& >::type rate_target_start_initial(rate_target_start_initialSEXP);
+    rcpp_result_gen = Rcpp::wrap(bvarPANEL(S, Y, X, prior, starting_values, thin, show_progress, rate_target_start_initial));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -154,17 +155,21 @@ BEGIN_RCPP
 END_RCPP
 }
 // sample_nu
-double sample_nu(const double& aux_nu, const arma::cube& aux_Sigma_c_cpp, const arma::cube& aux_Sigma_c_inv, const arma::mat& aux_Sigma, const Rcpp::List& prior);
-RcppExport SEXP _bvarPANELs_sample_nu(SEXP aux_nuSEXP, SEXP aux_Sigma_c_cppSEXP, SEXP aux_Sigma_c_invSEXP, SEXP aux_SigmaSEXP, SEXP priorSEXP) {
+double sample_nu(const double& aux_nu, const arma::vec& posterior_nu, const arma::cube& aux_Sigma_c_cpp, const arma::cube& aux_Sigma_c_inv, const arma::mat& aux_Sigma, const Rcpp::List& prior, const int& iteration, arma::vec& scale, const arma::vec& rate_target_start_initial);
+RcppExport SEXP _bvarPANELs_sample_nu(SEXP aux_nuSEXP, SEXP posterior_nuSEXP, SEXP aux_Sigma_c_cppSEXP, SEXP aux_Sigma_c_invSEXP, SEXP aux_SigmaSEXP, SEXP priorSEXP, SEXP iterationSEXP, SEXP scaleSEXP, SEXP rate_target_start_initialSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const double& >::type aux_nu(aux_nuSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type posterior_nu(posterior_nuSEXP);
     Rcpp::traits::input_parameter< const arma::cube& >::type aux_Sigma_c_cpp(aux_Sigma_c_cppSEXP);
     Rcpp::traits::input_parameter< const arma::cube& >::type aux_Sigma_c_inv(aux_Sigma_c_invSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type aux_Sigma(aux_SigmaSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List& >::type prior(priorSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_nu(aux_nu, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior));
+    Rcpp::traits::input_parameter< const int& >::type iteration(iterationSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type scale(scaleSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type rate_target_start_initial(rate_target_start_initialSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_nu(aux_nu, posterior_nu, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior, iteration, scale, rate_target_start_initial));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -232,7 +237,7 @@ RcppExport SEXP _bvarPANELs_RcppExport_registerCCallable() {
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_bvarPANELs_bvarPANEL", (DL_FUNC) &_bvarPANELs_bvarPANEL, 7},
+    {"_bvarPANELs_bvarPANEL", (DL_FUNC) &_bvarPANELs_bvarPANEL, 8},
     {"_bvarPANELs_forecast_bvarPANEL", (DL_FUNC) &_bvarPANELs_forecast_bvarPANEL, 4},
     {"_bvarPANELs_rmniw1", (DL_FUNC) &_bvarPANELs_rmniw1, 4},
     {"_bvarPANELs_sample_m", (DL_FUNC) &_bvarPANELs_sample_m, 5},
@@ -240,7 +245,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bvarPANELs_sample_s", (DL_FUNC) &_bvarPANELs_sample_s, 5},
     {"_bvarPANELs_log_kernel_nu", (DL_FUNC) &_bvarPANELs_log_kernel_nu, 8},
     {"_bvarPANELs_mcmc_accpetance_rate1", (DL_FUNC) &_bvarPANELs_mcmc_accpetance_rate1, 1},
-    {"_bvarPANELs_sample_nu", (DL_FUNC) &_bvarPANELs_sample_nu, 5},
+    {"_bvarPANELs_sample_nu", (DL_FUNC) &_bvarPANELs_sample_nu, 9},
     {"_bvarPANELs_sample_Sigma", (DL_FUNC) &_bvarPANELs_sample_Sigma, 4},
     {"_bvarPANELs_sample_AV", (DL_FUNC) &_bvarPANELs_sample_AV, 6},
     {"_bvarPANELs_sample_A_c_Sigma_c", (DL_FUNC) &_bvarPANELs_sample_A_c_Sigma_c, 6},
