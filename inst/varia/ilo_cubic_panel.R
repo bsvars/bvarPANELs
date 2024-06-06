@@ -1,6 +1,5 @@
 
-# A first look at the data
-
+# Create ILO dataset from provided files
 library(dplyr)
 
 # this file contains a cubic panel dynamic dataset
