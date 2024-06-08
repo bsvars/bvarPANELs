@@ -15,4 +15,11 @@ Rcpp::List forecast_bvarPANEL (
 );
 
 
+arma::vec mvnrnd_cond (
+    arma::vec x,        // Nx1 with NAs or without
+    arma::vec mu,       // Nx1 mean vector
+    arma::mat Sigma     // NxN covariance matrix
+);
+
+
 #endif  // _FORECAST_PANEL_H_
