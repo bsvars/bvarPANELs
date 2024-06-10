@@ -4,7 +4,12 @@
 \alias{forecast.PosteriorBVARPANEL}
 \title{Forecasting using Hierarchical Pannel Vector Autoregressions}
 \usage{
-\method{forecast}{PosteriorBVARPANEL}(posterior, horizon = 1, exogenous_forecast = NULL)
+\method{forecast}{PosteriorBVARPANEL}(
+  posterior,
+  horizon = 1,
+  exogenous_forecast = NULL,
+  conditional_forecast = NULL
+)
 }
 \arguments{
 \item{posterior}{posterior estimation outcome - an object of class 
@@ -14,6 +19,12 @@ PosteriorBVARPANEL obtained by running the \code{estimate} function.}
 
 \item{exogenous_forecast}{not used here ATM; included for compatibility with 
 generic \code{forecast}.}
+
+\item{conditional_forecast}{a list of length \code{C} containing 
+\code{horizon x N} matrices with forecasted values for selected variables. 
+These matrices should only contain \code{numeric} or \code{NA} values. The 
+entries with \code{NA} values correspond to the values that are forecasted 
+conditionally on the realisations provided as \code{numeric} values.}
 }
 \value{
 A list of class \code{PanelForecasts} containing the
@@ -46,6 +57,25 @@ ilo_cubic_panel |>
   estimate(S = 10) |> 
   estimate(S = 20) |> 
   forecast(horizon = 2) -> predictive
+
+# conditional forecasting 6 years ahead conditioning on 
+#  provided future values for the Gross Domestic Product 
+#  growth rate
+############################################################
+#' data(ilo_conditional_forecast)                        # load the conditional forecasts of dgdp
+predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_forecast)
+
+# workflow with the pipe |>
+############################################################
+set.seed(123)
+ilo_cubic_panel |>
+  specify_bvarPANEL$new() |>
+  estimate(S = 10) |> 
+  estimate(S = 20) |> 
+  forecast(
+    horizon = 6, 
+    conditional_forecast = ilo_conditional_forecast
+  ) -> predictive
 
 }
 \author{
