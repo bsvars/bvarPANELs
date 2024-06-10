@@ -4,7 +4,12 @@
 \alias{forecast.PosteriorBVARPANEL}
 \title{Forecasting using Hierarchical Pannel Vector Autoregressions}
 \usage{
-\method{forecast}{PosteriorBVARPANEL}(posterior, horizon = 1, exogenous_forecast = NULL)
+\method{forecast}{PosteriorBVARPANEL}(
+  posterior,
+  horizon = 1,
+  exogenous_forecast = NULL,
+  conditional_forecast = NULL
+)
 }
 \arguments{
 \item{posterior}{posterior estimation outcome - an object of class 
@@ -14,6 +19,13 @@ PosteriorBVARPANEL obtained by running the \code{estimate} function.}
 
 \item{exogenous_forecast}{not used here ATM; included for compatibility with 
 generic \code{forecast}.}
+
+\item{conditional_forecast}{a list of length \code{C} containing 
+\code{horizon x N} matrices or \code{ts} objects with of the same dimensions
+with forecasted values for selected variables. These objects should only 
+contain \code{numeric} or \code{NA} values. The entries with \code{NA} values 
+correspond to the values that are forecasted conditionally on the realisations
+provided as \code{numeric} values.}
 }
 \value{
 A list of class \code{PanelForecasts} containing the

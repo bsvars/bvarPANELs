@@ -11,6 +11,12 @@
 #' @param horizon a positive integer, specifying the forecasting horizon.
 #' @param exogenous_forecast not used here ATM; included for compatibility with 
 #' generic \code{forecast}.
+#' @param conditional_forecast a list of length \code{C} containing 
+#' \code{horizon x N} matrices or \code{ts} objects with of the same dimensions
+#' with forecasted values for selected variables. These objects should only 
+#' contain \code{numeric} or \code{NA} values. The entries with \code{NA} values 
+#' correspond to the values that are forecasted conditionally on the realisations
+#' provided as \code{numeric} values.
 #' 
 #' @return A list of class \code{PanelForecasts} containing the
 #' draws from the predictive density and data. The output list includes element:
@@ -41,8 +47,12 @@
 #'   forecast(horizon = 2) -> predictive
 #' 
 #' @export
-forecast.PosteriorBVARPANEL = function(posterior, horizon = 1, exogenous_forecast = NULL) {
-  
+forecast.PosteriorBVARPANEL = function(
+    posterior, 
+    horizon = 1, 
+    exogenous_forecast = NULL,
+    conditional_forecast = NULL
+) {
   
   posterior_A_c_cpp     = posterior$posterior$A_c_cpp
   posterior_Sigma_c_cpp = posterior$posterior$Sigma_c_cpp
