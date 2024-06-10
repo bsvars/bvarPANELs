@@ -22,4 +22,13 @@ arma::vec mvnrnd_cond (
 );
 
 
+Rcpp::List forecast_conditional_bvarPANEL (
+    arma::field<arma::cube>&  posterior_A_c_cpp,      // (S)(K, N, C)
+    arma::field<arma::cube>&  posterior_Sigma_c_cpp,  // (S)(N, N, C)
+    Rcpp::List&               X_c,                    // (C)(T_c, K)
+    Rcpp::List&               cond_forecasts,         // (C)(horizon, N)
+    const int                 horizon
+);
+
+
 #endif  // _FORECAST_PANEL_H_
