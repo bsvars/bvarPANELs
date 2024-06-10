@@ -38,3 +38,46 @@ expect_error(
   forecast(run_no1, horizon = 1.5),
   info = "forecast: specify horizon as integer."
 )
+
+
+# conditional forecasting
+data(ilo_conditional_forecast)
+
+set.seed(1)
+suppressMessages(
+  specification_no1 <- specify_bvarPANEL$new(ilo_cubic_panel)
+)
+run_no1             <- estimate(specification_no1, 3, 1, show_progress = FALSE)
+ff                  <- forecast(run_no1, 6, conditional_forecast = ilo_conditional_forecast)
+
+set.seed(1)
+suppressMessages(
+  ff2              <- ilo_cubic_panel |>
+    specify_bvarPANEL$new() |>
+    estimate(S = 3, thin = 1, show_progress = FALSE) |>
+    forecast(horizon = 6, conditional_forecast = ilo_conditional_forecast)
+)
+
+
+expect_identical(
+  ff$forecasts[1,1,1,1], ff2$forecasts[1,1,1,1],
+  info = "conditional forecast: forecast identical for normal and pipe workflow."
+)
+
+expect_true(
+  is.numeric(ff$forecasts) & is.array(ff$forecasts),
+  info = "conditional forecast: returns numeric array."
+)
+
+expect_error(
+  forecast(run_no1, horizon = 4, conditional_forecast = ilo_conditional_forecast),
+  pattern = "horizon",
+  info = "conditional forecast: provided forecasts different from horizon."
+)
+
+expect_error(
+  forecast(run_no1, horizon = 6, conditional_forecast = ilo_conditional_forecast[-1]),
+  info = "conditional forecast: uneven number of countries in forecasts and data."
+)
+
+
