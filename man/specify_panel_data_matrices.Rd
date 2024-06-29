@@ -48,7 +48,7 @@ regressors, \eqn{\mathbf{X}_c}.}
 \subsection{Method \code{new()}}{
 Create new data matrices DataMatricesBVARPANEL
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{specify_panel_data_matrices$new(data, p = 1L)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{specify_panel_data_matrices$new(data, p = 1L, exogenous = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -58,6 +58,10 @@ Create new data matrices DataMatricesBVARPANEL
 time series data.}
 
 \item{\code{p}}{a positive integer providing model's autoregressive lag order.}
+
+\item{\code{exogenous}}{a list containing \code{(T_c+p)xd} matrices with 
+country-specificof exogenous variables. This matrix should not include a 
+constant term.}
 }
 \if{html}{\out{</div>}}
 }

@@ -97,7 +97,7 @@ start adapting, the initial scaling rate}
 \subsection{Method \code{new()}}{
 Create a new specification of the Bayesian Panel VAR model BVARPANEL.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{specify_bvarPANEL$new(data, p = 1L)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{specify_bvarPANEL$new(data, p = 1L, exogenous = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -107,6 +107,8 @@ Create a new specification of the Bayesian Panel VAR model BVARPANEL.
 with time series data.}
 
 \item{\code{p}}{a positive integer providing model's autoregressive lag order.}
+
+\item{\code{exogenous}}{a \code{(T+p)xd} matrix of exogenous variables.}
 }
 \if{html}{\out{</div>}}
 }

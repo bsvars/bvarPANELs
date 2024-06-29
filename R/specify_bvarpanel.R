@@ -76,20 +76,22 @@ specify_prior_bvarPANEL = R6::R6Class(
     #' @param C a positive integer - the number of countries in the data.
     #' @param N a positive integer - the number of dependent variables in the model.
     #' @param p a positive integer - the autoregressive lag order of the SVAR model.
+    #' @param d a positive integer - the number of \code{exogenous} variables in the model.
     #' @return A new prior specification PriorBVARPANEL.
     #' @examples 
     #' # a prior for 2-country, 3-variable example with one lag and stationary data
     #' prior = specify_prior_bvarPANEL$new(C = 2, N = 3, p = 1)
     #' prior$M
     #' 
-    initialize = function(C, N, p){
+    initialize = function(C, N, p, d = 0){
       stopifnot("Argument C must be a positive integer number." = C > 0 & C %% 1 == 0)
       stopifnot("Argument N must be a positive integer number." = N > 0 & N %% 1 == 0)
       stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
+      stopifnot("Argument d must be a non-negative integer number." = d >= 0 & d %% 1 == 0)
     
-      K                 = N * p + 1
+      K                 = N * p + 1 + d
       self$M            = t(cbind(diag(N), matrix(0, N, K - N)))
-      self$W            = diag(c(kronecker((1:p)^2, rep(1, N) ), rep(10, 1)))
+      self$W            = diag(c(kronecker((1:p)^2, rep(1, N) ), rep(10, 1 + d)))
       self$S_inv        = diag(N)
       self$S_Sigma_inv  = diag(N)
       self$eta          = N + 1
@@ -194,17 +196,19 @@ specify_starting_values_bvarPANEL = R6::R6Class(
     #' @param C a positive integer - the number of countries in the data.
     #' @param N a positive integer - the number of dependent variables in the model.
     #' @param p a positive integer - the autoregressive lag order of the SVAR model.
+    #' @param d a positive integer - the number of \code{exogenous} variables in the model.
     #' @return Starting values StartingValuesBVARPANEL
     #' @examples 
     #' # starting values for Bayesian Panel VAR 2-country model with 4 lags for a 3-variable system.
     #' sv = specify_starting_values_bvarPANEL$new(C = 2, N = 3, p = 4)
     #' 
-    initialize = function(C, N, p){
+    initialize = function(C, N, p, d = 0){
       stopifnot("Argument C must be a positive integer number." = C > 0 & C %% 1 == 0)
       stopifnot("Argument N must be a positive integer number." = N > 0 & N %% 1 == 0)
       stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
+      stopifnot("Argument d must be a non-negative integer number." = d >= 0 & d %% 1 == 0)
       
-      K               = N * p + 1
+      K               = N * p + 1 + d
       self$A_c        = array(stats::rnorm(C * K * N, sd = 0.001), c(K, N, C))
       self$Sigma_c    = stats::rWishart(C, N + 1, diag(N))
       self$A          = matrix(stats::rnorm(K * N, sd = 0.001), K, N) + diag(K)[,1:N]
@@ -302,8 +306,11 @@ specify_panel_data_matrices = R6::R6Class(
     #' @param data a list containing \code{(T_c+p)xN} matrices with country-specific
     #' time series data.
     #' @param p a positive integer providing model's autoregressive lag order.
+    #' @param exogenous a list containing \code{(T_c+p)xd} matrices with 
+    #' country-specificof exogenous variables. This matrix should not include a 
+    #' constant term.
     #' @return New data matrices DataMatricesBVARPANEL
-    initialize = function(data, p = 1L) {
+    initialize = function(data, p = 1L, exogenous = NULL) {
       if (missing(data)) {
         stop("Argument data has to be specified")
       } else {
@@ -314,6 +321,23 @@ specify_panel_data_matrices = R6::R6Class(
       stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
       
       C             = length(data)
+      if (is.null(exogenous)) {
+        d = 0
+      } else {
+        stopifnot("Argument exogenous has to be a list of matrices." = is.list(exogenous) & all(simplify2array(lapply(exogenous, function(x){is.matrix(x) & is.numeric(x)}))))
+        stopifnot("Argument exogenous has to contain matrices with the same number of rows as argument data." = unique(simplify2array(lapply(exogenous, function(x){ncol(x)}))) >= 1 & unique(simplify2array(lapply(data, function(x){nrow(x)}))) == unique(simplify2array(lapply(exogenous, function(x){nrow(x)}))))
+        stopifnot("Argument exogenous cannot include missing values." = unique(simplify2array(lapply(exogenous, function(x){any(is.na(x))}))) == FALSE )
+        d = ncol(exogenous[[1]])
+        Td = nrow(exogenous[[1]])
+        test_exogenous = 0
+        for (c in 1:C) {
+          for (i in 1:d) {
+            test_exogenous = test_exogenous + prod(exogenous[[c]][,i] - mean(exogenous[[c]][,i]) == rep(0,Td))
+          }
+        }
+        stopifnot("Argument exogenous cannot include a constant term." = test_exogenous == 0 )
+      }
+      
       for (c in 1:C) {
         TT            = nrow(data[[c]])
         T_c           = TT - p
@@ -324,6 +348,9 @@ specify_panel_data_matrices = R6::R6Class(
           X           = cbind(X, data[[c]][(p + 1):TT - i,])
         }
         X             = cbind(X, rep(1, T_c))
+        if (!is.null(exogenous)) {
+          X           = cbind(X, exogenous[[c]][(p + 1):TT,])
+        }
         self$X[[c]]   = X
       } # END c loop
       names(self$Y)   = names(self$X) = names(data)
@@ -393,10 +420,12 @@ specify_bvarPANEL = R6::R6Class(
     #' @param data a list with \code{C} elements of \code{(T_c+p)xN} matrices 
     #' with time series data.
     #' @param p a positive integer providing model's autoregressive lag order.
+    #' @param exogenous a \code{(T+p)xd} matrix of exogenous variables. 
     #' @return A new complete specification for the Bayesian Panel VAR model BVARPANEL.
     initialize = function(
     data,
-    p = 1L
+    p = 1L,
+    exogenous = NULL
     ) {
       stopifnot("Argument data has to contain matrices with the same number of columns." = length(unique(simplify2array(lapply(data, ncol)))) == 1)
       stopifnot("Argument p has to be a positive integer." = ((p %% 1) == 0 & p > 0))
@@ -404,10 +433,14 @@ specify_bvarPANEL = R6::R6Class(
       self$p    = p
       C         = length(data)
       N         = unique(simplify2array(lapply(data, ncol)))
+      d             = 0
+      if (!is.null(exogenous)) {
+        d           = ncol(exogenous[[1]])
+      }
       
-      self$data_matrices   = specify_panel_data_matrices$new(data, self$p)
-      self$prior           = specify_prior_bvarPANEL$new(C, N, self$p)
-      self$starting_values = specify_starting_values_bvarPANEL$new(C, N, self$p)
+      self$data_matrices   = specify_panel_data_matrices$new(data, self$p, exogenous)
+      self$prior           = specify_prior_bvarPANEL$new(C, N, self$p, d)
+      self$starting_values = specify_starting_values_bvarPANEL$new(C, N, self$p, d)
       self$adaptiveMH      = c(0.6, 0.4, 10, 0.1)
     }, # END initialize
     
