@@ -14,13 +14,13 @@ data_cv <- all_cv %>%
 # Create a list with the country data
 countries = unique(data_cv$iso3code)
 countries = countries[order(countries)]
-ilo_conditional_forecast = list()
+ilo_conditional_forecasts = list()
 for (i in 1:length(countries)) {
-  ilo_conditional_forecast[[i]] <- data_cv %>% 
+  ilo_conditional_forecasts[[i]] <- data_cv %>% 
     filter(iso3code == countries[i]) %>% 
     select(UR, EPR, LFPR, dgdp) %>% 
     ts(start = 2024, frequency = 1)
-  names(ilo_conditional_forecast)[i] <- countries[i]
+  names(ilo_conditional_forecasts)[i] <- countries[i]
 }
 
-save(ilo_conditional_forecast, file = "data/ilo_conditional_forecast.rda")
+save(ilo_conditional_forecasts, file = "data/ilo_conditional_forecasts.rda")

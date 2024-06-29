@@ -41,21 +41,21 @@ expect_error(
 
 
 # conditional forecasting
-data(ilo_conditional_forecast)
+data(ilo_conditional_forecasts)
 
 set.seed(1)
 suppressMessages(
   specification_no1 <- specify_bvarPANEL$new(ilo_cubic_panel)
 )
 run_no1             <- estimate(specification_no1, 3, 1, show_progress = FALSE)
-ff                  <- forecast(run_no1, 6, conditional_forecast = ilo_conditional_forecast)
+ff                  <- forecast(run_no1, 6, conditional_forecast = ilo_conditional_forecasts)
 
 set.seed(1)
 suppressMessages(
   ff2              <- ilo_cubic_panel |>
     specify_bvarPANEL$new() |>
     estimate(S = 3, thin = 1, show_progress = FALSE) |>
-    forecast(horizon = 6, conditional_forecast = ilo_conditional_forecast)
+    forecast(horizon = 6, conditional_forecast = ilo_conditional_forecasts)
 )
 
 
@@ -70,13 +70,13 @@ expect_true(
 )
 
 expect_error(
-  forecast(run_no1, horizon = 4, conditional_forecast = ilo_conditional_forecast),
+  forecast(run_no1, horizon = 4, conditional_forecast = ilo_conditional_forecasts),
   pattern = "horizon",
   info = "conditional forecast: provided forecasts different from horizon."
 )
 
 expect_error(
-  forecast(run_no1, horizon = 6, conditional_forecast = ilo_conditional_forecast[-1]),
+  forecast(run_no1, horizon = 6, conditional_forecast = ilo_conditional_forecasts[-1]),
   info = "conditional forecast: uneven number of countries in forecasts and data."
 )
 

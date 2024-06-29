@@ -49,8 +49,8 @@
 #' #  provided future values for the Gross Domestic Product 
 #' #  growth rate
 #' ############################################################
-#' #' data(ilo_conditional_forecast)                        # load the conditional forecasts of dgdp
-#' predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_forecast)
+#' #' data(ilo_conditional_forecasts)                        # load the conditional forecasts of dgdp
+#' predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_forecasts)
 #' 
 #' # workflow with the pipe |>
 #' ############################################################
@@ -61,7 +61,7 @@
 #'   estimate(S = 20) |> 
 #'   forecast(
 #'     horizon = 6, 
-#'     conditional_forecast = ilo_conditional_forecast
+#'     conditional_forecast = ilo_conditional_forecasts
 #'   ) -> predictive
 #' 
 #' @export
