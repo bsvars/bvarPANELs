@@ -5,7 +5,7 @@
 \title{Bayesian estimation of a Bayesian Hierarchical Panel Vector 
 Autoregression using Gibbs sampler}
 \usage{
-\method{estimate}{BVARPANEL}(specification, S, thin = 10L, show_progress = TRUE)
+\method{estimate}{BVARPANEL}(specification, S, thin = 1L, show_progress = TRUE)
 }
 \arguments{
 \item{specification}{an object of class BVARPANEL generated using the 
@@ -43,8 +43,10 @@ coefficients and parameters on deterministic terms in \eqn{X_c}.
 }
 \examples{
 data(ilo_cubic_panel)                                   # load the data
+data(ilo_exogenous_variables)                           # load the exogenous variables
 set.seed(123)
-specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
+# specify the model
+specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
 burn_in       = estimate(specification, 10)             # run the burn-in
 posterior     = estimate(burn_in, 10)                   # estimate the model
 

@@ -38,8 +38,10 @@
 #' 
 #' @examples
 #' data(ilo_cubic_panel)                                   # load the data
+#' data(ilo_exogenous_variables)                           # load the exogenous variables
 #' set.seed(123)
-#' specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
+#' # specify the model
+#' specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
 #' burn_in       = estimate(specification, 10)             # run the burn-in
 #' posterior     = estimate(burn_in, 10)                   # estimate the model
 #' 
@@ -47,7 +49,7 @@
 estimate.BVARPANEL <- function(
     specification, 
     S, 
-    thin = 10L, 
+    thin = 1L, 
     show_progress = TRUE
 ) {
   

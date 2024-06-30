@@ -5,9 +5,10 @@
 #' @description For each of the countries a time series of 6 observations on 
 #' GDP growth rates (sgdp) #' formatted so they is provided to generate 
 #' conditional forecasts of labour market outcomes given the provided projected 
-#' paths of output. Last data update was implemented on 2024-05-11.
+#' paths of output. 
+#' Last data update was implemented on 2024-05-11.
 #'
-#' @usage data(ilo_conditional_forecast)
+#' @usage data(ilo_conditional_forecasts)
 #' 
 #' @format A list of 189 \code{ts} objects with time series of 6 observations 
 #' on 4 variables:
@@ -24,6 +25,6 @@
 #' ILOSTAT [database]. Available from \url{https://ilostat.ilo.org/data/}.
 #' 
 #' @examples 
-#' data(ilo_conditional_forecast)   # upload the data
+#' data(ilo_conditional_forecasts)   # upload the data
 #' 
-"ilo_conditional_forecast"
+"ilo_conditional_forecasts"
