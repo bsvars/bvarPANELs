@@ -5,6 +5,14 @@ bvarPANEL <- function(S, Y, X, prior, starting_values, thin, show_progress, rate
     .Call(`_bvarPANELs_bvarPANEL`, S, Y, X, prior, starting_values, thin, show_progress, rate_target_start_initial)
 }
 
+Sigma2B_c <- function(posterior_Sigma_c, lower = TRUE) {
+    .Call(`_bvarPANELs_Sigma2B_c`, posterior_Sigma_c, lower)
+}
+
+panel_variance_decompositions <- function(posterior_Sigma, posterior_A, global_Sigma, global_A, horizon, p, lower = TRUE) {
+    .Call(`_bvarPANELs_panel_variance_decompositions`, posterior_Sigma, posterior_A, global_Sigma, global_A, horizon, p, lower)
+}
+
 rmniw1 <- function(A, V, S, nu) {
     .Call(`_bvarPANELs_rmniw1`, A, V, S, nu)
 }

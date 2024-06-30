@@ -71,6 +71,35 @@ RcppExport SEXP _bvarPANELs_forecast_bvarPANEL(SEXP posterior_A_c_cppSEXP, SEXP 
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// Sigma2B_c
+arma::cube Sigma2B_c(arma::cube& posterior_Sigma_c, const bool lower);
+RcppExport SEXP _bvarPANELs_Sigma2B_c(SEXP posterior_Sigma_cSEXP, SEXP lowerSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::cube& >::type posterior_Sigma_c(posterior_Sigma_cSEXP);
+    Rcpp::traits::input_parameter< const bool >::type lower(lowerSEXP);
+    rcpp_result_gen = Rcpp::wrap(Sigma2B_c(posterior_Sigma_c, lower));
+    return rcpp_result_gen;
+END_RCPP
+}
+// panel_variance_decompositions
+arma::field<arma::cube> panel_variance_decompositions(arma::field<arma::cube>& posterior_Sigma, arma::field<arma::cube>& posterior_A, arma::cube& global_Sigma, arma::cube& global_A, const int horizon, const int p, const bool lower);
+RcppExport SEXP _bvarPANELs_panel_variance_decompositions(SEXP posterior_SigmaSEXP, SEXP posterior_ASEXP, SEXP global_SigmaSEXP, SEXP global_ASEXP, SEXP horizonSEXP, SEXP pSEXP, SEXP lowerSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::field<arma::cube>& >::type posterior_Sigma(posterior_SigmaSEXP);
+    Rcpp::traits::input_parameter< arma::field<arma::cube>& >::type posterior_A(posterior_ASEXP);
+    Rcpp::traits::input_parameter< arma::cube& >::type global_Sigma(global_SigmaSEXP);
+    Rcpp::traits::input_parameter< arma::cube& >::type global_A(global_ASEXP);
+    Rcpp::traits::input_parameter< const int >::type horizon(horizonSEXP);
+    Rcpp::traits::input_parameter< const int >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const bool >::type lower(lowerSEXP);
+    rcpp_result_gen = Rcpp::wrap(panel_variance_decompositions(posterior_Sigma, posterior_A, global_Sigma, global_A, horizon, p, lower));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rmniw1
 arma::field<arma::mat> rmniw1(const arma::mat& A, const arma::mat& V, const arma::mat& S, const double& nu);
 RcppExport SEXP _bvarPANELs_rmniw1(SEXP ASEXP, SEXP VSEXP, SEXP SSEXP, SEXP nuSEXP) {
@@ -241,6 +270,8 @@ RcppExport SEXP _bvarPANELs_RcppExport_registerCCallable() {
 static const R_CallMethodDef CallEntries[] = {
     {"_bvarPANELs_bvarPANEL", (DL_FUNC) &_bvarPANELs_bvarPANEL, 8},
     {"_bvarPANELs_forecast_bvarPANEL", (DL_FUNC) &_bvarPANELs_forecast_bvarPANEL, 6},
+    {"_bvarPANELs_Sigma2B_c", (DL_FUNC) &_bvarPANELs_Sigma2B_c, 2},
+    {"_bvarPANELs_panel_variance_decompositions", (DL_FUNC) &_bvarPANELs_panel_variance_decompositions, 7},
     {"_bvarPANELs_rmniw1", (DL_FUNC) &_bvarPANELs_rmniw1, 4},
     {"_bvarPANELs_sample_m", (DL_FUNC) &_bvarPANELs_sample_m, 5},
     {"_bvarPANELs_sample_w", (DL_FUNC) &_bvarPANELs_sample_w, 2},
