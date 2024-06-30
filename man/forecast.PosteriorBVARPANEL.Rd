@@ -43,11 +43,15 @@ from 1 to \code{horizon} specified as an argument of the function.
 }
 \examples{
 data(ilo_cubic_panel)                                   # load the data
+data(ilo_exogenous_variables)                           # load the exogenous variables
+data(ilo_exogenous_forecasts)                           # load the exogenous forecast
 set.seed(123)
-specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
+# specify the model
+specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
 burn_in       = estimate(specification, 10)             # run the burn-in
 posterior     = estimate(burn_in, 10)                   # estimate the model
-predictive    = forecast(posterior, 2)                  # forecast 2 years ahead
+# forecast 6 years ahead
+predictive    = forecast(posterior, 6, exogenous_forecast = ilo_exogenous_forecasts)
 
 # workflow with the pipe |>
 ############################################################
@@ -62,7 +66,11 @@ ilo_cubic_panel |>
 #  provided future values for the Gross Domestic Product 
 #  growth rate
 ############################################################
-#' data(ilo_conditional_forecasts)                        # load the conditional forecasts of dgdp
+data(ilo_conditional_forecasts)                        # load the conditional forecasts of dgdp
+specification = specify_bvarPANEL$new(ilo_cubic_panel)    # specify the model
+burn_in       = estimate(specification, 10)               # run the burn-in
+posterior     = estimate(burn_in, 10)                     # estimate the model
+# forecast 6 years ahead
 predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_forecasts)
 
 # workflow with the pipe |>

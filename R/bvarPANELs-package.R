@@ -41,11 +41,15 @@
 #' #' @examples
 #' @examples
 #' data(ilo_cubic_panel)                                   # load the data
+#' data(ilo_exogenous_variables)                           # load the exogenous variables
+#' data(ilo_exogenous_forecasts)                           # load the exogenous forecast
 #' set.seed(123)
-#' specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
-#' burn_in       = estimate(specification, 20)             # run the burn-in
-#' posterior     = estimate(burn_in, 20)                   # estimate the model
-#' predictive    = forecast(posterior, 2)                  # forecast 2 years ahead
+#' # specify the model
+#' specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
+#' burn_in       = estimate(specification, 10)             # run the burn-in
+#' posterior     = estimate(burn_in, 10)                   # estimate the model
+#' # forecast 6 years ahead
+#' predictive    = forecast(posterior, 6, exogenous_forecast = ilo_exogenous_forecasts)
 #' 
 #' # workflow with the pipe |>
 #' ############################################################

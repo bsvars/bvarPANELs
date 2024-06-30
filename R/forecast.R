@@ -30,11 +30,15 @@
 #' 
 #' @examples
 #' data(ilo_cubic_panel)                                   # load the data
+#' data(ilo_exogenous_variables)                           # load the exogenous variables
+#' data(ilo_exogenous_forecasts)                           # load the exogenous forecast
 #' set.seed(123)
-#' specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
+#' # specify the model
+#' specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
 #' burn_in       = estimate(specification, 10)             # run the burn-in
 #' posterior     = estimate(burn_in, 10)                   # estimate the model
-#' predictive    = forecast(posterior, 2)                  # forecast 2 years ahead
+#' # forecast 6 years ahead
+#' predictive    = forecast(posterior, 6, exogenous_forecast = ilo_exogenous_forecasts)
 #' 
 #' # workflow with the pipe |>
 #' ############################################################
@@ -49,7 +53,11 @@
 #' #  provided future values for the Gross Domestic Product 
 #' #  growth rate
 #' ############################################################
-#' #' data(ilo_conditional_forecasts)                        # load the conditional forecasts of dgdp
+#' data(ilo_conditional_forecasts)                        # load the conditional forecasts of dgdp
+#' specification = specify_bvarPANEL$new(ilo_cubic_panel)    # specify the model
+#' burn_in       = estimate(specification, 10)               # run the burn-in
+#' posterior     = estimate(burn_in, 10)                     # estimate the model
+#' # forecast 6 years ahead
 #' predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_forecasts)
 #' 
 #' # workflow with the pipe |>
@@ -77,13 +85,30 @@ forecast.PosteriorBVARPANEL = function(
   X_c             = posterior$last_draw$data_matrices$X
   Y_c             = posterior$last_draw$data_matrices$Y
   N               = dim(Y_c[[1]])[2]
+  K               = dim(X_c[[1]])[2]
+  C               = length(Y_c)
   
-  do_conditional_forecasting = !is.null(conditional_forecast)
+  d               = K - N * posterior$last_draw$p - 1
+  if (d == 0 ) {
+    # this will not be used for forecasting, but needs to be provided
+    exogenous_forecast = list()
+    for (c in 1:C) exogenous_forecast[[c]] = matrix(NA, horizon, 1)
+  } else {
+    stopifnot("Forecasted values of exogenous variables are missing." 
+              = (d > 0) & !is.null(exogenous_forecast))
+    stopifnot("The matrix of exogenous_forecast does not have a correct number of columns." 
+              = unique(simplify2array(lapply(exogenous_forecast, function(x){ncol(x)}))) == d)
+    stopifnot("Provide exogenous_forecast for all forecast periods specified by argument horizon." 
+              = unique(simplify2array(lapply(exogenous_forecast, function(x){nrow(x)}))) == horizon)
+    stopifnot("Argument exogenous has to be a matrix." 
+              = all(simplify2array(lapply(exogenous_forecast, function(x){is.matrix(x) & is.numeric(x)}))))
+    stopifnot("Argument exogenous cannot include missing values." 
+              = unique(simplify2array(lapply(exogenous_forecast, function(x){any(is.na(x))}))) == FALSE)
+  }
   
-  if (!do_conditional_forecasting) {
-    # perform forecasting
-    fore          = .Call(`_bvarPANELs_forecast_bvarPANEL`, 
-                          posterior_A_c_cpp, posterior_Sigma_c_cpp, X_c, horizon)
+  if ( is.null(conditional_forecast) ) {
+    conditional_forecast = list()
+    for (c in 1:C) conditional_forecast[[c]] = matrix(NA, horizon, N)
   } else {
     stopifnot("Argument conditional_forecast must be a list with the same countries 
               as in the provided data." 
@@ -104,12 +129,18 @@ forecast.PosteriorBVARPANEL = function(
               the same number of columns equal to the number of columns in the used data."
               = unique(sapply(conditional_forecast, function(x) ncol(x) )) == N
     )
-    
-    # perform conditional forecasting
-    fore          = .Call(`_bvarPANELs_forecast_conditional_bvarPANEL`, 
-                          posterior_A_c_cpp, posterior_Sigma_c_cpp, X_c, conditional_forecast, horizon)
   }
   
+  # perform forecasting
+  fore          = .Call(`_bvarPANELs_forecast_bvarPANEL`, 
+                        posterior_A_c_cpp, 
+                        posterior_Sigma_c_cpp, 
+                        X_c, 
+                        conditional_forecast, 
+                        exogenous_forecast, 
+                        horizon
+                       )
+                          
   S               = dim(posterior_A_c_cpp)[1]
   C               = length(Y_c)
   forecasts      = array(NA, c(horizon, N, S, C))
