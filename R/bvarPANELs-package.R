@@ -40,23 +40,41 @@
 #' @keywords package models ts
 #' #' @examples
 #' @examples
+#' # Basic estimation and forecasting example
+#' ############################################################
 #' data(ilo_cubic_panel)                                   # load the data
-#' data(ilo_exogenous_variables)                           # load the exogenous variables
-#' data(ilo_exogenous_forecasts)                           # load the exogenous forecast
 #' set.seed(123)
-#' # specify the model
-#' specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
+#' specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
 #' burn_in       = estimate(specification, 10)             # run the burn-in
 #' posterior     = estimate(burn_in, 10)                   # estimate the model
-#' # forecast 6 years ahead
-#' predictive    = forecast(posterior, 6, exogenous_forecast = ilo_exogenous_forecasts)
+#' predictive    = forecast(posterior, 2)                  # forecast the future       
 #' 
 #' # workflow with the pipe |>
-#' ############################################################
 #' set.seed(123)
 #' ilo_cubic_panel |>
 #'   specify_bvarPANEL$new() |>
 #'   estimate(S = 20) |> 
 #'   estimate(S = 20) |> 
 #'   forecast(horizon = 2) -> predictive
+#'   
+#' # Full estimation and forecasting example with 
+#' #   exogenous variables and conditional forecasts
+#' ############################################################
+#' data(ilo_cubic_panel)                                   # load the data
+#' data(ilo_exogenous_variables)                           # load the exogenous variables
+#' data(ilo_exogenous_forecasts)                           # load the exogenous forecasts
+#' data(ilo_conditional_forecasts)                         # load the conditional forecasts
+#' set.seed(123)
+#' specification = specify_bvarPANEL$new(
+#'                   ilo_cubic_panel,
+#'                   exogenous = ilo_exogenous_variables
+#'                 )
+#' burn_in       = estimate(specification, 10)             # run the burn-in
+#' posterior     = estimate(burn_in, 10)                   # estimate the model
+#' predictive    = forecast(
+#'                   posterior, 
+#'                   horizon = 6,
+#'                   exogenous_forecast = ilo_exogenous_forecasts,
+#'                   conditional_forecast = ilo_conditional_forecasts
+#'                 )
 "_PACKAGE"

@@ -49,7 +49,7 @@
 estimate.BVARPANEL <- function(
     specification, 
     S, 
-    thin = 10L, 
+    thin = 1L, 
     show_progress = TRUE
 ) {
   
