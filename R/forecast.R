@@ -1,4 +1,4 @@
-#' @title Forecasting using Hierarchical Pannel Vector Autoregressions
+#' @title Forecasting using Hierarchical Panel Vector Autoregressions
 #'
 #' @description Samples from the joint predictive density of the dependent 
 #' variables for all countries at forecast horizons 
@@ -17,14 +17,17 @@
 #' entries with \code{NA} values correspond to the values that are forecasted 
 #' conditionally on the realisations provided as \code{numeric} values.
 #' 
-#' @return A list of class \code{PanelForecasts} containing the
-#' draws from the predictive density and data. The output list includes element:
+#' @return A list of class \code{ForecastsPANEL} with \code{C} elements containing 
+#' the draws from the country-specific predictive density and data in a form of 
+#' object class \code{Forecasts} that includes:
 #' 
 #' \describe{
-#'  \item{forecasts}{an \code{horizonxNxCxS} array with the draws from predictive density}
-#'  \item{forecasts_cpp}{an unspecified object passed for computations in **cpp**}
-#'  \item{Y}{a \code{C}-element list with \code{T_cxN} matrices with the country-specific data}
+#'  \item{forecasts}{an \code{horizonxNxS} array with the draws from the 
+#'  country-specific predictive density}
+#'  \item{Y}{a \code{T_cxN} matrix with the country-specific data}
 #' }
+#'
+#' @seealso \code{\link{estimate.PosteriorBVARPANEL}}
 #'
 #' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
 #' 
@@ -33,10 +36,12 @@
 #' data(ilo_exogenous_variables)                           # load the exogenous variables
 #' data(ilo_exogenous_forecasts)                           # load the exogenous forecast
 #' set.seed(123)
+#' 
 #' # specify the model
 #' specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
 #' burn_in       = estimate(specification, 10)             # run the burn-in
 #' posterior     = estimate(burn_in, 10)                   # estimate the model
+#' 
 #' # forecast 6 years ahead
 #' predictive    = forecast(posterior, 6, exogenous_forecast = ilo_exogenous_forecasts)
 #' 
@@ -87,6 +92,7 @@ forecast.PosteriorBVARPANEL = function(
   N               = dim(Y_c[[1]])[2]
   K               = dim(X_c[[1]])[2]
   C               = length(Y_c)
+  c_names         = names(posterior$last_draw$data_matrices$Y)
   
   d               = K - N * posterior$last_draw$p - 1
   if (d == 0 ) {
@@ -132,7 +138,7 @@ forecast.PosteriorBVARPANEL = function(
   }
   
   # perform forecasting
-  fore          = .Call(`_bvarPANELs_forecast_bvarPANEL`, 
+  fff           = .Call(`_bvarPANELs_forecast_bvarPANEL`, 
                         posterior_A_c_cpp, 
                         posterior_Sigma_c_cpp, 
                         X_c, 
@@ -141,16 +147,17 @@ forecast.PosteriorBVARPANEL = function(
                         horizon
                        )
                           
-  S               = dim(posterior_A_c_cpp)[1]
-  C               = length(Y_c)
-  forecasts      = array(NA, c(horizon, N, S, C))
+  forecasts       = list()
   for (c in 1:C) {
-    forecasts[,,,c] = fore$forecasts_cpp[c,1][[1]]
+    fore            = list()
+    fore_tmp        = aperm(fff$forecasts_cpp[c,1][[1]], c(2,1,3))
+    fore$forecasts  = fore_tmp
+    fore$Y          = t(Y_c[[c]])
+    class(fore)     = "Forecasts"
+    forecasts[[c]]  = fore
   }
-  forecasts       = aperm(forecasts, c(1,2,4,3))
-  fore$forecasts  = forecasts
-  fore$Y          = Y_c
-  class(fore)     = "PanelForecasts"
+  names(forecasts)  = c_names
+  class(forecasts)  = "ForecastsPANEL"
   
-  return(fore)
+  return(forecasts)
 }

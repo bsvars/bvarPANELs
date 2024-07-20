@@ -2,7 +2,7 @@
 % Please edit documentation in R/forecast.R
 \name{forecast.PosteriorBVARPANEL}
 \alias{forecast.PosteriorBVARPANEL}
-\title{Forecasting using Hierarchical Pannel Vector Autoregressions}
+\title{Forecasting using Hierarchical Panel Vector Autoregressions}
 \usage{
 \method{forecast}{PosteriorBVARPANEL}(
   posterior,
@@ -27,13 +27,14 @@ entries with \code{NA} values correspond to the values that are forecasted
 conditionally on the realisations provided as \code{numeric} values.}
 }
 \value{
-A list of class \code{PanelForecasts} containing the
-draws from the predictive density and data. The output list includes element:
+A list of class \code{ForecastsPANEL} with \code{C} elements containing 
+the draws from the country-specific predictive density and data in a form of 
+object class \code{Forecasts} that includes:
 
 \describe{
- \item{forecasts}{an \code{horizonxNxCxS} array with the draws from predictive density}
- \item{forecasts_cpp}{an unspecified object passed for computations in **cpp**}
- \item{Y}{a \code{C}-element list with \code{T_cxN} matrices with the country-specific data}
+ \item{forecasts}{an \code{horizonxNxS} array with the draws from the 
+ country-specific predictive density}
+ \item{Y}{a \code{T_cxN} matrix with the country-specific data}
 }
 }
 \description{
@@ -46,10 +47,12 @@ data(ilo_cubic_panel)                                   # load the data
 data(ilo_exogenous_variables)                           # load the exogenous variables
 data(ilo_exogenous_forecasts)                           # load the exogenous forecast
 set.seed(123)
+
 # specify the model
 specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
 burn_in       = estimate(specification, 10)             # run the burn-in
 posterior     = estimate(burn_in, 10)                   # estimate the model
+
 # forecast 6 years ahead
 predictive    = forecast(posterior, 6, exogenous_forecast = ilo_exogenous_forecasts)
 
@@ -85,6 +88,9 @@ ilo_cubic_panel |>
     conditional_forecast = ilo_conditional_forecasts
   ) -> predictive
 
+}
+\seealso{
+\code{\link{estimate.PosteriorBVARPANEL}}
 }
 \author{
 Tomasz Woźniak \email{wozniak.tom@pm.me}
