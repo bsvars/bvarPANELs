@@ -1,8 +1,4 @@
 
-
-
-
-
 #' @title Computes posterior draws of the forecast error variance decomposition
 #' @description For each country, each of the draws from the posterior estimation 
 #' of the model is transformed into a draw from the posterior distribution of the forecast 
@@ -16,10 +12,10 @@
 #' @param horizon a positive integer number denoting the forecast horizon for 
 #' the forecast error variance decompositions.
 #' 
-#' @return  An object of class PosteriorFEVDPANEL, that is, an 
-#' \code{CxNxNx(horizon+1)xS} array with attribute PosteriorFEVDPANEL 
-#' containing \code{S} draws of the forecast error variance decompositions for 
-#' each country.
+#' @return  An object of class \code{PosteriorFEVDPANEL}, that is, a list with 
+#' \code{C} elements containing \code{NxNx(horizon+1)xS} arrays of class 
+#' \code{PosteriorFEVD} with \code{S} draws of country-specific forecast error 
+#' variance decompositions.
 #' 
 #' @seealso \code{\link{estimate}}
 #'
@@ -57,23 +53,40 @@
 #' @export
 compute_variance_decompositions.PosteriorBVARPANEL <- function(posterior, horizon) {
 
-  posterior_Sigma = posterior$posterior$Sigma_c
-  posterior_A     = posterior$posterior$A_c
+  posterior_Sigma = posterior$posterior$Sigma_c_cpp
+  posterior_A     = posterior$posterior$A_c_cpp
   posterior_Sg    = posterior$posterior$Sigma
   posterior_Ag    = posterior$posterior$A
-  N               = dim(posterior_A)[2]
-  C               = dim(posterior_A)[3]
-  S               = dim(posterior_A)[4]
+  N               = dim(posterior_Ag)[2]
+  C               = dim(posterior_A[1][[1]])[3]
+  S               = dim(posterior_A)[1]
   p               = posterior$last_draw$p
+  c_names         = names(posterior$last_draw$data_matrices$Y)
   
-  fff             = .Call(`_bvarPANELs_panel_variance_decompositions`, posterior_Sigma, posterior_A, posterior_Sg, posterior_Ag, horizon, p, TRUE)
-  fevd            = array(NA, c(C + 1, N, N, horizon + 1, S))
+  fff             = .Call(`_bvarPANELs_panel_variance_decompositions`, 
+                          posterior_Sigma, 
+                          posterior_A, 
+                          posterior_Sg, 
+                          posterior_Ag, 
+                          horizon, 
+                          p, 
+                          TRUE
+                    )
   
-  for (s in 1:S) {
-    for (c in 1:(C + 1)) {
-      fevd[c,,,,s] = fff[c,s][[1]]
+  fevd            = list()
+  for (c in 1:(C + 1)) {
+    fevd_c          = array(NA, c(N, N, horizon + 1, S))
+    for (s in 1:S) {
+      fevd_c[,,,s]  = fff[c, s][[1]]
     }
+    na_check        = apply(fevd_c, 4, function(x) any(is.na(x)))
+    fevd_c          = fevd_c[,,, !na_check]
+    class(fevd_c)   = "PosteriorFEVD"
+    fevd[[c]]       = fevd_c
   }
   
+  names(fevd) = c(c_names, "Global")
+  
   class(fevd) <- "PosteriorFEVDPANEL"
+  return(fevd)
 }

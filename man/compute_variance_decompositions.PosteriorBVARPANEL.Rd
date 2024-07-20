@@ -15,10 +15,10 @@
 the forecast error variance decompositions.}
 }
 \value{
-An object of class PosteriorFEVDPANEL, that is, an 
-\code{CxNxNx(horizon+1)xS} array with attribute PosteriorFEVDPANEL 
-containing \code{S} draws of the forecast error variance decompositions for 
-each country.
+An object of class \code{PosteriorFEVDPANEL}, that is, a list with 
+\code{C} elements containing \code{NxNx(horizon+1)xS} arrays of class 
+\code{PosteriorFEVD} with \code{S} draws of country-specific forecast error 
+variance decompositions.
 }
 \description{
 For each country, each of the draws from the posterior estimation 
