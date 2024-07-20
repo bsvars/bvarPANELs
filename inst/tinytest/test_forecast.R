@@ -19,12 +19,12 @@ suppressMessages(
 
 
 expect_identical(
-  ff$forecasts[1,1,1,1], ff2$forecasts[1,1,1,1],
+  ff[[1]]$forecasts[1,1,1], ff2[[1]]$forecasts[1,1,1],
   info = "forecast: forecast identical for normal and pipe workflow."
 )
 
 expect_true(
-  is.numeric(ff$forecasts) & is.array(ff$forecasts),
+  is.numeric(ff[[1]]$forecasts) & is.array(ff[[1]]$forecasts),
   info = "forecast: returns numeric array."
 )
 
@@ -60,17 +60,17 @@ suppressMessages(
 
 
 expect_identical(
-  ff$forecasts[1,1,1,1], ff2$forecasts[1,1,1,1],
+  ff[[1]]$forecasts[1,1,1], ff2[[1]]$forecasts[1,1,1],
   info = "conditional forecast: forecast identical for normal and pipe workflow."
 )
 
 expect_equivalent(
-  ilo_conditional_forecasts[[1]][1,4], ff2$forecasts[1,4,1,1],
+  ilo_conditional_forecasts[[1]][1,4], ff2[[1]]$forecasts[4,1,1],
   info = "conditional forecast: forecasts and provided conditional forecasts identical."
 )
 
 expect_true(
-  is.numeric(ff$forecasts) & is.array(ff$forecasts),
+  is.numeric(ff[[1]]$forecasts) & is.array(ff[[1]]$forecasts),
   info = "conditional forecast: returns numeric array."
 )
 
@@ -107,12 +107,12 @@ suppressMessages(
 
 
 expect_identical(
-  ff$forecasts[1,1,1,1], ff2$forecasts[1,1,1,1],
+  ff[[1]]$forecasts[1,1,1], ff2[[1]]$forecasts[1,1,1],
   info = "exogenous forecast: forecast identical for normal and pipe workflow."
 )
 
 expect_true(
-  is.numeric(ff$forecasts) & is.array(ff$forecasts),
+  is.numeric(ff[[1]]$forecasts) & is.array(ff[[1]]$forecasts),
   info = "exogenous forecast: returns numeric array."
 )
 
