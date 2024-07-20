@@ -18,7 +18,7 @@
 )
 }
 \arguments{
-\item{x}{an object of class Forecasts obtained using the
+\item{x}{an object of class \code{ForecastsPANEL} obtained using the
 \code{forecast()} function containing posterior draws of 
 fitted values of dependent variables.}
 
@@ -52,6 +52,7 @@ median and percentiles.
 specification = specify_bvarPANEL$new(ilo_cubic_panel)    # specify the model
 burn_in       = estimate(specification, 10)               # run the burn-in
 posterior     = estimate(burn_in, 10)                     # estimate the model
+
 # forecast 6 years ahead
 predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_forecasts)
 plot(predictive, which_c = "POL")                                # plot forecasts

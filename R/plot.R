@@ -4,7 +4,7 @@
 #' @description Plots of fitted values of dependent variables including their 
 #' median and percentiles.
 #' 
-#' @param x an object of class Forecasts obtained using the
+#' @param x an object of class \code{ForecastsPANEL} obtained using the
 #' \code{forecast()} function containing posterior draws of 
 #' fitted values of dependent variables.
 #' @param which_c a positive integer or a character string specifying the country 
@@ -31,6 +31,7 @@
 #' specification = specify_bvarPANEL$new(ilo_cubic_panel)    # specify the model
 #' burn_in       = estimate(specification, 10)               # run the burn-in
 #' posterior     = estimate(burn_in, 10)                     # estimate the model
+#'
 #' # forecast 6 years ahead
 #' predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_forecasts)
 #' plot(predictive, which_c = "POL")                                # plot forecasts
@@ -71,13 +72,100 @@ plot.ForecastsPANEL = function(
   
   plot(
     x[[which_c]],
-    probability = 0.9,
-    data_in_plot = 1,
-    col = "#ff69b4",
+    probability,
+    data_in_plot,
+    col,
     main,
     xlab,
-    mar.multi = c(1, 4.6, 0, 2.1),
-    oma.multi = c(6, 0, 5, 0),
+    mar.multi,
+    oma.multi,
     ...
   )
-}
+} # END plot.ForecastsPANEL
+
+
+
+
+
+
+
+
+#' @title Plots forecast error variance decompositions
+#'
+#' @description Plots of the posterior means of the forecast error variance 
+#' decompositions.
+#' 
+#' @param x an object of class \code{PosteriorFEVDPANEL} obtained using the
+#' \code{compute_variance_decompositions()} function containing posterior draws of 
+#' forecast error variance decompositions.
+#' @param which_c a positive integer or a character string specifying the country 
+#' for which the forecast should be plotted.
+#' @param cols an \code{N}-vector with colours of the plot
+#' @param main an alternative main title for the plot
+#' @param xlab an alternative x-axis label for the plot
+#' @param mar.multi the default \code{mar} argument setting in \code{graphics::par}. Modify with care!
+#' @param oma.multi the default \code{oma} argument setting in \code{graphics::par}. Modify with care!
+#' @param ... additional arguments affecting the summary produced.
+#' 
+#' @method plot PosteriorFEVDPANEL
+#' 
+#' @seealso \code{\link{compute_variance_decompositions.PosteriorBVARPANEL}}
+#'
+#' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
+#' 
+#' @examples
+#' set.seed(123)
+#' specification  = specify_bvarPANEL$new(ilo_cubic_panel)
+#' 
+#' # run the burn-in
+#' burn_in        = estimate(specification, 10)
+#' 
+#' # estimate the model
+#' posterior      = estimate(burn_in, 20)
+#' 
+#' # compute forecast error variance decomposition 4 years ahead
+#' fevd           = compute_variance_decompositions(posterior, horizon = 4)
+#' plot(fevd, which_c = "POL")
+#' 
+#' # workflow with the pipe |>
+#' ############################################################
+#' set.seed(123)
+#' ilo_cubic_panel |>
+#'   specify_bvarPANEL$new() |>
+#'   estimate(S = 10) |> 
+#'   estimate(S = 20) |> 
+#'   compute_variance_decompositions(horizon = 4) |>
+#'   plot(which_c = "POL")
+#' 
+#' @export
+plot.PosteriorFEVDPANEL = function(
+    x,
+    which_c,
+    cols,
+    main,
+    xlab,
+    mar.multi = c(1, 4.6, 0, 4.6),
+    oma.multi = c(6, 0, 5, 0),
+    ...
+) {
+ 
+  if (is.numeric(which_c)) {
+    stopifnot("Argument which_c must be a positive integer indicating one of the countries."
+              = length(which_c) == 1 & which_c %% 1 == 0 & which_c > 0 & which_c <= length(x))
+  } else if (is.character(which_c)) {
+    stopifnot("Argument which_c must be a character string indicating one of the countries."
+              = which_c %in% names(x))
+  } else {
+    stop("Argument which_c must be either a positive integer or a character string.")
+  }
+  
+  plot(
+    x[[which_c]],
+    cols,
+    main,
+    xlab,
+    mar.multi,
+    oma.multi,
+    ...
+  )
+} # END plot.PosteriorFEVDPANEL
