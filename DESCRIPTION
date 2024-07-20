@@ -18,7 +18,12 @@ Imports:
     Rcpp (>= 1.0.12),
     RcppProgress,
     RcppTN
-LinkingTo: bsvars, Rcpp, RcppArmadillo, RcppProgress, RcppTN
+LinkingTo: 
+    bsvars, 
+    Rcpp, 
+    RcppArmadillo, 
+    RcppProgress, 
+    RcppTN
 Suggests: tinytest
 LazyData: true
 Encoding: UTF-8
