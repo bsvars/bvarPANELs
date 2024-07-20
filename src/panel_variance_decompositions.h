@@ -13,6 +13,11 @@ arma::cube Sigma2B_c (
 );
 
 
+arma::cube flip_cube_rows_cols (
+    arma::cube&   x   // (N, K, S)
+);
+
+
 arma::field<arma::cube> panel_variance_decompositions (
     arma::field<arma::cube>&  posterior_Sigma,    // (C)(N, N, S)
     arma::field<arma::cube>&  posterior_A,        // (C)(K, N, S)
