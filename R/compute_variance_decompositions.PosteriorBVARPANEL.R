@@ -17,7 +17,7 @@
 #' \code{PosteriorFEVD} with \code{S} draws of country-specific forecast error 
 #' variance decompositions.
 #' 
-#' @seealso \code{\link{estimate}}
+#' @seealso \code{\link{estimate.PosteriorBVARPANEL}}
 #'
 #' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
 #' 
