@@ -7,4 +7,5 @@
 5. The package includes possibility of conditional forecasting given projected paths of some of the variables.
 [#8](https://github.com/bsvars/bvarPANELs/issues/8)
 6. The package includes estimation and forecasting with exogenous variables. [#12](https://github.com/bsvars/bvarPANELs/issues/12)
+7. The package includes forecast error variance decomposition analysis [#14](https://github.com/bsvars/bvarPANELs/issues/14)
 

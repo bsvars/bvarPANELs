@@ -5,7 +5,7 @@
 \title{Bayesian estimation of a Bayesian Hierarchical Panel Vector 
 Autoregression using Gibbs sampler}
 \usage{
-\method{estimate}{PosteriorBVARPANEL}(specification, S, thin = 10, show_progress = TRUE)
+\method{estimate}{PosteriorBVARPANEL}(specification, S, thin = 1, show_progress = TRUE)
 }
 \arguments{
 \item{specification}{an object of class PosteriorBVARPANEL generated using 

@@ -30,7 +30,7 @@
 #' @aliases bvarPANELs-package bvarPANELs
 #' @docType package
 #' @useDynLib bvarPANELs, .registration = TRUE
-#' @importFrom bsvars estimate forecast
+#' @importFrom bsvars estimate forecast compute_variance_decompositions
 #' @importFrom Rcpp sourceCpp
 #' @importFrom R6 R6Class
 #' @importFrom RcppTN rtn dtn
