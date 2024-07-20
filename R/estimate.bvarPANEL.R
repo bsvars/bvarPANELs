@@ -83,7 +83,7 @@ estimate.BVARPANEL <- function(
 estimate.PosteriorBVARPANEL <- function(
     specification, 
     S, 
-    thin = 10, 
+    thin = 1, 
     show_progress = TRUE
 ) {
   
