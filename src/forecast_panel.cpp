@@ -17,8 +17,8 @@ Rcpp::List forecast_bvarPANEL (
     const int                 horizon
 ) {
   
-  const int       N = posterior_A_c_cpp(0).n_cols;
   const int       S = posterior_A_c_cpp.n_elem;
+  const int       N = posterior_A_c_cpp(0).n_cols;
   const int       K = posterior_A_c_cpp(0).n_rows;
   const int       C = posterior_A_c_cpp(0).n_slices;
   
