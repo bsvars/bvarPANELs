@@ -192,3 +192,77 @@ summary.PosteriorBVARPANEL = function(
   
   return(out)
 } # END summary.PosteriorBVARPANEL
+
+
+
+
+
+
+#' @title Provides posterior summary of forecast error variance decompositions
+#'
+#' @description Provides posterior means of the forecast error variance 
+#' decompositions of each variable at all horizons.
+#' 
+#' @param object an object of class \code{PosteriorFEVDPANEL} obtained using the
+#' \code{compute_variance_decompositions()} function containing draws from the 
+#' posterior distribution of the forecast error variance decompositions. 
+#' @param which_c a positive integer or a character string specifying the country 
+#' for which the forecast should be plotted.
+#' @param ... additional arguments affecting the summary produced.
+#' 
+#' @return A list reporting the posterior mean of the forecast error variance 
+#' decompositions of each variable at all horizons.
+#' 
+#' @method summary PosteriorFEVDPANEL
+#' 
+#' @seealso \code{\link{compute_variance_decompositions.PosteriorBVARPANEL}}, \code{\link{plot}}
+#'
+#' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
+#' 
+#' @examples
+#' # upload data
+#' data(ilo_cubic_panel)
+#' 
+#' # specify the model and set seed
+#' set.seed(123)
+#' specification  = specify_bvarPANEL$new(ilo_cubic_panel, p = 1)
+#' 
+#' # run the burn-in
+#' burn_in        = estimate(specification, 10)
+#' 
+#' # estimate the model
+#' posterior      = estimate(burn_in, 20)
+#' 
+#' # compute forecast error variance decomposition 4 years ahead
+#' fevd           = compute_variance_decompositions(posterior, horizon = 4)
+#' summary(fevd, which_c = "POL")
+#' 
+#' # workflow with the pipe |>
+#' ############################################################
+#' set.seed(123)
+#' ilo_cubic_panel |>
+#'   specify_bvarPANEL$new(p = 1) |>
+#'   estimate(S = 10) |> 
+#'   estimate(S = 20) |> 
+#'   compute_variance_decompositions(horizon = 4) |> 
+#'   summary(which_c = "global")
+#' 
+#' @export
+summary.PosteriorFEVDPANEL = function(
+    object,
+    which_c,
+    ...
+) {
+  
+  if (is.numeric(which_c)) {
+    stopifnot("Argument which_c must be a positive integer indicating one of the countries."
+              = length(which_c) == 1 & which_c %% 1 == 0 & which_c > 0 & which_c <= length(object))
+  } else if (is.character(which_c)) {
+    stopifnot("Argument which_c must be a character string indicating one of the countries."
+              = which_c %in% names(object))
+  } else {
+    stop("Argument which_c must be either a positive integer or a character string.")
+  }
+  
+  summary(object[[which_c]], ...)
+}
