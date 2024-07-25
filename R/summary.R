@@ -266,3 +266,98 @@ summary.PosteriorFEVDPANEL = function(
   
   summary(object[[which_c]], ...)
 }
+
+
+
+
+
+#' @title Provides posterior summary of country-specific Forecasts
+#'
+#' @description Provides posterior summary of the forecasts including their 
+#' mean, standard deviations, as well as 5 and 95 percentiles.
+#' 
+#' @param object an object of class \code{ForecastsPANEL} obtained using the
+#' \code{forecast()} function containing draws the predictive density. 
+#' @param which_c a positive integer or a character string specifying the country 
+#' for which the forecast should be plotted.
+#' @param ... additional arguments affecting the summary produced.
+#' 
+#' @return A list reporting the posterior mean, standard deviations, as well as 
+#' 5 and 95 percentiles of the forecasts for each of the variables and forecast 
+#' horizons.
+#' 
+#' @method summary ForecastsPANEL
+#' 
+#' @seealso \code{\link{forecast.PosteriorBVARPANEL}}, \code{\link{plot}}
+#'
+#' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
+#' 
+#' @examples
+#' data(ilo_cubic_panel)                                   # load the data
+#' data(ilo_exogenous_variables)                           # load the exogenous variables
+#' data(ilo_exogenous_forecasts)                           # load the exogenous forecast
+#' set.seed(123)
+#' 
+#' # specify the model
+#' specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
+#' burn_in       = estimate(specification, 10)             # run the burn-in
+#' posterior     = estimate(burn_in, 10)                   # estimate the model
+#' 
+#' # forecast 6 years ahead
+#' predictive    = forecast(posterior, 6, exogenous_forecast = ilo_exogenous_forecasts)
+#' summary(predictive, which_c = "POL")
+#' 
+#' # workflow with the pipe |>
+#' ############################################################
+#' set.seed(123)
+#' ilo_cubic_panel |>
+#'   specify_bvarPANEL$new() |>
+#'   estimate(S = 10) |> 
+#'   estimate(S = 20) |> 
+#'   forecast(horizon = 2) |> 
+#'   summary(which_c = "POL")
+#' 
+#' # conditional forecasting 6 years ahead conditioning on 
+#' #  provided future values for the Gross Domestic Product 
+#' #  growth rate
+#' ############################################################
+#' data(ilo_conditional_forecasts)                        # load the conditional forecasts of dgdp
+#' specification = specify_bvarPANEL$new(ilo_cubic_panel)    # specify the model
+#' burn_in       = estimate(specification, 10)               # run the burn-in
+#' posterior     = estimate(burn_in, 10)                     # estimate the model
+#' # forecast 6 years ahead
+#' predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_forecasts)
+#' summary(predictive, which_c = "POL")
+#' 
+#' # workflow with the pipe |>
+#' ############################################################
+#' set.seed(123)
+#' ilo_cubic_panel |>
+#'   specify_bvarPANEL$new() |>
+#'   estimate(S = 10) |> 
+#'   estimate(S = 20) |> 
+#'   forecast(
+#'     horizon = 6, 
+#'     conditional_forecast = ilo_conditional_forecasts
+#'   ) |> 
+#'   summary(which_c = "POL")
+#' 
+#' @export
+summary.ForecastsPANEL = function(
+    object,
+    which_c,
+    ...
+) {
+  
+  if (is.numeric(which_c)) {
+    stopifnot("Argument which_c must be a positive integer indicating one of the countries."
+              = length(which_c) == 1 & which_c %% 1 == 0 & which_c > 0 & which_c <= length(object))
+  } else if (is.character(which_c)) {
+    stopifnot("Argument which_c must be a character string indicating one of the countries."
+              = which_c %in% names(object))
+  } else {
+    stop("Argument which_c must be either a positive integer or a character string.")
+  }
+  
+  summary(object[[which_c]], ...)  
+} # END summary.ForecastsPANEL
