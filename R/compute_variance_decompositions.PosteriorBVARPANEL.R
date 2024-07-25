@@ -85,7 +85,7 @@ compute_variance_decompositions.PosteriorBVARPANEL <- function(posterior, horizo
     fevd[[c]]       = fevd_c
   }
   
-  names(fevd) = c(c_names, "Global")
+  names(fevd) = c(c_names, "global")
   
   class(fevd) <- "PosteriorFEVDPANEL"
   return(fevd)
