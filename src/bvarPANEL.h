@@ -15,7 +15,7 @@ Rcpp::List bvarPANEL(
     const Rcpp::List&             starting_values, 
     const int                     thin, // introduce thinning
     const bool                    show_progress,
-    const arma::vec&              rate_target_start_initial
+    const arma::vec&              adptive_alpha_gamma // 2x1 vector with target acceptance rate and step size
 );
 
 

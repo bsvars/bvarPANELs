@@ -51,21 +51,22 @@ double log_kernel_nu (
 );
 
 
-double mcmc_accpetance_rate1 (
-    arma::vec& mcmc
+double cov_nu (
+    const double&   aux_nu,
+    const int&      C,
+    const int&      N
 );
 
 
-double sample_nu (
-    const double&       aux_nu,           // scalar
-    const arma::vec&    posterior_nu,     // sx1
+arma::vec sample_nu (
+    double&             aux_nu,           // scalar
+    double&             adaptive_scale,
     const arma::cube&   aux_Sigma_c_cpp,  // NxNxC
     const arma::cube&   aux_Sigma_c_inv,  // NxNxC
     const arma::mat&    aux_Sigma,        // NxN
     const Rcpp::List&   prior,
     const int&          iteration,        // MCMC iteration passed
-    arma::vec&          scale,            // (Sx1) adaptive scaling
-    const arma::vec&    rate_target_start_initial
+    const arma::vec&    adptive_alpha_gamma // 2x1 vector with target acceptance rate and step size
 );
 
 

@@ -153,38 +153,38 @@ double log_kernel_nu (
 
 
 
-
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
-double mcmc_accpetance_rate1 (
-    arma::vec& mcmc
+double cov_nu (
+    const double&   aux_nu,
+    const int&      C,
+    const int&      N
 ) {
-  const int N = mcmc.n_elem;
-  double acc = 0;
-  for (int i=1; i<N; i++) {
-    if (mcmc(i) == mcmc(i-1)) {
-      acc++;
-    }
-  }
-  return 1 - (acc / (N - 1));
-} // END mcmc_accpetance_rate1
-
-
+  
+  double Cov_nu       = 0;
+  for (int n = 1; n < N + 1; n++) {
+    Cov_nu           += R::psigamma( 0.5 * (aux_nu + 1 - n), 1);
+  } // END n loop
+  Cov_nu             *= (C / 4);
+  Cov_nu             -= (C * N * aux_nu) * (2 * pow(aux_nu - N - 1, 2));
+  Cov_nu              = sqrt(0.01 / Cov_nu);
+  
+  return Cov_nu;
+}
 
 
 
 // [[Rcpp:interface(cpp)]]
 // [[Rcpp::export]]
-double sample_nu (
-    const double&       aux_nu,           // scalar
-    const arma::vec&    posterior_nu,     // sx1
+arma::vec sample_nu (
+    double&             aux_nu,           // scalar
+    double&             adaptive_scale,
     const arma::cube&   aux_Sigma_c_cpp,  // NxNxC
     const arma::cube&   aux_Sigma_c_inv,  // NxNxC
     const arma::mat&    aux_Sigma,        // NxN
     const Rcpp::List&   prior,
     const int&          iteration,        // MCMC iteration passed
-    arma::vec&          scale,            // (Sx1) adaptive scaling
-    const arma::vec&    rate_target_start_initial
+    const arma::vec&    adptive_alpha_gamma // 2x1 vector with target acceptance rate and step size
 ) {
   
   double prior_lambda = as<double>(prior["lambda"]);
@@ -194,40 +194,87 @@ double sample_nu (
   int N               = aux_Sigma.n_rows;
   
   // negative inverted Hessian of full conditional log-kernel
-  double Cov_nu       = 0;
-  for (int n = 1; n < N + 1; n++) {
-    Cov_nu           += R::psigamma( 0.5 * (aux_nu + 1 - n), 1);
-  } // END n loop
-  Cov_nu             *= (C / 4);  
-  Cov_nu             -= (C * N * aux_nu) * (2 * pow(aux_nu - N - 1, 2));
-  Cov_nu              = sqrt(0.01 / Cov_nu);
-  
-  // Adaptive MH scaling
-  double scale_s      = rate_target_start_initial(3);
-  if (iteration > rate_target_start_initial(2)) {
-    vec    nu_to_s    = posterior_nu.head(iteration - 1);
-    double alpha_s    = mcmc_accpetance_rate1( nu_to_s );
-    scale_s           = scale(iteration - 1) + pow(iteration, - rate_target_start_initial(0)) * (alpha_s - rate_target_start_initial(1));
-  }
-  scale(iteration)    = scale_s;
+  double Cov_nu       = cov_nu(aux_nu, C, N);
   
   // Metropolis-Hastings
-  double aux_nu_star  = RcppTN::rtn1( aux_nu, pow(scale_s, 2) * Cov_nu, N + 1, R_PosInf );
+  double aux_nu_star  = RcppTN::rtn1( aux_nu, pow(adaptive_scale * Cov_nu, 0.5), N + 1, R_PosInf );
   double lk_nu_star   = log_kernel_nu ( aux_nu_star, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior_lambda, C, N, K );
   double lk_nu_old    = log_kernel_nu ( aux_nu, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior_lambda, C, N, K );
-  double cgd_ratio    = RcppTN::dtn1( aux_nu_star, aux_nu, pow(scale_s, 2) * Cov_nu, N + 1, R_PosInf ) / 
-                          RcppTN::dtn1( aux_nu, aux_nu_star, pow(scale_s, 2) * Cov_nu, N + 1, R_PosInf );
+  double cgd_ratio    = RcppTN::dtn1( aux_nu_star, aux_nu, pow(adaptive_scale * Cov_nu, 0.5), N + 1, R_PosInf ) / 
+    RcppTN::dtn1( aux_nu, aux_nu_star, pow(adaptive_scale * Cov_nu, 0.5), N + 1, R_PosInf );
+  
+  double alpha        = 1;
+  double kernel_ratio = exp(lk_nu_star - lk_nu_old) * cgd_ratio;
+  if ( kernel_ratio < 1 ) alpha = kernel_ratio;
   
   double u            = randu();
-  double out          = 0;
-  if (u < exp(lk_nu_star - lk_nu_old) * cgd_ratio) {
-    out               = aux_nu_star;
-  } else {
-    out               = aux_nu;
-  } // 
+  if ( u < alpha ) {
+    aux_nu            = aux_nu_star;
+  }
   
+  if (iteration > 1) {
+    adaptive_scale = exp( log(adaptive_scale) + 0.5 * log( 1 + pow(iteration, - adptive_alpha_gamma(1)) * (alpha - adptive_alpha_gamma(0))) );
+  }
+  
+  vec out = {aux_nu, adaptive_scale};
   return out;
 } // END sample_nu
+
+// // [[Rcpp:interface(cpp)]]
+// // [[Rcpp::export]]
+// double sample_nu (
+//     const double&       aux_nu,           // scalar
+//     const arma::vec&    posterior_nu,     // sx1
+//     const arma::cube&   aux_Sigma_c_cpp,  // NxNxC
+//     const arma::cube&   aux_Sigma_c_inv,  // NxNxC
+//     const arma::mat&    aux_Sigma,        // NxN
+//     const Rcpp::List&   prior,
+//     const int&          iteration,        // MCMC iteration passed
+//     arma::vec&          scale,            // (Sx1) adaptive scaling
+//     const arma::vec&    rate_target_start_initial
+// ) {
+//   
+//   double prior_lambda = as<double>(prior["lambda"]);
+//   mat prior_M         = as<mat>(prior["M"]);
+//   int K               = prior_M.n_rows;
+//   int C               = aux_Sigma_c_cpp.n_slices;
+//   int N               = aux_Sigma.n_rows;
+//   
+//   // negative inverted Hessian of full conditional log-kernel
+//   double Cov_nu       = 0;
+//   for (int n = 1; n < N + 1; n++) {
+//     Cov_nu           += R::psigamma( 0.5 * (aux_nu + 1 - n), 1);
+//   } // END n loop
+//   Cov_nu             *= (C / 4);  
+//   Cov_nu             -= (C * N * aux_nu) * (2 * pow(aux_nu - N - 1, 2));
+//   Cov_nu              = sqrt(0.01 / Cov_nu);
+//   
+//   // Adaptive MH scaling
+//   double scale_s      = rate_target_start_initial(3);
+//   if (iteration > rate_target_start_initial(2)) {
+//     vec    nu_to_s    = posterior_nu.head(iteration - 1);
+//     double alpha_s    = mcmc_accpetance_rate1( nu_to_s );
+//     scale_s           = scale(iteration - 1) + pow(iteration, - rate_target_start_initial(0)) * (alpha_s - rate_target_start_initial(1));
+//   }
+//   scale(iteration)    = scale_s;
+//   
+//   // Metropolis-Hastings
+//   double aux_nu_star  = RcppTN::rtn1( aux_nu, pow(scale_s, 2) * Cov_nu, N + 1, R_PosInf );
+//   double lk_nu_star   = log_kernel_nu ( aux_nu_star, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior_lambda, C, N, K );
+//   double lk_nu_old    = log_kernel_nu ( aux_nu, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior_lambda, C, N, K );
+//   double cgd_ratio    = RcppTN::dtn1( aux_nu_star, aux_nu, pow(scale_s, 2) * Cov_nu, N + 1, R_PosInf ) / 
+//                           RcppTN::dtn1( aux_nu, aux_nu_star, pow(scale_s, 2) * Cov_nu, N + 1, R_PosInf );
+//   
+//   double u            = randu();
+//   double out          = 0;
+//   if (u < exp(lk_nu_star - lk_nu_old) * cgd_ratio) {
+//     out               = aux_nu_star;
+//   } else {
+//     out               = aux_nu;
+//   } // 
+//   
+//   return out;
+// } // END sample_nu
 
 
 

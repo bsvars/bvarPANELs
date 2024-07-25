@@ -441,7 +441,7 @@ specify_bvarPANEL = R6::R6Class(
       self$data_matrices   = specify_panel_data_matrices$new(data, self$p, exogenous)
       self$prior           = specify_prior_bvarPANEL$new(C, N, self$p, d)
       self$starting_values = specify_starting_values_bvarPANEL$new(C, N, self$p, d)
-      self$adaptiveMH      = c(0.6, 0.4, 10, 0.1)
+      self$adaptiveMH      = c(0.44, 0.6)
     }, # END initialize
     
     #' @description

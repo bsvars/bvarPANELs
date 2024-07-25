@@ -18,7 +18,7 @@ Rcpp::List bvarPANEL(
     const Rcpp::List&             starting_values, 
     const int                     thin, // introduce thinning
     const bool                    show_progress,
-    const arma::vec&              rate_target_start_initial
+    const arma::vec&              adptive_alpha_gamma // 2x1 vector with target acceptance rate and step size
 ) {
   
   // Progress bar setup
@@ -82,6 +82,11 @@ Rcpp::List bvarPANEL(
   vec   scale(S);
   int   ss = 0;
   
+  // the initial value for the adaptive_scale is set to the negative inverse of 
+  // Hessian for the posterior log_kenel for nu
+  double adaptive_scale = cov_nu(aux_nu, C, N);
+  vec aux_nu_tmp(2);
+
   for (int s=0; s<S; s++) {
     // Rcout << "Iteration: " << s << endl;
     
@@ -102,8 +107,11 @@ Rcpp::List bvarPANEL(
     
     // sample aux_nu
     // Rcout << "  sample nu" << endl;
-    aux_nu      = sample_nu( aux_nu, posterior_nu_S, aux_Sigma_c, aux_Sigma_c_inv, aux_Sigma, prior , s, scale, rate_target_start_initial);
-
+    // aux_nu      = sample_nu( aux_nu, posterior_nu_S, aux_Sigma_c, aux_Sigma_c_inv, aux_Sigma, prior , s, scale, rate_target_start_initial);
+    aux_nu_tmp  = sample_nu ( aux_nu, adaptive_scale, aux_Sigma_c, aux_Sigma_c_inv, aux_Sigma, prior, s, adptive_alpha_gamma );
+    aux_nu      = aux_nu_tmp(0);
+    scale(s)    = aux_nu_tmp(1);
+    
     // sample aux_Sigma
     // Rcout << "  sample Sigma" << endl;
     aux_Sigma   = sample_Sigma( aux_Sigma_c_inv, aux_s, aux_nu, prior );
