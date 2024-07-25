@@ -77,20 +77,24 @@ specify_prior_bvarPANEL = R6::R6Class(
     #' @param N a positive integer - the number of dependent variables in the model.
     #' @param p a positive integer - the autoregressive lag order of the SVAR model.
     #' @param d a positive integer - the number of \code{exogenous} variables in the model.
+    #' @param stationary an \code{N} logical vector - its element set to 
+    #' \code{FALSE} sets the prior mean for the autoregressive parameters of the 
+    #' \code{N}th equation to the white noise process, otherwise to random walk.
     #' @return A new prior specification PriorBVARPANEL.
     #' @examples 
     #' # a prior for 2-country, 3-variable example with one lag and stationary data
     #' prior = specify_prior_bvarPANEL$new(C = 2, N = 3, p = 1)
     #' prior$M
     #' 
-    initialize = function(C, N, p, d = 0){
+    initialize = function(C, N, p, d = 0, stationary = rep(FALSE, N)) {
       stopifnot("Argument C must be a positive integer number." = C > 0 & C %% 1 == 0)
       stopifnot("Argument N must be a positive integer number." = N > 0 & N %% 1 == 0)
       stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
       stopifnot("Argument d must be a non-negative integer number." = d >= 0 & d %% 1 == 0)
+      stopifnot("Argument stationary must be a logical vector of length N." = length(stationary) == N & is.logical(stationary))
     
       K                 = N * p + 1 + d
-      self$M            = t(cbind(diag(N), matrix(0, N, K - N)))
+      self$M            = t(cbind(diag(as.numeric(!stationary)), matrix(0, N, K - N)))
       self$W            = diag(c(kronecker((1:p)^2, rep(1, N) ), rep(10, 1 + d)))
       self$S_inv        = diag(N)
       self$S_Sigma_inv  = diag(N)
@@ -421,11 +425,15 @@ specify_bvarPANEL = R6::R6Class(
     #' with time series data.
     #' @param p a positive integer providing model's autoregressive lag order.
     #' @param exogenous a \code{(T+p)xd} matrix of exogenous variables. 
+    #' @param stationary an \code{N} logical vector - its element set to 
+    #' \code{FALSE} sets the prior mean for the autoregressive parameters of the 
+    #' \code{N}th equation to the white noise process, otherwise to random walk.
     #' @return A new complete specification for the Bayesian Panel VAR model BVARPANEL.
     initialize = function(
     data,
     p = 1L,
-    exogenous = NULL
+    exogenous = NULL,
+    stationary = rep(FALSE, ncol(data[[1]]))
     ) {
       stopifnot("Argument data has to contain matrices with the same number of columns." = length(unique(simplify2array(lapply(data, ncol)))) == 1)
       stopifnot("Argument p has to be a positive integer." = ((p %% 1) == 0 & p > 0))
@@ -439,7 +447,7 @@ specify_bvarPANEL = R6::R6Class(
       }
       
       self$data_matrices   = specify_panel_data_matrices$new(data, self$p, exogenous)
-      self$prior           = specify_prior_bvarPANEL$new(C, N, self$p, d)
+      self$prior           = specify_prior_bvarPANEL$new(C, N, self$p, d, stationary)
       self$starting_values = specify_starting_values_bvarPANEL$new(C, N, self$p, d)
       self$adaptiveMH      = c(0.44, 0.6)
     }, # END initialize
