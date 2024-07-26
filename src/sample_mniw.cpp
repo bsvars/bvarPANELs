@@ -167,7 +167,7 @@ double cov_nu (
   } // END n loop
   Cov_nu             *= (C / 4);
   Cov_nu             -= (C * N * aux_nu) * (2 * pow(aux_nu - N - 1, 2));
-  Cov_nu              = sqrt(0.01 / Cov_nu);
+  Cov_nu              = sqrt(1 / Cov_nu);
   
   return Cov_nu;
 }
@@ -197,11 +197,11 @@ arma::vec sample_nu (
   double Cov_nu       = cov_nu(aux_nu, C, N);
   
   // Metropolis-Hastings
-  double aux_nu_star  = RcppTN::rtn1( aux_nu, pow(adaptive_scale * Cov_nu, 0.5), N + 1, R_PosInf );
+  double aux_nu_star  = RcppTN::rtn1( aux_nu, adaptive_scale * Cov_nu, N + 1, R_PosInf );
   double lk_nu_star   = log_kernel_nu ( aux_nu_star, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior_lambda, C, N, K );
   double lk_nu_old    = log_kernel_nu ( aux_nu, aux_Sigma_c_cpp, aux_Sigma_c_inv, aux_Sigma, prior_lambda, C, N, K );
-  double cgd_ratio    = RcppTN::dtn1( aux_nu_star, aux_nu, pow(adaptive_scale * Cov_nu, 0.5), N + 1, R_PosInf ) / 
-    RcppTN::dtn1( aux_nu, aux_nu_star, pow(adaptive_scale * Cov_nu, 0.5), N + 1, R_PosInf );
+  double cgd_ratio    = RcppTN::dtn1( aux_nu_star, aux_nu, adaptive_scale * Cov_nu, N + 1, R_PosInf ) / 
+    RcppTN::dtn1( aux_nu, aux_nu_star, adaptive_scale * Cov_nu, N + 1, R_PosInf );
   
   double alpha        = 1;
   double kernel_ratio = exp(lk_nu_star - lk_nu_old) * cgd_ratio;
