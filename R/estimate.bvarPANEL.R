@@ -14,19 +14,19 @@
 #' \eqn{A_c} is an \code{NxK} matrix of country-specific autoregressive slope 
 #' coefficients and parameters on deterministic terms in \eqn{X_c}.
 #' 
-#' @param specification an object of class BVARPANEL generated using the 
+#' @param specification an object of class \code{BVARPANEL} generated using the 
 #' \code{specify_bvarPANEL$new()} function.
 #' @param S a positive integer, the number of posterior draws to be generated
 #' @param thin a positive integer, specifying the frequency of MCMC output thinning
 #' @param show_progress a logical value, if \code{TRUE} the estimation progress 
 #' bar is visible
 #' 
-#' @return An object of class PosteriorBVARPANEL containing the Bayesian 
+#' @return An object of class \code{PosteriorBVARPANEL} containing the Bayesian 
 #' estimation output and containing two elements:
 #' 
 #'  \code{posterior} a list with a collection of \code{S} draws from the 
 #'  posterior distribution generated via Gibbs sampler.
-#' \code{last_draw} an object of class BVARPANEL with the last draw of the 
+#' \code{last_draw} an object of class \code{BVARPANEL} with the last draw of the 
 #' current MCMC run as the starting value to be passed to the continuation of 
 #' the MCMC estimation using the \code{estimate()} method. 
 #'
@@ -74,7 +74,7 @@ estimate.BVARPANEL <- function(
 #' 
 #' @method estimate PosteriorBVARPANEL
 #' 
-#' @param specification an object of class PosteriorBVARPANEL generated using 
+#' @param specification an object of class \code{PosteriorBVARPANEL} generated using 
 #' the \code{estimate.BVARPANEL()} function. This setup facilitates the 
 #' continuation of the MCMC sampling starting from the last draw of the previous 
 #' run.

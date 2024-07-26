@@ -8,7 +8,7 @@ Autoregression using Gibbs sampler}
 \method{estimate}{PosteriorBVARPANEL}(specification, S, thin = 1, show_progress = TRUE)
 }
 \arguments{
-\item{specification}{an object of class PosteriorBVARPANEL generated using 
+\item{specification}{an object of class \code{PosteriorBVARPANEL} generated using 
 the \code{estimate.BVARPANEL()} function. This setup facilitates the 
 continuation of the MCMC sampling starting from the last draw of the previous 
 run.}
@@ -21,12 +21,12 @@ run.}
 bar is visible}
 }
 \value{
-An object of class PosteriorBVARPANEL containing the Bayesian 
+An object of class \code{PosteriorBVARPANEL} containing the Bayesian 
 estimation output and containing two elements:
 
  \code{posterior} a list with a collection of \code{S} draws from the 
  posterior distribution generated via Gibbs sampler.
-\code{last_draw} an object of class BVARPANEL with the last draw of the 
+\code{last_draw} an object of class \code{BVARPANEL} with the last draw of the 
 current MCMC run as the starting value to be passed to the continuation of 
 the MCMC estimation using the \code{estimate()} method.
 }
