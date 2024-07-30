@@ -58,9 +58,20 @@ estimate.BVARPANEL <- function(
   starting_values     = specification$starting_values$get_starting_values()
   data_matrices       = specification$data_matrices$get_data_matrices()
   adaptiveMH          = specification$adaptiveMH
+  simple              = specification$simple
   
   # estimation
-  qqq                 = .Call(`_bvarPANELs_bvarPANEL`, S, data_matrices$Y, data_matrices$X, prior, starting_values, thin, show_progress, adaptiveMH)
+  qqq                 = .Call(`_bvarPANELs_bvarPANEL`, 
+                              S, 
+                              data_matrices$Y, 
+                              data_matrices$X, 
+                              prior, 
+                              starting_values, 
+                              thin, 
+                              show_progress, 
+                              adaptiveMH,
+                              simple
+                             )
   
   specification$starting_values$set_starting_values(qqq$last_draw)
   output              = specify_posterior_bvarPANEL$new(specification, qqq$posterior)
@@ -92,9 +103,20 @@ estimate.PosteriorBVARPANEL <- function(
   starting_values     = specification$last_draw$starting_values$get_starting_values()
   data_matrices       = specification$last_draw$data_matrices$get_data_matrices()
   adaptiveMH          = specification$last_draw$adaptiveMH
+  simple              = specification$last_draw$simple
   
   # estimation
-  qqq                 = .Call(`_bvarPANELs_bvarPANEL`, S, data_matrices$Y, data_matrices$X, prior, starting_values, thin, show_progress, adaptiveMH)
+  qqq                 = .Call(`_bvarPANELs_bvarPANEL`, 
+                              S, 
+                              data_matrices$Y, 
+                              data_matrices$X, 
+                              prior, 
+                              starting_values, 
+                              thin, 
+                              show_progress, 
+                              adaptiveMH, 
+                              simple
+                             )
   
   specification$last_draw$starting_values$set_starting_values(qqq$last_draw)
   output              = specify_posterior_bvarPANEL$new(specification$last_draw, qqq$posterior)
