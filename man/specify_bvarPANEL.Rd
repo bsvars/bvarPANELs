@@ -77,6 +77,8 @@ spec$set_adaptiveMH(c(0.6, 0.4, 10, 0.1))
 \item{\code{adaptiveMH}}{a vector of four values setting the adaptive MH sampler 
 for nu: adaptive rate, target acceptance rate, the iteration at which to 
 start adapting, the initial scaling rate}
+
+\item{\code{simple}}{a logical value denoting whether a simplified model is used.}
 }
 \if{html}{\out{</div>}}
 }
@@ -101,7 +103,8 @@ Create a new specification of the Bayesian Panel VAR model BVARPANEL.
   data,
   p = 1L,
   exogenous = NULL,
-  stationary = rep(FALSE, ncol(data[[1]]))
+  stationary = rep(FALSE, ncol(data[[1]])),
+  simple = FALSE
 )}\if{html}{\out{</div>}}
 }
 
@@ -118,6 +121,8 @@ with time series data.}
 \item{\code{stationary}}{an \code{N} logical vector - its element set to 
 \code{FALSE} sets the prior mean for the autoregressive parameters of the 
 \code{N}th equation to the white noise process, otherwise to random walk.}
+
+\item{\code{simple}}{a logical - if \code{TRUE} the simplified model is initialised.}
 }
 \if{html}{\out{</div>}}
 }

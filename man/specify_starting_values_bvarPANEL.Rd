@@ -88,7 +88,7 @@ parameter \eqn{\mathbf{\Sigma}_c}.}
 \subsection{Method \code{new()}}{
 Create new starting values StartingValuesBVARPANEL
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{specify_starting_values_bvarPANEL$new(C, N, p, d = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{specify_starting_values_bvarPANEL$new(C, N, p, d = 0, simple = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -101,6 +101,9 @@ Create new starting values StartingValuesBVARPANEL
 \item{\code{p}}{a positive integer - the autoregressive lag order of the SVAR model.}
 
 \item{\code{d}}{a positive integer - the number of \code{exogenous} variables in the model.}
+
+\item{\code{simple}}{a logical - if \code{TRUE} the starting values for a 
+simplified model are set.}
 }
 \if{html}{\out{</div>}}
 }

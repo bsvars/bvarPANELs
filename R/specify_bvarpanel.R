@@ -201,12 +201,14 @@ specify_starting_values_bvarPANEL = R6::R6Class(
     #' @param N a positive integer - the number of dependent variables in the model.
     #' @param p a positive integer - the autoregressive lag order of the SVAR model.
     #' @param d a positive integer - the number of \code{exogenous} variables in the model.
+    #' @param simple a logical - if \code{TRUE} the starting values for a 
+    #' simplified model are set.
     #' @return Starting values StartingValuesBVARPANEL
     #' @examples 
     #' # starting values for Bayesian Panel VAR 2-country model with 4 lags for a 3-variable system.
     #' sv = specify_starting_values_bvarPANEL$new(C = 2, N = 3, p = 4)
     #' 
-    initialize = function(C, N, p, d = 0){
+    initialize = function(C, N, p, d = 0, simple = FALSE){
       stopifnot("Argument C must be a positive integer number." = C > 0 & C %% 1 == 0)
       stopifnot("Argument N must be a positive integer number." = N > 0 & N %% 1 == 0)
       stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
@@ -216,9 +218,15 @@ specify_starting_values_bvarPANEL = R6::R6Class(
       self$A_c        = array(stats::rnorm(C * K * N, sd = 0.001), c(K, N, C))
       self$Sigma_c    = stats::rWishart(C, N + 1, diag(N))
       self$A          = matrix(stats::rnorm(K * N, sd = 0.001), K, N) + diag(K)[,1:N]
-      self$V          = stats::rWishart(1, K + 1, diag(K))[,,1]
+      
+      if (simple) {
+        self$V          = stats::rWishart(1, K + 1, diag(K))[,,1]
+      } else {
+        self$V          = diag(c(kronecker((1:p)^2, rep(1, N) ), rep(10, 1 + d)))
+      }
+      
       self$Sigma      = stats::rWishart(1, N + 1, diag(N))[,,1]
-      self$nu         = N + 1 + 0.1
+      self$nu         = N + 2
       self$m          = stats::rnorm(1, sd = 0.001)
       self$w          = stats::rgamma(1, 1)
       self$s          = stats::rgamma(1, 1)
@@ -419,6 +427,9 @@ specify_bvarPANEL = R6::R6Class(
     #' start adapting, the initial scaling rate
     adaptiveMH             = numeric(),
     
+    #' @field simple a logical value denoting whether a simplified model is used.
+    simple                 = logical(),
+    
     #' @description
     #' Create a new specification of the Bayesian Panel VAR model BVARPANEL.
     #' @param data a list with \code{C} elements of \code{(T_c+p)xN} matrices 
@@ -428,15 +439,18 @@ specify_bvarPANEL = R6::R6Class(
     #' @param stationary an \code{N} logical vector - its element set to 
     #' \code{FALSE} sets the prior mean for the autoregressive parameters of the 
     #' \code{N}th equation to the white noise process, otherwise to random walk.
+    #' @param simple a logical - if \code{TRUE} the simplified model is initialised.
     #' @return A new complete specification for the Bayesian Panel VAR model BVARPANEL.
     initialize = function(
     data,
     p = 1L,
     exogenous = NULL,
-    stationary = rep(FALSE, ncol(data[[1]]))
+    stationary = rep(FALSE, ncol(data[[1]])),
+    simple = FALSE
     ) {
       stopifnot("Argument data has to contain matrices with the same number of columns." = length(unique(simplify2array(lapply(data, ncol)))) == 1)
       stopifnot("Argument p has to be a positive integer." = ((p %% 1) == 0 & p > 0))
+      stopifnot("Argument simple must be a logical value." = is.logical(simple) & (simple == TRUE || simple == FALSE))
       
       self$p    = p
       C         = length(data)
@@ -448,8 +462,9 @@ specify_bvarPANEL = R6::R6Class(
       
       self$data_matrices   = specify_panel_data_matrices$new(data, self$p, exogenous)
       self$prior           = specify_prior_bvarPANEL$new(C, N, self$p, d, stationary)
-      self$starting_values = specify_starting_values_bvarPANEL$new(C, N, self$p, d)
+      self$starting_values = specify_starting_values_bvarPANEL$new(C, N, self$p, d, simple)
       self$adaptiveMH      = c(0.44, 0.6)
+      self$simple          = simple
     }, # END initialize
     
     #' @description
