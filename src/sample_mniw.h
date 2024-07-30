@@ -15,6 +15,13 @@ arma::field<arma::mat> rmniw1(
 );
 
 
+arma::mat rmn1(
+    const arma::mat& A,     // KxN
+    const arma::mat& V,     // KxK
+    const arma::mat& S      // NxN
+);
+
+
 double sample_m (
     const arma::mat&    aux_A,    // KxN
     const arma::mat&    aux_V,    // KxK
@@ -26,6 +33,17 @@ double sample_m (
 
 double sample_w (
     const arma::mat&    aux_V,    // KxK
+    const Rcpp::List&   prior
+);
+
+
+double sample_w_simple (
+    const arma::cube&   aux_A_c_cpp,      // KxNxC
+    const arma::cube&   aux_Sigma_c_inv,  // NxNxC
+    const arma::mat&    aux_A,            // KxN
+    const arma::mat&    aux_V,    // KxK
+    const double&       aux_m,            // scalar
+    const double&       aux_s,            // scalar
     const Rcpp::List&   prior
 );
 
@@ -84,7 +102,8 @@ arma::field<arma::mat> sample_AV (
     const double&       aux_s,            // scalar
     const double&       aux_m,            // scalar
     const double&       aux_w,            // scalar
-    const Rcpp::List&   prior
+    const Rcpp::List&   prior,
+    bool                simple = false
 );
 
 

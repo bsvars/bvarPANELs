@@ -13,10 +13,6 @@ arma::field<arma::mat> rmniw1(
     const arma::mat& S,     // NxN
     const double&    nu     // scalar
 ) {
-  // Rcout << "  A: " << A << std::endl;
-  // Rcout << "  V: " << V.is_sympd() << std::endl;
-  // Rcout << "  S: " << S.is_sympd() << std::endl;
-  // Rcout << "  nu: " << nu << std::endl;
   
   mat SS        = 0.5 * (S + S.t());
   mat Sigma     = iwishrnd(SS, nu);
@@ -28,6 +24,22 @@ arma::field<arma::mat> rmniw1(
   out(1)        = Sigma;
   return out;
 } // END rmniw1
+
+
+
+// [[Rcpp:interface(cpp,r)]]
+// [[Rcpp::export]]
+arma::mat rmn1(
+    const arma::mat& A,     // KxN
+    const arma::mat& V,     // KxK
+    const arma::mat& S      // NxN
+) {
+  
+  mat X_tmp     = mat(size(A), fill::randn);
+  mat X         = A + chol(V).t() * X_tmp * chol(S);
+  
+  return X;
+} // END rmn1
 
 
 // [[Rcpp:interface(cpp)]]
@@ -80,6 +92,45 @@ double sample_w (
   double out        = randg( distr_param(a_w_bar, s_w_bar) );
   return out;
 } // END sample_w
+
+
+
+
+// [[Rcpp:interface(cpp)]]
+// [[Rcpp::export]]
+double sample_w_simple (
+    const arma::cube&   aux_A_c_cpp,      // KxNxC
+    const arma::cube&   aux_Sigma_c_inv,  // NxNxC
+    const arma::mat&    aux_A,            // KxN
+    const arma::mat&    aux_V,    // KxK
+    const double&       aux_m,            // scalar
+    const double&       aux_s,            // scalar
+    const Rcpp::List&   prior
+) {
+  
+  int C             = aux_A_c_cpp.n_slices;
+  int N             = aux_A_c_cpp.n_cols;
+  int K             = aux_A_c_cpp.n_rows;
+  
+  mat prior_M       = as<mat>(prior["M"]);
+  mat prior_S_inv   = as<mat>(prior["S_inv"]);
+  double prior_s_w  = as<double>(prior["s_w"]);
+  double prior_a_w  = as<double>(prior["a_w"]);
+  
+  double sum_quad   = as_scalar((aux_A - aux_m * prior_M) * prior_S_inv * trans(aux_A - aux_m * prior_M) / aux_s);
+  for (int c=0; c<C; c++) {
+    sum_quad      += as_scalar((aux_A_c_cpp.slice(c) - aux_A) * aux_Sigma_c_inv.slice(c) * trans(aux_A_c_cpp.slice(c) - aux_A));
+  }
+  double s_w_bar    = prior_s_w;
+  s_w_bar          += trace(inv_sympd(aux_V) * sum_quad);
+  double a_w_bar    = prior_a_w + (C + 1) * K * N;
+  double out        = s_w_bar / chi2rnd( a_w_bar );
+  
+  return out;
+} // END sample_w_simple
+
+
+
 
 
 // [[Rcpp:interface(cpp)]]
@@ -314,7 +365,8 @@ arma::field<arma::mat> sample_AV (
     const double&       aux_s,            // scalar
     const double&       aux_m,            // scalar
     const double&       aux_w,            // scalar
-    const Rcpp::List&   prior
+    const Rcpp::List&   prior,
+    bool                simple = false
 ) {
   
   int C             = aux_A_c_cpp.n_slices;
@@ -339,12 +391,21 @@ arma::field<arma::mat> sample_AV (
   mat S_bar_inv     = (prior_S_inv / aux_s) + sum_Sc_inv;
   mat S_bar         = inv_sympd(S_bar_inv);
   mat M_bar_trans   = S_bar * ( (aux_m / aux_s) * (prior_S_inv * prior_M.t()) + sum_Sc_invAt);
-  mat W_bar         = (aux_w * prior_W) + (pow(aux_m, 2) / aux_s) * (prior_M * prior_S_inv * prior_M.t())
-    + sum_ASc_invAt - M_bar_trans.t() * S_bar_inv * M_bar_trans;
-  double eta_bar    = C * N + prior_eta;  
+  field<mat>  aux_AV(2);
   
-  arma::field<arma::mat> aux_AV = rmniw1( M_bar_trans, S_bar, W_bar, eta_bar );
-  aux_AV(0)         = trans(aux_AV(0));
+  if ( !simple ) {
+    mat W_bar         = (aux_w * prior_W) + (pow(aux_m, 2) / aux_s) * (prior_M * prior_S_inv * prior_M.t())
+    + sum_ASc_invAt - M_bar_trans.t() * S_bar_inv * M_bar_trans;
+    double  eta_bar   = C * N + prior_eta;  
+    aux_AV            = rmniw1( M_bar_trans, S_bar, W_bar, eta_bar );
+    aux_AV(0)         = trans(aux_AV(0));
+  } else {
+    mat W_bar         = aux_w * prior_W;
+    mat aux_A_tmp     = rmn1(M_bar_trans, S_bar, W_bar);
+    aux_AV(0)         = trans(aux_A_tmp);
+    aux_AV(1)         = prior_W;
+  }
+  
   return aux_AV;
 } // END sample_AV
 

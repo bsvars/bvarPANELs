@@ -18,7 +18,8 @@ Rcpp::List bvarPANEL(
     const Rcpp::List&             starting_values, 
     const int                     thin, // introduce thinning
     const bool                    show_progress,
-    const arma::vec&              adptive_alpha_gamma // 2x1 vector with target acceptance rate and step size
+    const arma::vec&              adptive_alpha_gamma, // 2x1 vector with target acceptance rate and step size
+    bool                          simple = false
 ) {
   
   // Progress bar setup
@@ -65,7 +66,6 @@ Rcpp::List bvarPANEL(
   cube        posterior_V(K, K, SS);
   cube        posterior_Sigma(N, N, SS);
   vec         posterior_nu(SS);
-  vec         posterior_nu_S(S);
   vec         posterior_m(SS);
   vec         posterior_w(SS);
   vec         posterior_s(SS);
@@ -79,7 +79,7 @@ Rcpp::List bvarPANEL(
     aux_Sigma_c_inv.slice(c) = inv_sympd( aux_Sigma_c.slice(c) );
   } // END c loop
   
-  vec   scale(S);
+  mat   aux_V_which = aux_V;
   int   ss = 0;
   
   // the initial value for the adaptive_scale is set to the negative inverse of 
@@ -88,51 +88,50 @@ Rcpp::List bvarPANEL(
   vec aux_nu_tmp(2);
 
   for (int s=0; s<S; s++) {
-    // Rcout << "Iteration: " << s << endl;
     
     // Increment progress bar
     if (any(prog_rep_points == s)) p.increment();
     // Check for user interrupts
     if (s % 200 == 0) checkUserInterrupt();
     
-    // sample aux_m, aux_w, aux_s
-    // Rcout << "  sample m" << endl;
+    // sample aux_m, aux_w, aux_s - this is OK
     aux_m       = sample_m( aux_A, aux_V, aux_s, aux_w, prior );
     
-    // Rcout << "  sample w" << endl;
-    aux_w       = sample_w( aux_V, prior );
+    if ( !simple ) {
+      aux_w       = sample_w( aux_V, prior );
+      aux_V_which = aux_V;
+    } else {
+      aux_w       = sample_w_simple( aux_A_c, aux_Sigma_c_inv, aux_A, aux_V, aux_m, aux_s, prior );
+      aux_V_which = aux_w * aux_V;
+    }
     
-    // Rcout << "  sample s" << endl;
-    aux_s       = sample_s( aux_A, aux_V, aux_Sigma, aux_m, prior );
+    aux_s       = sample_s( aux_A, aux_V_which, aux_Sigma, aux_m, prior );
     
     // sample aux_nu
-    // Rcout << "  sample nu" << endl;
-    // aux_nu      = sample_nu( aux_nu, posterior_nu_S, aux_Sigma_c, aux_Sigma_c_inv, aux_Sigma, prior , s, scale, rate_target_start_initial);
-    aux_nu_tmp  = sample_nu ( aux_nu, adaptive_scale, aux_Sigma_c, aux_Sigma_c_inv, aux_Sigma, prior, s, adptive_alpha_gamma );
-    aux_nu      = aux_nu_tmp(0);
-    scale(s)    = aux_nu_tmp(1);
+    if ( !simple ) {
+      aux_nu_tmp      = sample_nu ( aux_nu, adaptive_scale, aux_Sigma_c, aux_Sigma_c_inv, aux_Sigma, prior, s, adptive_alpha_gamma );
+      aux_nu          = aux_nu_tmp(0);
+      adaptive_scale  = aux_nu_tmp(1);
+    }
     
-    // sample aux_Sigma
-    // Rcout << "  sample Sigma" << endl;
+    // sample aux_Sigma - this is OK!
     aux_Sigma   = sample_Sigma( aux_Sigma_c_inv, aux_s, aux_nu, prior );
     
     // sample aux_A, aux_V
-    // Rcout << "  sample AV" << endl;
-    field<mat> tmp_AV     = sample_AV( aux_A_c, aux_Sigma_c_inv, aux_s, aux_m, aux_w, prior );
+    field<mat> tmp_AV     = sample_AV( aux_A_c, aux_Sigma_c_inv, aux_s, aux_m, aux_w, prior, simple );
     aux_A       = tmp_AV(0);  
-    aux_V       = tmp_AV(1);
+    if ( !simple ) {
+      aux_V       = tmp_AV(1);
+      aux_V_which = aux_V;
+    }
     
     // sample aux_A_c, aux_Sigma_c
-    // Rcout << "  sample A_c Sigma_c" << endl;
-    // Rcout << "  aux_nu: " << aux_nu << endl;
     for (int c=0; c<C; c++) {
-      field<mat> tmp_A_c_Sigma_c  = sample_A_c_Sigma_c( y(c), x(c), aux_A, aux_V, aux_Sigma, aux_nu );
+      field<mat> tmp_A_c_Sigma_c  = sample_A_c_Sigma_c( y(c), x(c), aux_A, aux_V_which, aux_Sigma, aux_nu );
       aux_A_c.slice(c)            = tmp_A_c_Sigma_c(0);
       aux_Sigma_c.slice(c)        = tmp_A_c_Sigma_c(1);
       aux_Sigma_c_inv.slice(c)    = inv_sympd( aux_Sigma_c.slice(c) );
     } // END c loop
-    
-    posterior_nu_S(s) = aux_nu;
     
     if (s % thin == 0) {
       posterior_A_c_cpp(ss)     = aux_A_c;
@@ -170,8 +169,7 @@ Rcpp::List bvarPANEL(
       _["nu"]       = posterior_nu,
       _["m"]        = posterior_m,
       _["w"]        = posterior_w,
-      _["s"]        = posterior_s,
-      _["scale"]    = scale
+      _["s"]        = posterior_s
     )
   );
 } // END bvarPANEL

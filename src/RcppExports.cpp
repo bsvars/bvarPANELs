@@ -15,8 +15,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // bvarPANEL
-Rcpp::List bvarPANEL(const int& S, const Rcpp::List& Y, const Rcpp::List& X, const Rcpp::List& prior, const Rcpp::List& starting_values, const int thin, const bool show_progress, const arma::vec& adptive_alpha_gamma);
-RcppExport SEXP _bvarPANELs_bvarPANEL(SEXP SSEXP, SEXP YSEXP, SEXP XSEXP, SEXP priorSEXP, SEXP starting_valuesSEXP, SEXP thinSEXP, SEXP show_progressSEXP, SEXP adptive_alpha_gammaSEXP) {
+Rcpp::List bvarPANEL(const int& S, const Rcpp::List& Y, const Rcpp::List& X, const Rcpp::List& prior, const Rcpp::List& starting_values, const int thin, const bool show_progress, const arma::vec& adptive_alpha_gamma, bool simple);
+RcppExport SEXP _bvarPANELs_bvarPANEL(SEXP SSEXP, SEXP YSEXP, SEXP XSEXP, SEXP priorSEXP, SEXP starting_valuesSEXP, SEXP thinSEXP, SEXP show_progressSEXP, SEXP adptive_alpha_gammaSEXP, SEXP simpleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -28,7 +28,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type thin(thinSEXP);
     Rcpp::traits::input_parameter< const bool >::type show_progress(show_progressSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type adptive_alpha_gamma(adptive_alpha_gammaSEXP);
-    rcpp_result_gen = Rcpp::wrap(bvarPANEL(S, Y, X, prior, starting_values, thin, show_progress, adptive_alpha_gamma));
+    Rcpp::traits::input_parameter< bool >::type simple(simpleSEXP);
+    rcpp_result_gen = Rcpp::wrap(bvarPANEL(S, Y, X, prior, starting_values, thin, show_progress, adptive_alpha_gamma, simple));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -114,6 +115,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rmn1
+arma::mat rmn1(const arma::mat& A, const arma::mat& V, const arma::mat& S);
+RcppExport SEXP _bvarPANELs_rmn1(SEXP ASEXP, SEXP VSEXP, SEXP SSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type V(VSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type S(SSEXP);
+    rcpp_result_gen = Rcpp::wrap(rmn1(A, V, S));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sample_m
 double sample_m(const arma::mat& aux_A, const arma::mat& aux_V, const double& aux_s, const double& aux_w, const Rcpp::List& prior);
 RcppExport SEXP _bvarPANELs_sample_m(SEXP aux_ASEXP, SEXP aux_VSEXP, SEXP aux_sSEXP, SEXP aux_wSEXP, SEXP priorSEXP) {
@@ -138,6 +152,23 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::mat& >::type aux_V(aux_VSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List& >::type prior(priorSEXP);
     rcpp_result_gen = Rcpp::wrap(sample_w(aux_V, prior));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sample_w_simple
+double sample_w_simple(const arma::cube& aux_A_c_cpp, const arma::cube& aux_Sigma_c_inv, const arma::mat& aux_A, const arma::mat& aux_V, const double& aux_m, const double& aux_s, const Rcpp::List& prior);
+RcppExport SEXP _bvarPANELs_sample_w_simple(SEXP aux_A_c_cppSEXP, SEXP aux_Sigma_c_invSEXP, SEXP aux_ASEXP, SEXP aux_VSEXP, SEXP aux_mSEXP, SEXP aux_sSEXP, SEXP priorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::cube& >::type aux_A_c_cpp(aux_A_c_cppSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type aux_Sigma_c_inv(aux_Sigma_c_invSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type aux_A(aux_ASEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type aux_V(aux_VSEXP);
+    Rcpp::traits::input_parameter< const double& >::type aux_m(aux_mSEXP);
+    Rcpp::traits::input_parameter< const double& >::type aux_s(aux_sSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type prior(priorSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_w_simple(aux_A_c_cpp, aux_Sigma_c_inv, aux_A, aux_V, aux_m, aux_s, prior));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -220,8 +251,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // sample_AV
-arma::field<arma::mat> sample_AV(const arma::cube& aux_A_c_cpp, const arma::cube& aux_Sigma_c_inv, const double& aux_s, const double& aux_m, const double& aux_w, const Rcpp::List& prior);
-RcppExport SEXP _bvarPANELs_sample_AV(SEXP aux_A_c_cppSEXP, SEXP aux_Sigma_c_invSEXP, SEXP aux_sSEXP, SEXP aux_mSEXP, SEXP aux_wSEXP, SEXP priorSEXP) {
+arma::field<arma::mat> sample_AV(const arma::cube& aux_A_c_cpp, const arma::cube& aux_Sigma_c_inv, const double& aux_s, const double& aux_m, const double& aux_w, const Rcpp::List& prior, bool simple);
+RcppExport SEXP _bvarPANELs_sample_AV(SEXP aux_A_c_cppSEXP, SEXP aux_Sigma_c_invSEXP, SEXP aux_sSEXP, SEXP aux_mSEXP, SEXP aux_wSEXP, SEXP priorSEXP, SEXP simpleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -231,7 +262,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type aux_m(aux_mSEXP);
     Rcpp::traits::input_parameter< const double& >::type aux_w(aux_wSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List& >::type prior(priorSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_AV(aux_A_c_cpp, aux_Sigma_c_inv, aux_s, aux_m, aux_w, prior));
+    Rcpp::traits::input_parameter< bool >::type simple(simpleSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_AV(aux_A_c_cpp, aux_Sigma_c_inv, aux_s, aux_m, aux_w, prior, simple));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -269,19 +301,21 @@ RcppExport SEXP _bvarPANELs_RcppExport_registerCCallable() {
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_bvarPANELs_bvarPANEL", (DL_FUNC) &_bvarPANELs_bvarPANEL, 8},
+    {"_bvarPANELs_bvarPANEL", (DL_FUNC) &_bvarPANELs_bvarPANEL, 9},
     {"_bvarPANELs_forecast_bvarPANEL", (DL_FUNC) &_bvarPANELs_forecast_bvarPANEL, 6},
     {"_bvarPANELs_Sigma2B_c", (DL_FUNC) &_bvarPANELs_Sigma2B_c, 2},
     {"_bvarPANELs_panel_variance_decompositions", (DL_FUNC) &_bvarPANELs_panel_variance_decompositions, 7},
     {"_bvarPANELs_rmniw1", (DL_FUNC) &_bvarPANELs_rmniw1, 4},
+    {"_bvarPANELs_rmn1", (DL_FUNC) &_bvarPANELs_rmn1, 3},
     {"_bvarPANELs_sample_m", (DL_FUNC) &_bvarPANELs_sample_m, 5},
     {"_bvarPANELs_sample_w", (DL_FUNC) &_bvarPANELs_sample_w, 2},
+    {"_bvarPANELs_sample_w_simple", (DL_FUNC) &_bvarPANELs_sample_w_simple, 7},
     {"_bvarPANELs_sample_s", (DL_FUNC) &_bvarPANELs_sample_s, 5},
     {"_bvarPANELs_log_kernel_nu", (DL_FUNC) &_bvarPANELs_log_kernel_nu, 8},
     {"_bvarPANELs_cov_nu", (DL_FUNC) &_bvarPANELs_cov_nu, 3},
     {"_bvarPANELs_sample_nu", (DL_FUNC) &_bvarPANELs_sample_nu, 8},
     {"_bvarPANELs_sample_Sigma", (DL_FUNC) &_bvarPANELs_sample_Sigma, 4},
-    {"_bvarPANELs_sample_AV", (DL_FUNC) &_bvarPANELs_sample_AV, 6},
+    {"_bvarPANELs_sample_AV", (DL_FUNC) &_bvarPANELs_sample_AV, 7},
     {"_bvarPANELs_sample_A_c_Sigma_c", (DL_FUNC) &_bvarPANELs_sample_A_c_Sigma_c, 6},
     {"_bvarPANELs_RcppExport_registerCCallable", (DL_FUNC) &_bvarPANELs_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}
