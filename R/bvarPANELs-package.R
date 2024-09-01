@@ -24,7 +24,7 @@
 #'
 #' @description Forecasting a multi-country time series panel data using 
 #' Bayesian Vector Autoregressions with a three-level country-global 
-#' hierarchical prior structure. Copyright: 2024 International Labour Organization.
+#' hierarchical prior structure.
 #' 
 #' @details 
 #' The package provides a set of functions for predictive analysis with the 
