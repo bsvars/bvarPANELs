@@ -103,7 +103,7 @@ posterior     = estimate(burn_in, 10)                   # estimate the model
 
 }
 \seealso{
-\code{\link{bvarPANELs}}, \code{\link{specify_bvarPANEL}}, \code{\link{specify_posterior_bvarPANEL}}
+\code{\link{bvarPANELs}}, \code{\link{specify_bvarPANEL}}, \code{\link{specify_posterior_bvarPANEL}},code{\link{summary.PosteriorBVARPANEL}}
 }
 \author{
 Tomasz Woźniak \email{wozniak.tom@pm.me}

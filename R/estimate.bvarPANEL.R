@@ -79,7 +79,7 @@
 #' the MCMC estimation using the \code{estimate()} method. }
 #' }
 #'
-#' @seealso \code{\link{bvarPANELs}}, \code{\link{specify_bvarPANEL}}, \code{\link{specify_posterior_bvarPANEL}}
+#' @seealso \code{\link{bvarPANELs}}, \code{\link{specify_bvarPANEL}}, \code{\link{specify_posterior_bvarPANEL}},code{\link{summary.PosteriorBVARPANEL}}
 #'
 #' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
 #' 
