@@ -134,8 +134,8 @@ This package is currently in active development.
 data(ilo_cubic_panel)                                   # load the data
 set.seed(123)
 specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
-burn_in       = estimate(specification, S = 10)         # run the burn-in; use S = 5000 at least
-posterior     = estimate(burn_in, S = 10)               # estimate the model; use S = 10000 at least
+burn_in       = estimate(specification, S = 10)         # run the burn-in; use say S = 5000
+posterior     = estimate(burn_in, S = 10)               # estimate the model; use say S = 10000
 predictive    = forecast(posterior, 2)                  # forecast the future       
 
 # workflow with the pipe |>
@@ -160,8 +160,8 @@ specification = specify_bvarPANEL$new(
                   ilo_cubic_panel,
                   exogenous = ilo_exogenous_variables
                 )
-burn_in       = estimate(specification, S = 10)         # run the burn-in; use S = 5000 at least
-posterior     = estimate(burn_in, S = 10)               # estimate the model; use S = 10000 at least
+burn_in       = estimate(specification, S = 10)         # run the burn-in; use say S = 5000
+posterior     = estimate(burn_in, S = 10)               # estimate the model; use say S = 10000
 predictive    = forecast(
                   posterior, 
                   horizon = 6,
