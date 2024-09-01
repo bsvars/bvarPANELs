@@ -24,11 +24,18 @@ bar is visible}
 An object of class \code{PosteriorBVARPANEL} containing the Bayesian 
 estimation output and containing two elements:
 
- \code{posterior} a list with a collection of \code{S} draws from the 
- posterior distribution generated via Gibbs sampler.
-\code{last_draw} an object of class \code{BVARPANEL} with the last draw of the 
+\describe{
+ \item{\code{posterior}}{a list with a collection of \code{S} draws from the 
+ posterior distribution generated via Gibbs sampler. Elements of the list
+ correspond to the parameters of the model listed in section \strong{Details}
+ and are named respectively:
+ \code{A_c}, \code{Sigma_c}, \code{A}, \code{Sigma},
+ \code{V}, \code{nu}, \code{m}, \code{w}, \code{s}. 
+ }
+ \item{\code{last_draw}}{an object of class \code{BVARPANEL} with the last draw of the 
 current MCMC run as the starting value to be passed to the continuation of 
-the MCMC estimation using the \code{estimate()} method.
+the MCMC estimation using the \code{estimate()} method. }
+}
 }
 \description{
 Estimates the Bayesian Hierarchical Panel VAR using the Gibbs 
@@ -40,8 +47,10 @@ The Bayesian Hierarchical Panel Vector Autoregressive model described in
 estimation procedure all the parameters of the model are estimated jointly.
 The list of parameters of the model includes:
 \describe{
- \item{\eqn{\mathbf{A}_c}}{a \code{KxN} country-specific autoregressive parameters matrix}
- \item{\eqn{\mathbf{\Sigma}_c}}{an \code{NxN} country-specific covariance matrix}
+ \item{\eqn{\mathbf{A}_c}}{a \code{KxN} country-specific autoregressive 
+ parameters matrix for each of the countries \eqn{c = 1,\dots,C}}
+ \item{\eqn{\mathbf{\Sigma}_c}}{an \code{NxN} country-specific covariance 
+ matrix for each of the countries \eqn{c = 1,\dots,C}}
  \item{\eqn{\mathbf{A}}}{a \code{KxN} global autoregressive parameters matrix}
  \item{\eqn{\mathbf{\Sigma}}}{an \code{NxN} global covariance matrix}
  \item{\eqn{\mathbf{V}}}{a \code{KxK} covariance matrix of prior for global autoregressive parameters}
@@ -51,20 +60,22 @@ The list of parameters of the model includes:
  \item{\eqn{s}}{prior scaling parameter}
 }
 
-\strong{Gibbs sampler.}
-Is an algorithm to sample random draws from the posterior distribution of the
+\strong{Gibbs sampler}
+is an algorithm to sample random draws from the posterior distribution of the
 parameters of the model given the data. The algorithm is briefly explained 
-on an example of two-parameter model with parameters \eqn{\theta_1} and 
+on an example of a two-parameter model with parameters \eqn{\theta_1} and 
 \eqn{\theta_2}. In order to sample from the joint posterior distribution 
 \eqn{p(\theta_1,\theta_2|\mathbf{Y})} the Gibbs sampler proceeds by sampling 
-from full-conditional posterior distributions of each parameter given all the
-other parameters, denoted by \eqn{p(\theta_1|\theta_2,\mathbf{Y})} and 
-\eqn{p(\theta_2|\theta_1,\mathbf{Y})}.
+from full-conditional posterior distributions of each parameter given data 
+and all the other parameters, denoted by \eqn{p(\theta_1|\theta_2,\mathbf{Y})} 
+and \eqn{p(\theta_2|\theta_1,\mathbf{Y})}. These distributions are available 
+from derivations and should be in a form of distributions that are easy to 
+sample random numbers from.
 
 To obtain \code{S} draws from the posterior distribution:
 \enumerate{
 \item Set the initial values of the parameters \eqn{\theta_2^{(0)}}
-\item At each of the \code{s} iteration:
+\item At each of the \code{s} iterations:
 \enumerate{
 \item Sample \eqn{\theta_1^{(s)}} from \eqn{p(\theta_1|\theta_2^{(s-1)},\mathbf{Y})}
 \item Sample \eqn{\theta_2^{(s)}} from \eqn{p(\theta_2|\theta_1^{(s)},\mathbf{Y})}
