@@ -56,7 +56,9 @@ ilo_cubic_panel |>
 Lütkepohl, H. (2017). Structural VAR Tools, Chapter 4, In: Structural vector autoregressive analysis. Cambridge University Press.
 }
 \seealso{
-\code{\link{estimate.PosteriorBVARPANEL}}
+\code{\link{estimate.PosteriorBVARPANEL}}, 
+\code{\link{summary.PosteriorFEVDPANEL}}, 
+\code{\link{plot.PosteriorFEVDPANEL}}
 }
 \author{
 Tomasz Woźniak \email{wozniak.tom@pm.me}
