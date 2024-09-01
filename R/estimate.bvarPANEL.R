@@ -79,7 +79,8 @@
 #' the MCMC estimation using the \code{estimate()} method. }
 #' }
 #'
-#' @seealso \code{\link{bvarPANELs}}, \code{\link{specify_bvarPANEL}}, \code{\link{specify_posterior_bvarPANEL}},code{\link{summary.PosteriorBVARPANEL}}
+#' @seealso \code{\link{bvarPANELs}}, \code{\link{specify_bvarPANEL}}, 
+#' \code{\link{specify_posterior_bvarPANEL}}, \code{\link{summary.PosteriorBVARPANEL}}
 #'
 #' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
 #' 
@@ -91,8 +92,8 @@
 #' set.seed(123)
 #' # specify the model
 #' specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
-#' burn_in       = estimate(specification, 10)             # run the burn-in
-#' posterior     = estimate(burn_in, 10)                   # estimate the model
+#' burn_in       = estimate(specification, 10)             # run the burn-in; use say S = 5000
+#' posterior     = estimate(burn_in, 10)                   # estimate the model; use say S = 10000
 #' 
 #' @export
 estimate.BVARPANEL <- function(
