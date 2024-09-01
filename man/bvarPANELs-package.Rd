@@ -12,13 +12,15 @@ hierarchical prior structure. Copyright: 2024 International Labour Organization.
 }
 \details{
 The package provides a set of functions for predictive analysis with the 
-Bayesian Hierarchical Panel Vector Autoregression. The model specification
-is initiated using function \code{\link{specify_bvarPANEL}} that creates 
-an object of class \code{BVARPANEL} containing the prior specification, 
-starting values for estimation, data matrices, and some parameters of the 
-Monte Carlo Markov Chain sampling algorithm.
+Bayesian Hierarchical Panel Vector Autoregression. 
 
-\strong{The Model.} The model features country-specific Vector Autoregressive 
+\strong{The Model.} The model specification is initiated using function 
+\code{\link{specify_bvarPANEL}} that creates an object of class 
+\code{BVARPANEL} containing the prior specification, starting values for 
+estimation, data matrices, and the setup of the Monte Carlo Markov 
+Chain sampling algorithm.
+
+The model features country-specific Vector Autoregressive 
 (VAR) equation for \code{N} dependent variables with \code{T_c} observations 
 for each country \code{c}. Its equation is given by
 \deqn{\mathbf{Y}_c = \mathbf{A}_c\mathbf{X}_c + \mathbf{E}_c}
@@ -31,14 +33,15 @@ parameter matrix \eqn{\mathbf{A}_c} includes autoregressive matrices capturing t
 effects of the lagged vectors of dependent variables at lags from 1 to \code{p},
 a constant term and a set of exogenous variables.
 
-The error terms for each of the periods have zero conditional mean, 
+The error terms for each of the periods have zero conditional mean and
 conditional covariance given by the \code{NxN} matrix \eqn{\mathbf{\Sigma}}. The errors 
-are jointly normally distributed and not serially correlated. These 
+are jointly normally distributed and serially uncorrelated. These 
 assumptions are summarised using a matrix-variate normal distribution 
 (see Woźniak, 2016):
 \deqn{\mathbf{E}_c \sim MN(\mathbf{0}_{T_c x N}, \mathbf{\Sigma}, \mathbf{I}_{T_c})}
-where the identity matrix \eqn{\mathbf{I}_{T_c}} and joint normality imply no serial
-autocorrelation.
+where the identity matrix \eqn{\mathbf{I}_{T_c}} of order \code{T_c} and joint 
+normality imply no serial autocorrelation. Matrix \eqn{\mathbf{0}_{T_c x N}}
+denotes a \code{T_c x N} matrix of zeros.
 
 \strong{Global Prior Distributions.} 
 The Hierarchical Panel VAR model features a sophisticated hierarchical prior
@@ -55,7 +58,7 @@ of the matrix-variate normal inverted Wishart distribution (see Woźniak, 2016)
 given by:
 \deqn{\mathbf{A}_c, \mathbf{\Sigma}_c | \mathbf{A}, \mathbf{V}, \mathbf{\Sigma}, \nu \sim MNIW(\mathbf{A}, \mathbf{V}, (N - \nu - 1)\mathbf{\Sigma}, \nu)}
 where \eqn{V} is a \code{KxK} column-specific covariance matrix, 
-\eqn{(N - \nu - 1)\mathbf{\Sigma}} is the row-specific matrix, and \eqn{\nu} is the 
+\eqn{(N - \nu - 1)\mathbf{\Sigma}} is the row-specific matrix, and \eqn{\nu > N+1} is the 
 degrees-of-freedom parameter. 
 
 All of the parameters of the prior distribution above feature their own prior
@@ -83,15 +86,30 @@ Finally, the priors for the remaining scalar hyper-parameters are:
 \deqn{w \sim G(\underline{s}_w, \underline{a}_w)}
 \deqn{s \sim IG2 (\underline{s}_s, \underline{\nu}_s)}
 
+The prior hyper-parameters in this note are grouped into those that are:
+\describe{
+ \item{fixed}{and denoted using underscore, such as e.g. 
+ \eqn{\underline{\mathbf{M}}}, \eqn{\underline{\mu}_\Sigma}, or 
+ \eqn{\underline{\nu}_s}. These hyper-parameters must be fixed and their 
+ default values are set by initiating the model specification using function
+ \code{\link{specify_bvarPANEL}}. These values can be accesses from such 
+ generated object in its element \code{prior} and can be modified by the user.}
+ \item{estimated}{not featuring the underscore in the notation, such as e.g.
+ \eqn{\mathbf{A}}, \eqn{\mathbf{\Sigma}}, or \eqn{m}. These hyper-parameters
+ are estimated and their posterior draws are available from an object 
+ generated after the estimation running the function \code{estimate}.}
+}
+
 \strong{Estimation.}
 The package implements Bayesian estimation using the Gibbs sampler. This 
-sampling algorithm provides a sample of random draws from the posterior 
-parameters of the model defined by Bayes' Rule stating that the posterior
-distribution of the parameters given data is proportional to the likelihood 
+algorithm provides a sample of random draws from the posterior distribution 
+of the parameters of the model. The posterior distribution is defined by 
+Bayes' Rule stating that the posterior
+distribution of the parameters given data and is proportional to the likelihood 
 function and the prior distribution of the parameters:
 \deqn{p(\mathbf{\theta} | \mathbf{Y}) \propto L(\mathbf{\theta}; \mathbf{Y}) p(\mathbf{\theta})}
-where \eqn{\mathbf{\theta}} collects all the parameters of the model.
-At each of its iterations a single draw of all of the 
+where \eqn{\mathbf{\theta}} collects all the parameters of the model to be 
+estimated. At each of its iterations a single draw of all of the 
 parameters of the model, including the estimated hyper-parameters, is obtained. 
 This Bayesian procedure estimates jointly all the parameters of the model and
 is implemented in the \code{\link{estimate.BVARPANEL}} and 
@@ -116,8 +134,8 @@ This package is currently in active development.
 data(ilo_cubic_panel)                                   # load the data
 set.seed(123)
 specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
-burn_in       = estimate(specification, 10)             # run the burn-in
-posterior     = estimate(burn_in, 10)                   # estimate the model
+burn_in       = estimate(specification, S = 10)         # run the burn-in; use S = 5000 at least
+posterior     = estimate(burn_in, S = 10)               # estimate the model; use S = 10000 at least
 predictive    = forecast(posterior, 2)                  # forecast the future       
 
 # workflow with the pipe |>
@@ -142,8 +160,8 @@ specification = specify_bvarPANEL$new(
                   ilo_cubic_panel,
                   exogenous = ilo_exogenous_variables
                 )
-burn_in       = estimate(specification, 10)             # run the burn-in
-posterior     = estimate(burn_in, 10)                   # estimate the model
+burn_in       = estimate(specification, S = 10)         # run the burn-in; use S = 5000 at least
+posterior     = estimate(burn_in, S = 10)               # estimate the model; use S = 10000 at least
 predictive    = forecast(
                   posterior, 
                   horizon = 6,
