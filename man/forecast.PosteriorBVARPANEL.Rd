@@ -40,7 +40,55 @@ object class \code{Forecasts} that includes:
 \description{
 Samples from the joint predictive density of the dependent 
 variables for all countries at forecast horizons 
-from 1 to \code{horizon} specified as an argument of the function.
+from 1 to \code{horizon} specified as an argument of the function. 
+Also implements conditional forecasting based on the provided projections
+for some of the variables.
+}
+\details{
+The package provides a range of options regarding the forecasting procedure.
+They are dependent on the model and forecast specifications and include 
+Bayesian forecasting many periods ahead, conditional forecasting, and 
+forecasting for models with exogenous variables.
+
+\strong{One-period-ahead predictive density.}
+The model assumptions provided in the documentation for \code{\link{bvarPANELs}} 
+determine the country-specific one-period ahead conditional predictive density 
+for the unknown vector \eqn{\mathbf{y}_{c.t+1}} given the data available at 
+time \eqn{t} and the parameters of the model. It is multivariate normal with
+the mean \eqn{\mathbf{A}_c' \mathbf{x}_{c.t+1}} and the covariance matrix 
+\eqn{\mathbf{\Sigma}_c}
+\deqn{p(\mathbf{y}_{c.t+1} | \mathbf{x}_{c.t+1}, \mathbf{A}_c, \mathbf{\Sigma}_c) = N_N(\mathbf{A}_c' \mathbf{x}_{c.t+1}, \mathbf{\Sigma}_c)}
+where \eqn{\mathbf{x}_{c.t+1}} includes the lagged
+values of \eqn{\mathbf{y}_{c.t+1}}, the constant term, and, potentially,
+exogenous variables if they were specified by the user. 
+
+\strong{Bayesian predictive density.}
+The one-period ahead predictive density is used to sample from the joint 
+predictive density of the unknown future values. This predictive density is
+defined as a joint density of \eqn{\mathbf{y}_{c.t+h}} at horizons 
+\eqn{h = 1,\dots,H}, where \eqn{H} corresponds to the value of argument 
+\code{horizon}, given the data available at time \eqn{t}:
+\deqn{p( \mathbf{y}_{c.T_c + H}, \dots, \mathbf{y}_{c.T_c + 1} | \mathbf{Y}_c, \mathbf{X}_c) = 
+\int p(\mathbf{y}_{c.T_c + H}, \dots, \mathbf{y}_{c.T_c + 1} | \mathbf{Y}_c, \mathbf{X}_c, \mathbf{A}_c, \boldsymbol\Sigma_c)
+p( \mathbf{A}_c, \boldsymbol\Sigma_c | \mathbf{Y}_c, \mathbf{X}_c) d(\mathbf{A}_c, \boldsymbol\Sigma_c)}
+Therefore, the Bayesian forecast does not depend on the parameter values as
+the parameters are integrated out with respect to their posterior distribution.
+Consequently, Bayesian forecasts incorporate the uncertainty with respect to
+estimation. Sampling from the density is facilitated using the draws from the 
+posterior density and sequential sampling from the one-period ahead 
+predictive density.
+
+\strong{Conditional forecasting} of some of the variables given the future 
+values of the remaining variables is implemented following 
+Waggoner and Zha (1999) and is based on the conditional normal density given
+the future projections of some of the variables created basing on the 
+one-period ahead predictive density.
+
+\strong{Exogenous variables.}
+Forecasting with models for which specification argument 
+\code{exogenous_variables} was specified required providing the future values
+of these exogenous variables in the argument \code{exogenous_forecast} of the
+\code{\link{forecast.PosteriorBVARPANEL}} function.
 }
 \examples{
 data(ilo_cubic_panel)                                   # load the data
@@ -50,8 +98,8 @@ set.seed(123)
 
 # specify the model
 specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
-burn_in       = estimate(specification, 10)             # run the burn-in
-posterior     = estimate(burn_in, 10)                   # estimate the model
+burn_in       = estimate(specification, 10)             # run the burn-in; use say S = 5000
+posterior     = estimate(burn_in, 10)                   # estimate the model; use say S = 10000
 
 # forecast 6 years ahead
 predictive    = forecast(posterior, 6, exogenous_forecast = ilo_exogenous_forecasts)
@@ -71,8 +119,8 @@ ilo_cubic_panel |>
 ############################################################
 data(ilo_conditional_forecasts)                        # load the conditional forecasts of dgdp
 specification = specify_bvarPANEL$new(ilo_cubic_panel)    # specify the model
-burn_in       = estimate(specification, 10)               # run the burn-in
-posterior     = estimate(burn_in, 10)                     # estimate the model
+burn_in       = estimate(specification, 10)            # run the burn-in; use say S = 5000
+posterior     = estimate(burn_in, 10)                  # estimate the model; use say S = 10000
 # forecast 6 years ahead
 predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_forecasts)
 
@@ -89,8 +137,15 @@ ilo_cubic_panel |>
   ) -> predictive
 
 }
+\references{
+Waggoner, D. F., & Zha, T. (1999) 
+Conditional forecasts in dynamic multivariate models, 
+\emph{Review of Economics and Statistics}, \bold{81}(4), 639-651,
+\doi{10.1162/003465399558508}.
+}
 \seealso{
-\code{\link{estimate.PosteriorBVARPANEL}}
+\code{\link{estimate.PosteriorBVARPANEL}}, 
+\code{\link{summary.ForecastsPANEL}}, \code{\link{plot.ForecastsPANEL}}
 }
 \author{
 Tomasz Woźniak \email{wozniak.tom@pm.me}
