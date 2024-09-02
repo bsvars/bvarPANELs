@@ -1,10 +1,10 @@
 Package: bvarPANELs
 Type: Package
 Title: Forecasting with Bayesian Hierarchical Panel Vector Autoregressions
-Description: Forecasting a multi-country time series panel data using Bayesian Vector Autoregressions with a three-level country-global hierarchical prior structure.
+Description: Forecasting a multicountry time series panel data using Bayesian Vector Autoregressions with a three-level country-global hierarchical prior structure. The model estimates country-specific autoregressive and covariance parameters as well as their global counterparts that play the role of the country-specific prior mean values in a Bayesian panel model. The package facilitates predictions for models with and without exogenous variables and including the possibility of conditional forecasts given the future projections of some of the variables. Beautiful plots, informative summary functions, and extensive documentation complement all this. Copyright: 2024 International Labour Organization.
 Version: 0.0.1.9000
-Date: 2024-04-27
-Author: c(person(given="Tomasz", family="Woźniak", email="wozniak.tom@pm.me", role =
+Date: 2024-09-01
+Authors@R: c(person(given="Tomasz", family="Woźniak", email="wozniak.tom@pm.me", role =
          c("aut", "cre"), comment = c(ORCID = "0000-0003-2212-2378")),
          person(given="Miguel", family="Sanchez-Martinez", role = "ctb"),
          person(given="International Labour Organization", role = "cph"))
