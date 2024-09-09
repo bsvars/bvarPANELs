@@ -24,7 +24,7 @@ for (c in 1:length(ilo_cubic_panel)) {
 data(ilo_conditional_forecasts)
 
 dummy_forecasts     = matrix(0, nrow(ilo_conditional_forecasts$POL), 3)
-colnames(dummy_forecasts) = c("2024", "2025", "2026")
+colnames(dummy_forecasts) = c("2008", "2020", "2021")
 dummy_forecasts     = ts(dummy_forecasts, start = 2024, frequency = 1)
 
 ilo_exogenous_forecasts             = list()

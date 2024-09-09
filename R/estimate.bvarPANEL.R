@@ -47,7 +47,7 @@
 #' \item Repeat step 2. \code{S} times. Return \eqn{\{\theta_1^{(s)},\theta_2^{(s)}\}_{s=1}^{S}} 
 #' as a sample drawn from the posterior distribution \eqn{p(\theta_1,\theta_2|\mathbf{Y})}.
 #' }
-#' The \code{estimate()} function returns the draws from the posetrior distribution
+#' The \code{estimate()} function returns the draws from the posterior distribution
 #' of the parameters of the hierarchical panel VAR model listed above.
 #' 
 #' \strong{Thinning.} 
