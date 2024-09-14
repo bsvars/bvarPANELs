@@ -6,9 +6,27 @@
 \alias{bvarPANELs}
 \title{Forecasting with Bayesian Hierarchical Panel Vector Autoregressions}
 \description{
-Forecasting a multi-country time series panel data using 
-Bayesian Vector Autoregressions with a three-level country-global 
-hierarchical prior structure.
+Provides Bayesian estimation and forecasting of dynamic panel 
+data using Bayesian Hierarchical Panel Vector Autoregressions. The model 
+includes country-specific VARs that share a global prior distribution. Under 
+this prior expected value, each country's system follows a global VAR with 
+country-invariant parameters. Further flexibility is provided by the 
+hierarchical prior structure that retains the Minnesota prior interpretation 
+for the global VAR and features estimated prior covariance matrices, 
+shrinkage, and persistence levels. Bayesian forecasting is developed for 
+models including exogenous variables, allowing conditional forecasts given 
+the future trajectories of some variables and restricted forecasts assuring 
+that rates are forecasted to stay positive and less than 100. The package 
+implements the model specification, estimation, and forecasting routines, 
+facilitating coherent workflows and reproducibility. Beautiful plots, 
+informative summary functions, and extensive documentation complement all 
+this. An extraordinary computational speed is achieved thanks to employing 
+frontier econometric and numerical techniques and algorithms written in C++. 
+The 'bvarPANELs' package is aligned regarding objects, workflows, and code 
+structure with the R packages 'bsvars' by Woźniak (2024) 
+\doi{10.32614/CRAN.package.bsvars} and 'bsvarSIGNs' by Wang & Woźniak (2024) 
+\doi{10.32614/CRAN.package.bsvarSIGNs}, and they constitute an integrated 
+toolset. Copyright: 2024 International Labour Organization.
 }
 \details{
 The package provides a set of functions for predictive analysis with the 
