@@ -17,7 +17,8 @@ Imports:
     R6,
     Rcpp (>= 1.0.12),
     RcppProgress,
-    RcppTN
+    RcppTN,
+    tmvtnsim
 LinkingTo: 
     bsvars, 
     Rcpp, 
