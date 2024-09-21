@@ -1,15 +1,15 @@
-data(ilo_cubic_panel)
+data(ilo_dynamic_panel)
 
 set.seed(1)
-specification_no1   <- specify_bvarPANEL$new(ilo_cubic_panel)
+specification_no1   <- specify_bvarPANEL$new(ilo_dynamic_panel)
 run_no1             <- estimate(specification_no1, 3, 1, show_progress = FALSE)
 
 set.seed(1)
-specification_no2   <- specify_bvarPANEL$new(ilo_cubic_panel)
+specification_no2   <- specify_bvarPANEL$new(ilo_dynamic_panel)
 run_no2             <- estimate(specification_no2, 3, 1, show_progress = FALSE)
 
 set.seed(1)
-run_no3             <- ilo_cubic_panel |>
+run_no3             <- ilo_dynamic_panel |>
   specify_bvarPANEL$new() |>
   estimate(S = 3, thin = 1, show_progress = FALSE)
 
