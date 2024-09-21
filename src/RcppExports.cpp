@@ -32,9 +32,84 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mvnrnd_truncated
+arma::vec mvnrnd_truncated(arma::vec mu, arma::mat Sigma, arma::vec LB, arma::vec UB);
+static SEXP _bvarPANELs_mvnrnd_truncated_try(SEXP muSEXP, SEXP SigmaSEXP, SEXP LBSEXP, SEXP UBSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Sigma(SigmaSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type LB(LBSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type UB(UBSEXP);
+    rcpp_result_gen = Rcpp::wrap(mvnrnd_truncated(mu, Sigma, LB, UB));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _bvarPANELs_mvnrnd_truncated(SEXP muSEXP, SEXP SigmaSEXP, SEXP LBSEXP, SEXP UBSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_bvarPANELs_mvnrnd_truncated_try(muSEXP, SigmaSEXP, LBSEXP, UBSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
+// mvnrnd_cond_truncated
+arma::vec mvnrnd_cond_truncated(arma::vec x, arma::vec mu, arma::mat Sigma, arma::vec LB, arma::vec UB);
+static SEXP _bvarPANELs_mvnrnd_cond_truncated_try(SEXP xSEXP, SEXP muSEXP, SEXP SigmaSEXP, SEXP LBSEXP, SEXP UBSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Sigma(SigmaSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type LB(LBSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type UB(UBSEXP);
+    rcpp_result_gen = Rcpp::wrap(mvnrnd_cond_truncated(x, mu, Sigma, LB, UB));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _bvarPANELs_mvnrnd_cond_truncated(SEXP xSEXP, SEXP muSEXP, SEXP SigmaSEXP, SEXP LBSEXP, SEXP UBSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_bvarPANELs_mvnrnd_cond_truncated_try(xSEXP, muSEXP, SigmaSEXP, LBSEXP, UBSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // forecast_bvarPANEL
-Rcpp::List forecast_bvarPANEL(arma::field<arma::cube>& posterior_A_c_cpp, arma::field<arma::cube>& posterior_Sigma_c_cpp, Rcpp::List& X_c, Rcpp::List& cond_forecasts, Rcpp::List& exog_forecasts, const int horizon);
-static SEXP _bvarPANELs_forecast_bvarPANEL_try(SEXP posterior_A_c_cppSEXP, SEXP posterior_Sigma_c_cppSEXP, SEXP X_cSEXP, SEXP cond_forecastsSEXP, SEXP exog_forecastsSEXP, SEXP horizonSEXP) {
+Rcpp::List forecast_bvarPANEL(arma::field<arma::cube>& posterior_A_c_cpp, arma::field<arma::cube>& posterior_Sigma_c_cpp, Rcpp::List& X_c, Rcpp::List& cond_forecasts, Rcpp::List& exog_forecasts, const int horizon, arma::vec LB, arma::vec UB, const bool show_progress);
+static SEXP _bvarPANELs_forecast_bvarPANEL_try(SEXP posterior_A_c_cppSEXP, SEXP posterior_Sigma_c_cppSEXP, SEXP X_cSEXP, SEXP cond_forecastsSEXP, SEXP exog_forecastsSEXP, SEXP horizonSEXP, SEXP LBSEXP, SEXP UBSEXP, SEXP show_progressSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< arma::field<arma::cube>& >::type posterior_A_c_cpp(posterior_A_c_cppSEXP);
@@ -43,15 +118,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::List& >::type cond_forecasts(cond_forecastsSEXP);
     Rcpp::traits::input_parameter< Rcpp::List& >::type exog_forecasts(exog_forecastsSEXP);
     Rcpp::traits::input_parameter< const int >::type horizon(horizonSEXP);
-    rcpp_result_gen = Rcpp::wrap(forecast_bvarPANEL(posterior_A_c_cpp, posterior_Sigma_c_cpp, X_c, cond_forecasts, exog_forecasts, horizon));
+    Rcpp::traits::input_parameter< arma::vec >::type LB(LBSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type UB(UBSEXP);
+    Rcpp::traits::input_parameter< const bool >::type show_progress(show_progressSEXP);
+    rcpp_result_gen = Rcpp::wrap(forecast_bvarPANEL(posterior_A_c_cpp, posterior_Sigma_c_cpp, X_c, cond_forecasts, exog_forecasts, horizon, LB, UB, show_progress));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _bvarPANELs_forecast_bvarPANEL(SEXP posterior_A_c_cppSEXP, SEXP posterior_Sigma_c_cppSEXP, SEXP X_cSEXP, SEXP cond_forecastsSEXP, SEXP exog_forecastsSEXP, SEXP horizonSEXP) {
+RcppExport SEXP _bvarPANELs_forecast_bvarPANEL(SEXP posterior_A_c_cppSEXP, SEXP posterior_Sigma_c_cppSEXP, SEXP X_cSEXP, SEXP cond_forecastsSEXP, SEXP exog_forecastsSEXP, SEXP horizonSEXP, SEXP LBSEXP, SEXP UBSEXP, SEXP show_progressSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_bvarPANELs_forecast_bvarPANEL_try(posterior_A_c_cppSEXP, posterior_Sigma_c_cppSEXP, X_cSEXP, cond_forecastsSEXP, exog_forecastsSEXP, horizonSEXP));
+        rcpp_result_gen = PROTECT(_bvarPANELs_forecast_bvarPANEL_try(posterior_A_c_cppSEXP, posterior_Sigma_c_cppSEXP, X_cSEXP, cond_forecastsSEXP, exog_forecastsSEXP, horizonSEXP, LBSEXP, UBSEXP, show_progressSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -256,13 +334,17 @@ END_RCPP
 static int _bvarPANELs_RcppExport_validate(const char* sig) { 
     static std::set<std::string> signatures;
     if (signatures.empty()) {
-        signatures.insert("Rcpp::List(*forecast_bvarPANEL)(arma::field<arma::cube>&,arma::field<arma::cube>&,Rcpp::List&,Rcpp::List&,Rcpp::List&,const int)");
+        signatures.insert("arma::vec(*mvnrnd_truncated)(arma::vec,arma::mat,arma::vec,arma::vec)");
+        signatures.insert("arma::vec(*mvnrnd_cond_truncated)(arma::vec,arma::vec,arma::mat,arma::vec,arma::vec)");
+        signatures.insert("Rcpp::List(*forecast_bvarPANEL)(arma::field<arma::cube>&,arma::field<arma::cube>&,Rcpp::List&,Rcpp::List&,Rcpp::List&,const int,arma::vec,arma::vec,const bool)");
     }
     return signatures.find(sig) != signatures.end();
 }
 
 // registerCCallable (register entry points for exported C++ functions)
 RcppExport SEXP _bvarPANELs_RcppExport_registerCCallable() { 
+    R_RegisterCCallable("bvarPANELs", "_bvarPANELs_mvnrnd_truncated", (DL_FUNC)_bvarPANELs_mvnrnd_truncated_try);
+    R_RegisterCCallable("bvarPANELs", "_bvarPANELs_mvnrnd_cond_truncated", (DL_FUNC)_bvarPANELs_mvnrnd_cond_truncated_try);
     R_RegisterCCallable("bvarPANELs", "_bvarPANELs_forecast_bvarPANEL", (DL_FUNC)_bvarPANELs_forecast_bvarPANEL_try);
     R_RegisterCCallable("bvarPANELs", "_bvarPANELs_RcppExport_validate", (DL_FUNC)_bvarPANELs_RcppExport_validate);
     return R_NilValue;
@@ -270,7 +352,9 @@ RcppExport SEXP _bvarPANELs_RcppExport_registerCCallable() {
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bvarPANELs_bvarPANEL", (DL_FUNC) &_bvarPANELs_bvarPANEL, 8},
-    {"_bvarPANELs_forecast_bvarPANEL", (DL_FUNC) &_bvarPANELs_forecast_bvarPANEL, 6},
+    {"_bvarPANELs_mvnrnd_truncated", (DL_FUNC) &_bvarPANELs_mvnrnd_truncated, 4},
+    {"_bvarPANELs_mvnrnd_cond_truncated", (DL_FUNC) &_bvarPANELs_mvnrnd_cond_truncated, 5},
+    {"_bvarPANELs_forecast_bvarPANEL", (DL_FUNC) &_bvarPANELs_forecast_bvarPANEL, 9},
     {"_bvarPANELs_Sigma2B_c", (DL_FUNC) &_bvarPANELs_Sigma2B_c, 2},
     {"_bvarPANELs_panel_variance_decompositions", (DL_FUNC) &_bvarPANELs_panel_variance_decompositions, 7},
     {"_bvarPANELs_rmniw1", (DL_FUNC) &_bvarPANELs_rmniw1, 4},

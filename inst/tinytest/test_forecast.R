@@ -136,3 +136,32 @@ expect_error(
   info = "exogenous forecast: provided exogenous forecasts contain missing values."
 )
 
+
+
+# truncated forecasts
+
+expect_identical(
+  class(specify_bvarPANEL$new(ilo_dynamic_panel, type = c("real",rep("rates",3))))[1], 
+  "BVARPANEL",
+  info = "truncated forecast: good specification of argument type."
+)
+
+expect_error(
+  specify_bvarPANEL$new(ilo_dynamic_panel, type = rep("rates",3)),
+  pattern = "length",
+  info = "truncated forecast: wrong specification of argument type."
+)
+
+set.seed(1)
+suppressMessages(
+  specification_no1 <- specify_bvarPANEL$new(ilo_dynamic_panel, type = c("real",rep("rates",3)))
+)
+run_no1             <- estimate(specification_no1, 3, 1, show_progress = FALSE)
+suppressMessages(
+  ff                  <- forecast(run_no1, 6)
+)
+
+expect_true(
+  all(ff$POL$forecasts[2,,] >= 0),
+  info = "truncated forecast: unemployment rates forecasts are non-negative."
+)

@@ -52,6 +52,13 @@
 #' of these exogenous variables in the argument \code{exogenous_forecast} of the
 #' \code{\link{forecast.PosteriorBVARPANEL}} function.
 #' 
+#' \strong{Truncated forecasts for variables of type 'rates'.}
+#' The package provides the option to truncate the forecasts for variables of 
+#' for which the corresponding element of argument \code{type} of the function 
+#' \code{specify_bvarPANEL$new()} is set to \code{"rates"}. The one-period-ahead
+#' predictive normal density for such variables is truncated to values from 
+#' interval  \eqn{[0,100]}. 
+#' 
 #' @method forecast PosteriorBVARPANEL
 #' 
 #' @param posterior posterior estimation outcome - an object of class 
@@ -81,7 +88,7 @@
 #' \emph{Review of Economics and Statistics}, \bold{81}(4), 639-651,
 #' \doi{10.1162/003465399558508}.
 #'
-#' @seealso \code{\link{estimate.PosteriorBVARPANEL}}, 
+#' @seealso \code{\link{specify_bvarPANEL}}, \code{\link{estimate.PosteriorBVARPANEL}}, 
 #' \code{\link{summary.ForecastsPANEL}}, \code{\link{plot.ForecastsPANEL}}
 #'
 #' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
@@ -111,10 +118,13 @@
 #' 
 #' # conditional forecasting 6 years ahead conditioning on 
 #' #  provided future values for the Gross Domestic Product 
-#' #  growth rate
+#' #  and truncated forecasts for the rates
 #' ############################################################
 #' data(ilo_conditional_forecasts)                        # load the conditional forecasts of dgdp
-#' specification = specify_bvarPANEL$new(ilo_dynamic_panel)   # specify the model
+#' specification = specify_bvarPANEL$new(
+#'                   ilo_dynamic_panel,
+#'                   type = c("real", rep("rates", 3))
+#'                 )   # specify the model
 #' burn_in       = estimate(specification, 10)            # run the burn-in; use say S = 10000
 #' posterior     = estimate(burn_in, 10)                  # estimate the model; use say S = 10000
 #' # forecast 6 years ahead
@@ -124,7 +134,7 @@
 #' ############################################################
 #' set.seed(123)
 #' ilo_dynamic_panel |>
-#'   specify_bvarPANEL$new() |>
+#'   specify_bvarPANEL$new(type = c("real", rep("rates", 3))) |>
 #'   estimate(S = 10) |> 
 #'   estimate(S = 20) |> 
 #'   forecast(
@@ -192,6 +202,15 @@ forecast.PosteriorBVARPANEL = function(
     )
   }
   
+  type      = posterior$last_draw$data_matrices$type
+  LB        = rep(-Inf, N)
+  UB        = rep(Inf, N)
+  rates_id  = which(type == "rates")
+  if (length(rates_id) > 0) {
+    LB[rates_id] = 0
+    UB[rates_id] = 100
+  }
+  
   # perform forecasting
   fff           = .Call(`_bvarPANELs_forecast_bvarPANEL`, 
                         posterior_A_c_cpp, 
@@ -199,7 +218,10 @@ forecast.PosteriorBVARPANEL = function(
                         X_c, 
                         conditional_forecast, 
                         exogenous_forecast, 
-                        horizon
+                        horizon,
+                        LB,
+                        UB,
+                        TRUE
                        )
                           
   forecasts       = list()
