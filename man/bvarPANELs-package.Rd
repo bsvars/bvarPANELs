@@ -139,9 +139,16 @@ from the joint predictive density defined as the joint density of the future
 unknown values to be predicted, \eqn{\mathbf{Y}_f}, given data, \eqn{\mathbf{Y}}
 closely following Karlsson (2013):
 \deqn{p(\mathbf{Y}_f | \mathbf{Y})}
-The package offers the possibility of conditional predictions given provided 
-future projections for some of the variables. The forecasting is performed 
-using function \code{\link{forecast.PosteriorBVARPANEL}}.
+The package offers the possibility of:
+\describe{
+  \item{forecasting for models with exogenous variables}{given the provided 
+  future values of the exogenous variables.}
+  \item{conditional predictions}{given provided future projections for some 
+  of the variables.}
+  \item{trucated forecasts}{for variables that represents rates from the 
+  interval \eqn{[0,100]}.}
+}
+The forecasting is performed using function \code{\link{forecast.PosteriorBVARPANEL}}.
 }
 \note{
 This package is currently in active development.
@@ -167,7 +174,7 @@ ilo_dynamic_panel |>
 plot(predictive, which_c = "POL")
 
 # Full estimation and forecasting example with 
-#   exogenous variables and conditional forecasts
+#   exogenous variables, conditional forecasts, and truncation for rates
 ############################################################
 data(ilo_dynamic_panel)                                 # load the data
 data(ilo_exogenous_variables)                           # load the exogenous variables
@@ -176,7 +183,8 @@ data(ilo_conditional_forecasts)                         # load the conditional f
 set.seed(123)
 specification = specify_bvarPANEL$new(
                   ilo_dynamic_panel,
-                  exogenous = ilo_exogenous_variables
+                  exogenous = ilo_exogenous_variables,
+                  type = c("real", rep("rates", 3))
                 )
 burn_in       = estimate(specification, S = 10)         # run the burn-in; use say S = 10000
 posterior     = estimate(burn_in, S = 10)               # estimate the model; use say S = 10000
