@@ -26,11 +26,11 @@ decompositions of each variable at all horizons.
 }
 \examples{
 # upload data
-data(ilo_cubic_panel)
+data(ilo_dynamic_panel)
 
 # specify the model and set seed
 set.seed(123)
-specification  = specify_bvarPANEL$new(ilo_cubic_panel, p = 1)
+specification  = specify_bvarPANEL$new(ilo_dynamic_panel, p = 1)
 
 # run the burn-in
 burn_in        = estimate(specification, 10)
@@ -45,7 +45,7 @@ summary(fevd, which_c = "POL")
 # workflow with the pipe |>
 ############################################################
 set.seed(123)
-ilo_cubic_panel |>
+ilo_dynamic_panel |>
   specify_bvarPANEL$new(p = 1) |>
   estimate(S = 10) |> 
   estimate(S = 20) |> 

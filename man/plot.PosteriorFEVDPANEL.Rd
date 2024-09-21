@@ -41,7 +41,7 @@ decompositions.
 }
 \examples{
 set.seed(123)
-specification  = specify_bvarPANEL$new(ilo_cubic_panel)
+specification  = specify_bvarPANEL$new(ilo_dynamic_panel)
 
 # run the burn-in
 burn_in        = estimate(specification, 10)
@@ -56,7 +56,7 @@ plot(fevd, which_c = "POL")
 # workflow with the pipe |>
 ############################################################
 set.seed(123)
-ilo_cubic_panel |>
+ilo_dynamic_panel |>
   specify_bvarPANEL$new() |>
   estimate(S = 10) |> 
   estimate(S = 20) |> 

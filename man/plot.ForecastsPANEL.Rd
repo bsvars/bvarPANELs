@@ -49,7 +49,7 @@ Plots of fitted values of dependent variables including their
 median and percentiles.
 }
 \examples{
-specification = specify_bvarPANEL$new(ilo_cubic_panel)    # specify the model
+specification = specify_bvarPANEL$new(ilo_dynamic_panel)  # specify the model
 burn_in       = estimate(specification, 10)               # run the burn-in
 posterior     = estimate(burn_in, 10)                     # estimate the model
 
@@ -60,7 +60,7 @@ plot(predictive, which_c = "POL")                                # plot forecast
 # workflow with the pipe |>
 ############################################################
 set.seed(123)
-ilo_cubic_panel |>
+ilo_dynamic_panel |>
   specify_bvarPANEL$new() |>
   estimate(S = 10) |> 
   estimate(S = 10) |> 

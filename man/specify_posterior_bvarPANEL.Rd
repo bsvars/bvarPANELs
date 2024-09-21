@@ -12,10 +12,10 @@ element \code{posterior}.
 }
 \examples{
 # This is a function that is used within estimate()
-data(ilo_cubic_panel)
+data(ilo_dynamic_panel)
 set.seed(123)
 specification = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 
@@ -27,10 +27,10 @@ class(posterior)
 ## Method `specify_posterior_bvarPANEL$get_posterior`
 ## ------------------------------------------------
 
-data(ilo_cubic_panel)
+data(ilo_dynamic_panel)
 set.seed(123)
 specification = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 
@@ -42,10 +42,10 @@ posterior$get_posterior()
 ## Method `specify_posterior_bvarPANEL$get_last_draw`
 ## ------------------------------------------------
 
-data(ilo_cubic_panel)
+data(ilo_dynamic_panel)
 set.seed(123)
 specification = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 
@@ -113,10 +113,10 @@ Returns a list containing Bayesian estimation output.
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{data(ilo_cubic_panel)
+\preformatted{data(ilo_dynamic_panel)
 set.seed(123)
 specification = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 
@@ -142,10 +142,10 @@ MCMC estimation using \code{estimate()}.
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{data(ilo_cubic_panel)
+\preformatted{data(ilo_dynamic_panel)
 set.seed(123)
 specification = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 

@@ -28,7 +28,7 @@
 #' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
 #' 
 #' @examples
-#' specification = specify_bvarPANEL$new(ilo_cubic_panel)    # specify the model
+#' specification = specify_bvarPANEL$new(ilo_dynamic_panel)  # specify the model
 #' burn_in       = estimate(specification, 10)               # run the burn-in
 #' posterior     = estimate(burn_in, 10)                     # estimate the model
 #'
@@ -39,7 +39,7 @@
 #' # workflow with the pipe |>
 #' ############################################################
 #' set.seed(123)
-#' ilo_cubic_panel |>
+#' ilo_dynamic_panel |>
 #'   specify_bvarPANEL$new() |>
 #'   estimate(S = 10) |> 
 #'   estimate(S = 10) |> 
@@ -115,7 +115,7 @@ plot.ForecastsPANEL = function(
 #' 
 #' @examples
 #' set.seed(123)
-#' specification  = specify_bvarPANEL$new(ilo_cubic_panel)
+#' specification  = specify_bvarPANEL$new(ilo_dynamic_panel)
 #' 
 #' # run the burn-in
 #' burn_in        = estimate(specification, 10)
@@ -130,7 +130,7 @@ plot.ForecastsPANEL = function(
 #' # workflow with the pipe |>
 #' ############################################################
 #' set.seed(123)
-#' ilo_cubic_panel |>
+#' ilo_dynamic_panel |>
 #'   specify_bvarPANEL$new() |>
 #'   estimate(S = 10) |> 
 #'   estimate(S = 20) |> 
