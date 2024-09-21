@@ -1,17 +1,41 @@
 
 #include <RcppArmadillo.h>
 #include <bsvars.h>
+#include "progress.hpp"
+#include "rtmvtnorm.h"
 
 using namespace Rcpp;
 using namespace arma;
 
 
+
 // [[Rcpp::interfaces(cpp)]]
 // [[Rcpp::export]]
-arma::vec mvnrnd_cond_rest (
+arma::vec mvnrnd_truncated (
+    arma::vec     mu,       // Nx1 mean vector
+    arma::mat     Sigma,    // NxN covariance matrix
+    arma::vec     LB,       // Nx1 lower bounds for truncation
+    arma::vec     UB        // Nx1 upper bounds for truncation
+) {
+  
+  int     N = mu.n_elem;
+  mat     blc(N, N, fill::eye);
+  rowvec  init(N);
+  
+  mat out = rtmvnormcpp(mu.t(), Sigma, blc, LB.t(), UB.t(), init, 10);
+  return out.t();
+} // END mvnrnd_truncated
+
+
+
+// [[Rcpp::interfaces(cpp)]]
+// [[Rcpp::export]]
+arma::vec mvnrnd_cond_truncated (
     arma::vec x,        // Nx1 with NAs or without
     arma::vec mu,       // Nx1 mean vector
-    arma::mat Sigma     // NxN covariance matrix
+    arma::mat Sigma,    // NxN covariance matrix
+    arma::vec LB,       // Nx1 lower bounds for truncation
+    arma::vec UB        // Nx1 upper bounds for truncation
 ) {
   int   N         = x.n_elem;
   uvec  ind       = find_finite(x);
@@ -30,11 +54,14 @@ arma::vec mvnrnd_cond_rest (
   vec   mu_cond     = mu1 + Sigma12 * Sigma22_inv * (x2 - mu2);
   mat   Sigma_cond  = Sigma11 - Sigma12 * Sigma22_inv * Sigma12.t();
   
-  vec   draw = mvnrnd( mu_cond, Sigma_cond);
+  vec   LB1 = LB(ind_nan);
+  vec   UB1 = UB(ind_nan);
+  
+  vec   draw = mvnrnd_truncated( mu_cond, Sigma_cond, LB1, UB1);
   
   vec   out = aj.cols(ind_nan) * draw + aj.cols(ind) * x2;
   return out;
-} // END mvnrnd_cond
+} // END mvnrnd_cond_truncated
 
 
 // [[Rcpp::interfaces(cpp)]]
@@ -45,7 +72,10 @@ Rcpp::List forecast_bvarPANEL (
     Rcpp::List&               X_c,                    // (C)(T_c, K)
     Rcpp::List&               cond_forecasts,         // (C)(horizon, N)
     Rcpp::List&               exog_forecasts,         // (C)(horizon, d)
-    const int                 horizon
+    const int                 horizon,
+    arma::vec                 LB,                     // Nx1 lower bounds for truncation
+    arma::vec                 UB,                     // Nx1 upper bounds for truncation
+    const bool                show_progress
 ) {
   
   const int       S = posterior_A_c_cpp.n_elem;
@@ -53,12 +83,32 @@ Rcpp::List forecast_bvarPANEL (
   const int       K = posterior_A_c_cpp(0).n_rows;
   const int       C = posterior_A_c_cpp(0).n_slices;
   
+  // Progress bar setup
+  vec prog_rep_points = arma::round(arma::linspace(0, C, 50));
+  
+  if (show_progress) {
+    Rcout << "**************************************************|" << endl;
+    Rcout << "bvarPANELs: Forecasting with Bayesian Hierarchical|" << endl;
+    Rcout << "            Panel Vector Autoregressions          |" << endl;
+    Rcout << "**************************************************|" << endl;
+    Rcout << " Progress of sampling " << S << " draws from" << endl;
+    Rcout << "    the predictive density for " << C << " countries" << endl;
+    Rcout << "    Press Esc to interrupt the computations" << endl;
+    Rcout << "**************************************************|" << endl;
+  }
+  Progress p(50, show_progress);
+
   mat     EXcc    = as<mat>(exog_forecasts[0]);
   const int       d = EXcc.n_cols;
   
   field<cube>     forecasts(C);                       // of (horizon, N, S) cubes
   
   for (int c=0; c<C; c++) {
+    
+    // Increment progress bar
+    if (any(prog_rep_points == c)) p.increment();
+    // Check for user interrupts
+    if (c % 10 == 0) checkUserInterrupt();
     
     mat     XXcc    = as<mat>(X_c[c]);
     mat     EXcc    = as<mat>(exog_forecasts[c]);
@@ -94,11 +144,11 @@ Rcpp::List forecast_bvarPANEL (
         
         if ( nonf_no == N ) {
           forecasts_c.slice(s).row(h) = trans(
-            mvnrnd( A_cs * Xt, Sigma_cs )
+            mvnrnd_truncated( A_cs * Xt, Sigma_cs, LB, UB )
           );
         } else {
           forecasts_c.slice(s).row(h) = trans(
-            bsvars::mvnrnd_cond( cond_fc_h, A_cs * Xt, Sigma_cs )   // does not work if cond_fc_h is all nan
+            mvnrnd_cond_truncated( cond_fc_h, A_cs * Xt, Sigma_cs, LB, UB )   // does not work if cond_fc_h is all nan
           );
         }
         
