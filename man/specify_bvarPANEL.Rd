@@ -120,7 +120,7 @@ with time series data.}
 \code{FALSE} sets the prior mean for the autoregressive parameters of the 
 \code{N}th equation to the white noise process, otherwise to random walk.}
 
-\item{\code{type}}{an \code{N} character vector with elements set to "rates" or "real"
+\item{\code{type}}{an \code{N} character vector with elements set to "rate" or "real"
 determining the truncation of the predictive density to \code{[0, 100]} and
 \code{(-Inf, Inf)} (no truncation) for each of the variables.}
 }

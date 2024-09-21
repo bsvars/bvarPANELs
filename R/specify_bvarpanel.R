@@ -305,7 +305,7 @@ specify_panel_data_matrices = R6::R6Class(
     #' regressors, \eqn{\mathbf{X}_c}. 
     X     = list(),
     
-    #' @field type an \code{N} character vector with elements set to "rates" or "real"
+    #' @field type an \code{N} character vector with elements set to "rate" or "real"
     #' determining the truncation of the predictive density to \code{[0, 100]} and
     #' \code{(-Inf, Inf)} (no truncation) for each of the variables.
     type  = character(),
@@ -318,7 +318,7 @@ specify_panel_data_matrices = R6::R6Class(
     #' @param exogenous a list containing \code{(T_c+p)xd} matrices with 
     #' country-specific of exogenous variables. This matrix should not include a 
     #' constant term.
-    #' @param type an \code{N} character vector with elements set to "rates" or "real"
+    #' @param type an \code{N} character vector with elements set to "rate" or "real"
     #' determining the truncation of the predictive density to \code{[0, 100]} and
     #' \code{(-Inf, Inf)} (no truncation) for each of the variables.
     #' @return New data matrices DataMatricesBVARPANEL
@@ -332,8 +332,8 @@ specify_panel_data_matrices = R6::R6Class(
       }
       stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
       
-      stopifnot("Argument type must include elements 'rates' or 'real'." 
-                = all(unique(type) %in% c("rates", "real")) )
+      stopifnot("Argument type must include elements 'rate' or 'real'." 
+                = all(unique(type) %in% c("rate", "real")) )
       stopifnot("Argument type must be of length corresponding to the numbers of variables."
                 = length(type) == ncol(data[[1]]) )
       
@@ -443,7 +443,7 @@ specify_bvarPANEL = R6::R6Class(
     #' @param stationary an \code{N} logical vector - its element set to 
     #' \code{FALSE} sets the prior mean for the autoregressive parameters of the 
     #' \code{N}th equation to the white noise process, otherwise to random walk.
-    #' @param type an \code{N} character vector with elements set to "rates" or "real"
+    #' @param type an \code{N} character vector with elements set to "rate" or "real"
     #' determining the truncation of the predictive density to \code{[0, 100]} and
     #' \code{(-Inf, Inf)} (no truncation) for each of the variables.
     #' @return A new complete specification for the Bayesian Panel VAR model BVARPANEL.

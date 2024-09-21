@@ -223,7 +223,7 @@
 #' specification = specify_bvarPANEL$new(
 #'                   ilo_dynamic_panel,
 #'                   exogenous = ilo_exogenous_variables,
-#'                   type = c("real", rep("rates", 3))
+#'                   type = c("real", rep("rate", 3))
 #'                 )
 #' burn_in       = estimate(specification, S = 10)         # run the burn-in; use say S = 10000
 #' posterior     = estimate(burn_in, S = 10)               # estimate the model; use say S = 10000

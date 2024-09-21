@@ -90,10 +90,10 @@ Forecasting with models for which specification argument
 of these exogenous variables in the argument \code{exogenous_forecast} of the
 \code{\link{forecast.PosteriorBVARPANEL}} function.
 
-\strong{Truncated forecasts for variables of type 'rates'.}
+\strong{Truncated forecasts for variables of type 'rate'.}
 The package provides the option to truncate the forecasts for variables of 
 for which the corresponding element of argument \code{type} of the function 
-\code{specify_bvarPANEL$new()} is set to \code{"rates"}. The one-period-ahead
+\code{specify_bvarPANEL$new()} is set to \code{"rate"}. The one-period-ahead
 predictive normal density for such variables is truncated to values from 
 interval  \eqn{[0,100]}.
 }
@@ -127,7 +127,7 @@ ilo_dynamic_panel |>
 data(ilo_conditional_forecasts)                        # load the conditional forecasts of dgdp
 specification = specify_bvarPANEL$new(
                   ilo_dynamic_panel,
-                  type = c("real", rep("rates", 3))
+                  type = c("real", rep("rate", 3))
                 )   # specify the model
 burn_in       = estimate(specification, 10)            # run the burn-in; use say S = 10000
 posterior     = estimate(burn_in, 10)                  # estimate the model; use say S = 10000
@@ -138,7 +138,7 @@ predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_fo
 ############################################################
 set.seed(123)
 ilo_dynamic_panel |>
-  specify_bvarPANEL$new(type = c("real", rep("rates", 3))) |>
+  specify_bvarPANEL$new(type = c("real", rep("rate", 3))) |>
   estimate(S = 10) |> 
   estimate(S = 20) |> 
   forecast(
