@@ -101,7 +101,8 @@ Create a new specification of the Bayesian Panel VAR model BVARPANEL.
   data,
   p = 1L,
   exogenous = NULL,
-  stationary = rep(FALSE, ncol(data[[1]]))
+  stationary = rep(FALSE, ncol(data[[1]])),
+  type = rep("real", ncol(data[[1]]))
 )}\if{html}{\out{</div>}}
 }
 
@@ -118,6 +119,10 @@ with time series data.}
 \item{\code{stationary}}{an \code{N} logical vector - its element set to 
 \code{FALSE} sets the prior mean for the autoregressive parameters of the 
 \code{N}th equation to the white noise process, otherwise to random walk.}
+
+\item{\code{type}}{an \code{N} character vector with elements set to "rates" or "real"
+determining the truncation of the predictive density to \code{[0, 100]} and
+\code{(-Inf, Inf)} (no truncation) for each of the variables.}
 }
 \if{html}{\out{</div>}}
 }

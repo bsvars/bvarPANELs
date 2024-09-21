@@ -305,16 +305,24 @@ specify_panel_data_matrices = R6::R6Class(
     #' regressors, \eqn{\mathbf{X}_c}. 
     X     = list(),
     
+    #' @field type an \code{N} character vector with elements set to "rates" or "real"
+    #' determining the truncation of the predictive density to \code{[0, 100]} and
+    #' \code{(-Inf, Inf)} (no truncation) for each of the variables.
+    type  = character(),
+    
     #' @description
     #' Create new data matrices DataMatricesBVARPANEL
     #' @param data a list containing \code{(T_c+p)xN} matrices with country-specific
     #' time series data.
     #' @param p a positive integer providing model's autoregressive lag order.
     #' @param exogenous a list containing \code{(T_c+p)xd} matrices with 
-    #' country-specificof exogenous variables. This matrix should not include a 
+    #' country-specific of exogenous variables. This matrix should not include a 
     #' constant term.
+    #' @param type an \code{N} character vector with elements set to "rates" or "real"
+    #' determining the truncation of the predictive density to \code{[0, 100]} and
+    #' \code{(-Inf, Inf)} (no truncation) for each of the variables.
     #' @return New data matrices DataMatricesBVARPANEL
-    initialize = function(data, p = 1L, exogenous = NULL) {
+    initialize = function(data, p = 1L, exogenous = NULL, type = rep("real", ncol(data[[1]]))) {
       if (missing(data)) {
         stop("Argument data has to be specified")
       } else {
@@ -323,6 +331,11 @@ specify_panel_data_matrices = R6::R6Class(
         stopifnot("Argument data cannot include missing values." = all(simplify2array(lapply(data, function(x){!any(is.na(x))}))))
       }
       stopifnot("Argument p must be a positive integer number." = p > 0 & p %% 1 == 0)
+      
+      stopifnot("Argument type must include elements 'rates' or 'real'." 
+                = all(unique(type) %in% c("rates", "real")) )
+      stopifnot("Argument type must be of length corresponding to the numbers of variables."
+                = length(type) == ncol(data[[1]]) )
       
       C             = length(data)
       if (is.null(exogenous)) {
@@ -358,6 +371,7 @@ specify_panel_data_matrices = R6::R6Class(
         self$X[[c]]   = X
       } # END c loop
       names(self$Y)   = names(self$X) = names(data)
+      self$type       = type
     }, # END initialize
     
     #' @description
@@ -371,7 +385,8 @@ specify_panel_data_matrices = R6::R6Class(
     get_data_matrices = function() {
       list(
         Y = self$Y,
-        X = self$X
+        X = self$X,
+        type = self$type
       )
     } # END get_data_matrices
   ) # END public
@@ -428,15 +443,21 @@ specify_bvarPANEL = R6::R6Class(
     #' @param stationary an \code{N} logical vector - its element set to 
     #' \code{FALSE} sets the prior mean for the autoregressive parameters of the 
     #' \code{N}th equation to the white noise process, otherwise to random walk.
+    #' @param type an \code{N} character vector with elements set to "rates" or "real"
+    #' determining the truncation of the predictive density to \code{[0, 100]} and
+    #' \code{(-Inf, Inf)} (no truncation) for each of the variables.
     #' @return A new complete specification for the Bayesian Panel VAR model BVARPANEL.
     initialize = function(
     data,
     p = 1L,
     exogenous = NULL,
-    stationary = rep(FALSE, ncol(data[[1]]))
+    stationary = rep(FALSE, ncol(data[[1]])),
+    type = rep("real", ncol(data[[1]]))
     ) {
-      stopifnot("Argument data has to contain matrices with the same number of columns." = length(unique(simplify2array(lapply(data, ncol)))) == 1)
-      stopifnot("Argument p has to be a positive integer." = ((p %% 1) == 0 & p > 0))
+      stopifnot("Argument data has to contain matrices with the same number of columns." 
+                = length(unique(simplify2array(lapply(data, ncol)))) == 1)
+      stopifnot("Argument p has to be a positive integer." 
+                = ((p %% 1) == 0 & p > 0))
       
       self$p    = p
       C         = length(data)
@@ -445,8 +466,8 @@ specify_bvarPANEL = R6::R6Class(
       if (!is.null(exogenous)) {
         d           = ncol(exogenous[[1]])
       }
-      
-      self$data_matrices   = specify_panel_data_matrices$new(data, self$p, exogenous)
+    
+      self$data_matrices   = specify_panel_data_matrices$new(data, self$p, exogenous, type)
       self$prior           = specify_prior_bvarPANEL$new(C, N, self$p, d, stationary)
       self$starting_values = specify_starting_values_bvarPANEL$new(C, N, self$p, d)
       self$adaptiveMH      = c(0.44, 0.6)

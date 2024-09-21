@@ -31,6 +31,10 @@ dependent variables, \eqn{\mathbf{Y}_c}.}
 
 \item{\code{X}}{a list with \code{C} elements with \code{T_c x K} matrices of 
 regressors, \eqn{\mathbf{X}_c}.}
+
+\item{\code{type}}{an \code{N} character vector with elements set to "rates" or "real"
+determining the truncation of the predictive density to \code{[0, 100]} and
+\code{(-Inf, Inf)} (no truncation) for each of the variables.}
 }
 \if{html}{\out{</div>}}
 }
@@ -48,7 +52,12 @@ regressors, \eqn{\mathbf{X}_c}.}
 \subsection{Method \code{new()}}{
 Create new data matrices DataMatricesBVARPANEL
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{specify_panel_data_matrices$new(data, p = 1L, exogenous = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{specify_panel_data_matrices$new(
+  data,
+  p = 1L,
+  exogenous = NULL,
+  type = rep("real", ncol(data[[1]]))
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -60,8 +69,12 @@ time series data.}
 \item{\code{p}}{a positive integer providing model's autoregressive lag order.}
 
 \item{\code{exogenous}}{a list containing \code{(T_c+p)xd} matrices with 
-country-specificof exogenous variables. This matrix should not include a 
+country-specific of exogenous variables. This matrix should not include a 
 constant term.}
+
+\item{\code{type}}{an \code{N} character vector with elements set to "rates" or "real"
+determining the truncation of the predictive density to \code{[0, 100]} and
+\code{(-Inf, Inf)} (no truncation) for each of the variables.}
 }
 \if{html}{\out{</div>}}
 }
