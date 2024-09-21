@@ -1,5 +1,5 @@
 
-# Create ILO conditional forecasts from provided files
+# Create ILO dataset from provided files
 library(dplyr)
 
 # this file contains a dynamic panel dynamic dataset
@@ -8,21 +8,20 @@ colnames(all_cv) = c("year", "iso3code", "country", "GDP", "UR", "EPR", "LFPR")
 
 # all variables all countries
 data_cv <- all_cv %>% 
-  filter(year >= 2024) %>% 
-  filter(year <= 2029) %>% 
+  filter(year <= 2023) %>% 
   mutate(gdp = log(GDP)) %>% 
   select(year, iso3code, gdp, UR, EPR, LFPR)
 
 # Create a list with the country data
 countries = unique(data_cv$iso3code)
 countries = countries[order(countries)]
-ilo_conditional_forecasts = list()
+ilo_dynamic_panel = list()
 for (i in 1:length(countries)) {
-  ilo_conditional_forecasts[[i]] <- data_cv %>% 
+  ilo_dynamic_panel[[i]] <- data_cv %>% 
     filter(iso3code == countries[i]) %>% 
     select(gdp, UR, EPR, LFPR) %>% 
-    ts(start = 2024, frequency = 1)
-  names(ilo_conditional_forecasts)[i] <- countries[i]
+    ts(start = 1991, frequency = 1)
+  names(ilo_dynamic_panel)[i] <- countries[i]
 }
 
-save(ilo_conditional_forecasts, file = "data/ilo_conditional_forecasts.rda")
+save(ilo_dynamic_panel, file = "data/ilo_dynamic_panel.rda")

@@ -188,16 +188,16 @@
 #' @examples
 #' # Basic estimation and forecasting example
 #' ############################################################
-#' data(ilo_cubic_panel)                                   # load the data
+#' data(ilo_dynamic_panel)                                   # load the data
 #' set.seed(123)
-#' specification = specify_bvarPANEL$new(ilo_cubic_panel)  # specify the model
-#' burn_in       = estimate(specification, S = 10)         # run the burn-in; use say S = 5000
+#' specification = specify_bvarPANEL$new(ilo_dynamic_panel) # specify the model
+#' burn_in       = estimate(specification, S = 10)         # run the burn-in; use say S = 10000
 #' posterior     = estimate(burn_in, S = 10)               # estimate the model; use say S = 10000
 #' predictive    = forecast(posterior, 2)                  # forecast the future       
 #' 
 #' # workflow with the pipe |>
 #' set.seed(123)
-#' ilo_cubic_panel |>
+#' ilo_dynamic_panel |>
 #'   specify_bvarPANEL$new() |>
 #'   estimate(S = 20) |> 
 #'   estimate(S = 20) |> 
@@ -208,16 +208,16 @@
 #' # Full estimation and forecasting example with 
 #' #   exogenous variables and conditional forecasts
 #' ############################################################
-#' data(ilo_cubic_panel)                                   # load the data
+#' data(ilo_dynamic_panel)                                 # load the data
 #' data(ilo_exogenous_variables)                           # load the exogenous variables
 #' data(ilo_exogenous_forecasts)                           # load the exogenous forecasts
 #' data(ilo_conditional_forecasts)                         # load the conditional forecasts
 #' set.seed(123)
 #' specification = specify_bvarPANEL$new(
-#'                   ilo_cubic_panel,
+#'                   ilo_dynamic_panel,
 #'                   exogenous = ilo_exogenous_variables
 #'                 )
-#' burn_in       = estimate(specification, S = 10)         # run the burn-in; use say S = 5000
+#' burn_in       = estimate(specification, S = 10)         # run the burn-in; use say S = 10000
 #' posterior     = estimate(burn_in, S = 10)               # estimate the model; use say S = 10000
 #' predictive    = forecast(
 #'                   posterior, 

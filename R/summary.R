@@ -23,13 +23,13 @@
 #' 
 #' @examples
 #' # upload data
-#' data(ilo_cubic_panel)                                   # load the data
+#' data(ilo_dynamic_panel)                                   # load the data
 #' data(ilo_exogenous_variables)                           # load the exogenous variables
 #' 
 #' set.seed(123)
 #' 
 #' # specify the model
-#' specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
+#' specification = specify_bvarPANEL$new(ilo_dynamic_panel, exogenous = ilo_exogenous_variables)
 #' burn_in       = estimate(specification, 10)             # run the burn-in
 #' posterior     = estimate(burn_in, 10)                   # estimate the model
 #' summary(posterior)
@@ -37,7 +37,7 @@
 #' # workflow with the pipe |>
 #' ############################################################
 #' set.seed(123)
-#' ilo_cubic_panel |>
+#' ilo_dynamic_panel |>
 #'   specify_bvarPANEL$new(exogenous = ilo_exogenous_variables) |>
 #'   estimate(S = 10) |> 
 #'   estimate(S = 10) |> 
@@ -221,11 +221,11 @@ summary.PosteriorBVARPANEL = function(
 #' 
 #' @examples
 #' # upload data
-#' data(ilo_cubic_panel)
+#' data(ilo_dynamic_panel)
 #' 
 #' # specify the model and set seed
 #' set.seed(123)
-#' specification  = specify_bvarPANEL$new(ilo_cubic_panel, p = 1)
+#' specification  = specify_bvarPANEL$new(ilo_dynamic_panel, p = 1)
 #' 
 #' # run the burn-in
 #' burn_in        = estimate(specification, 10)
@@ -240,7 +240,7 @@ summary.PosteriorBVARPANEL = function(
 #' # workflow with the pipe |>
 #' ############################################################
 #' set.seed(123)
-#' ilo_cubic_panel |>
+#' ilo_dynamic_panel |>
 #'   specify_bvarPANEL$new(p = 1) |>
 #'   estimate(S = 10) |> 
 #'   estimate(S = 20) |> 
@@ -293,13 +293,13 @@ summary.PosteriorFEVDPANEL = function(
 #' @author Tomasz Woźniak \email{wozniak.tom@pm.me}
 #' 
 #' @examples
-#' data(ilo_cubic_panel)                                   # load the data
+#' data(ilo_dynamic_panel)                                   # load the data
 #' data(ilo_exogenous_variables)                           # load the exogenous variables
 #' data(ilo_exogenous_forecasts)                           # load the exogenous forecast
 #' set.seed(123)
 #' 
 #' # specify the model
-#' specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
+#' specification = specify_bvarPANEL$new(ilo_dynamic_panel, exogenous = ilo_exogenous_variables)
 #' burn_in       = estimate(specification, 10)             # run the burn-in
 #' posterior     = estimate(burn_in, 10)                   # estimate the model
 #' 
@@ -310,7 +310,7 @@ summary.PosteriorFEVDPANEL = function(
 #' # workflow with the pipe |>
 #' ############################################################
 #' set.seed(123)
-#' ilo_cubic_panel |>
+#' ilo_dynamic_panel |>
 #'   specify_bvarPANEL$new() |>
 #'   estimate(S = 10) |> 
 #'   estimate(S = 20) |> 
@@ -322,7 +322,7 @@ summary.PosteriorFEVDPANEL = function(
 #' #  growth rate
 #' ############################################################
 #' data(ilo_conditional_forecasts)                        # load the conditional forecasts of dgdp
-#' specification = specify_bvarPANEL$new(ilo_cubic_panel)    # specify the model
+#' specification = specify_bvarPANEL$new(ilo_dynamic_panel)    # specify the model
 #' burn_in       = estimate(specification, 10)               # run the burn-in
 #' posterior     = estimate(burn_in, 10)                     # estimate the model
 #' # forecast 6 years ahead
@@ -332,7 +332,7 @@ summary.PosteriorFEVDPANEL = function(
 #' # workflow with the pipe |>
 #' ############################################################
 #' set.seed(123)
-#' ilo_cubic_panel |>
+#' ilo_dynamic_panel |>
 #'   specify_bvarPANEL$new() |>
 #'   estimate(S = 10) |> 
 #'   estimate(S = 20) |> 

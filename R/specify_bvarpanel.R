@@ -287,8 +287,8 @@ specify_starting_values_bvarPANEL = R6::R6Class(
 #' Bayesian Panel VAR model for all countries \eqn{c = 1, ..., C}.
 #' 
 #' @examples 
-#' data(ilo_cubic_panel)
-#' YX = specify_panel_data_matrices$new(data = ilo_cubic_panel, p = 4)
+#' data(ilo_dynamic_panel)
+#' YX = specify_panel_data_matrices$new(data = ilo_dynamic_panel, p = 4)
 #' length(YX$Y); names(YX$Y)
 #'
 #' @export
@@ -364,8 +364,8 @@ specify_panel_data_matrices = R6::R6Class(
     #' Returns the data matrices DataMatricesBVARPANEL as a \code{list}.
     #' 
     #' @examples 
-    #' data(ilo_cubic_panel)
-    #' YX = specify_panel_data_matrices$new(ilo_cubic_panel)
+    #' data(ilo_dynamic_panel)
+    #' YX = specify_panel_data_matrices$new(ilo_dynamic_panel)
     #' YX$get_data_matrices()
     #' 
     get_data_matrices = function() {
@@ -390,9 +390,9 @@ specify_panel_data_matrices = R6::R6Class(
 #' Vector Autoregression.
 #' 
 #' @examples 
-#' data(ilo_cubic_panel)
+#' data(ilo_dynamic_panel)
 #' spec = specify_bvarPANEL$new(
-#'    data = ilo_cubic_panel,
+#'    data = ilo_dynamic_panel,
 #'    p = 4
 #' )
 #' 
@@ -456,9 +456,9 @@ specify_bvarPANEL = R6::R6Class(
     #' Returns the data matrices as the DataMatricesBVARPANEL object.
     #' 
     #' @examples
-    #' data(ilo_cubic_panel)
+    #' data(ilo_dynamic_panel)
     #' spec = specify_bvarPANEL$new(
-    #'    data = ilo_cubic_panel,
+    #'    data = ilo_dynamic_panel,
     #'    p = 4
     #' )
     #' spec$get_data_matrices()
@@ -471,9 +471,9 @@ specify_bvarPANEL = R6::R6Class(
     #' Returns the prior specification as the PriorBVARPANEL object.
     #' 
     #' @examples 
-    #' data(ilo_cubic_panel)
+    #' data(ilo_dynamic_panel)
     #' spec = specify_bvarPANEL$new(
-    #'    data = ilo_cubic_panel,
+    #'    data = ilo_dynamic_panel,
     #'    p = 4
     #' )
     #' spec$get_prior()
@@ -486,9 +486,9 @@ specify_bvarPANEL = R6::R6Class(
     #' Returns the starting values as the StartingValuesBVARPANEL object.
     #' 
     #' @examples 
-    #' data(ilo_cubic_panel)
+    #' data(ilo_dynamic_panel)
     #' spec = specify_bvarPANEL$new(
-    #'    data = ilo_cubic_panel,
+    #'    data = ilo_dynamic_panel,
     #'    p = 4
     #' )
     #' spec$get_starting_values()
@@ -505,9 +505,9 @@ specify_bvarPANEL = R6::R6Class(
     #' start adapting, the initial scaling rate
     #' 
     #' @examples 
-    #' data(ilo_cubic_panel)
+    #' data(ilo_dynamic_panel)
     #' spec = specify_bvarPANEL$new(
-    #'    data = ilo_cubic_panel,
+    #'    data = ilo_dynamic_panel,
     #'    p = 4
     #' )
     #' spec$set_adaptiveMH(c(0.6, 0.4, 10, 0.1))
@@ -539,10 +539,10 @@ specify_bvarPANEL = R6::R6Class(
 #' 
 #' @examples 
 #' # This is a function that is used within estimate()
-#' data(ilo_cubic_panel)
+#' data(ilo_dynamic_panel)
 #' set.seed(123)
 #' specification = specify_bvarPANEL$new(
-#'    data = ilo_cubic_panel,
+#'    data = ilo_dynamic_panel,
 #'    p = 4
 #' )
 #' 
@@ -602,10 +602,10 @@ specify_posterior_bvarPANEL = R6::R6Class(
     #' Returns a list containing Bayesian estimation output.
     #' 
     #' @examples 
-    #' data(ilo_cubic_panel)
+    #' data(ilo_dynamic_panel)
     #' set.seed(123)
     #' specification = specify_bvarPANEL$new(
-    #'    data = ilo_cubic_panel,
+    #'    data = ilo_dynamic_panel,
     #'    p = 4
     #' )
     #' 
@@ -622,10 +622,10 @@ specify_posterior_bvarPANEL = R6::R6Class(
     #' MCMC estimation using \code{estimate()}.
     #' 
     #' @examples
-    #' data(ilo_cubic_panel)
+    #' data(ilo_dynamic_panel)
     #' set.seed(123)
     #' specification = specify_bvarPANEL$new(
-    #'    data = ilo_cubic_panel,
+    #'    data = ilo_dynamic_panel,
     #'    p = 4
     #' )
     #' 

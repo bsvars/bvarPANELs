@@ -8,9 +8,9 @@ The class BVARPANEL presents complete specification for the Bayesian Panel
 Vector Autoregression.
 }
 \examples{
-data(ilo_cubic_panel)
+data(ilo_dynamic_panel)
 spec = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 
@@ -19,9 +19,9 @@ spec = specify_bvarPANEL$new(
 ## Method `specify_bvarPANEL$get_data_matrices`
 ## ------------------------------------------------
 
-data(ilo_cubic_panel)
+data(ilo_dynamic_panel)
 spec = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 spec$get_data_matrices()
@@ -31,9 +31,9 @@ spec$get_data_matrices()
 ## Method `specify_bvarPANEL$get_prior`
 ## ------------------------------------------------
 
-data(ilo_cubic_panel)
+data(ilo_dynamic_panel)
 spec = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 spec$get_prior()
@@ -43,9 +43,9 @@ spec$get_prior()
 ## Method `specify_bvarPANEL$get_starting_values`
 ## ------------------------------------------------
 
-data(ilo_cubic_panel)
+data(ilo_dynamic_panel)
 spec = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 spec$get_starting_values()
@@ -55,9 +55,9 @@ spec$get_starting_values()
 ## Method `specify_bvarPANEL$set_adaptiveMH`
 ## ------------------------------------------------
 
-data(ilo_cubic_panel)
+data(ilo_dynamic_panel)
 spec = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 spec$set_adaptiveMH(c(0.6, 0.4, 10, 0.1))
@@ -136,9 +136,9 @@ Returns the data matrices as the DataMatricesBVARPANEL object.
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{data(ilo_cubic_panel)
+\preformatted{data(ilo_dynamic_panel)
 spec = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 spec$get_data_matrices()
@@ -160,9 +160,9 @@ Returns the prior specification as the PriorBVARPANEL object.
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{data(ilo_cubic_panel)
+\preformatted{data(ilo_dynamic_panel)
 spec = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 spec$get_prior()
@@ -184,9 +184,9 @@ Returns the starting values as the StartingValuesBVARPANEL object.
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{data(ilo_cubic_panel)
+\preformatted{data(ilo_dynamic_panel)
 spec = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 spec$get_starting_values()
@@ -217,9 +217,9 @@ start adapting, the initial scaling rate}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{data(ilo_cubic_panel)
+\preformatted{data(ilo_dynamic_panel)
 spec = specify_bvarPANEL$new(
-   data = ilo_cubic_panel,
+   data = ilo_dynamic_panel,
    p = 4
 )
 spec$set_adaptiveMH(c(0.6, 0.4, 10, 0.1))

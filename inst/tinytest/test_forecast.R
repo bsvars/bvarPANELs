@@ -1,17 +1,17 @@
 
-data(ilo_cubic_panel)
+data(ilo_dynamic_panel)
 
 # for bsvar
 set.seed(1)
 suppressMessages(
-  specification_no1 <- specify_bvarPANEL$new(ilo_cubic_panel)
+  specification_no1 <- specify_bvarPANEL$new(ilo_dynamic_panel)
 )
 run_no1             <- estimate(specification_no1, 3, 1, show_progress = FALSE)
 ff                  <- forecast(run_no1, horizon = 2)
 
 set.seed(1)
 suppressMessages(
-  ff2              <- ilo_cubic_panel |>
+  ff2              <- ilo_dynamic_panel |>
     specify_bvarPANEL$new() |>
     estimate(S = 3, thin = 1, show_progress = FALSE) |>
     forecast(horizon = 2)
@@ -30,7 +30,7 @@ expect_true(
 
 
 expect_error(
-  specify_bvarPANEL$new(ilo_cubic_panel) |> forecast(horizon = 3),
+  specify_bvarPANEL$new(ilo_dynamic_panel) |> forecast(horizon = 3),
   info = "forecast: wrong input provided."
 )
 
@@ -45,14 +45,14 @@ data(ilo_conditional_forecasts)
 
 set.seed(1)
 suppressMessages(
-  specification_no1 <- specify_bvarPANEL$new(ilo_cubic_panel)
+  specification_no1 <- specify_bvarPANEL$new(ilo_dynamic_panel)
 )
 run_no1             <- estimate(specification_no1, 3, 1, show_progress = FALSE)
 ff                  <- forecast(run_no1, 6, conditional_forecast = ilo_conditional_forecasts)
 
 set.seed(1)
 suppressMessages(
-  ff2              <- ilo_cubic_panel |>
+  ff2              <- ilo_dynamic_panel |>
     specify_bvarPANEL$new() |>
     estimate(S = 3, thin = 1, show_progress = FALSE) |>
     forecast(horizon = 6, conditional_forecast = ilo_conditional_forecasts)
@@ -65,7 +65,7 @@ expect_identical(
 )
 
 expect_equivalent(
-  ilo_conditional_forecasts[[1]][1,4], ff2[[1]]$forecasts[4,1,1],
+  ilo_conditional_forecasts[[1]][1,1], ff2[[1]]$forecasts[1,1,1],
   info = "conditional forecast: forecasts and provided conditional forecasts identical."
 )
 
@@ -92,14 +92,14 @@ data("ilo_exogenous_forecasts")
 
 set.seed(1)
 suppressMessages(
-  specification_no1 <- specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
+  specification_no1 <- specify_bvarPANEL$new(ilo_dynamic_panel, exogenous = ilo_exogenous_variables)
 )
 run_no1             <- estimate(specification_no1, 3, 1, show_progress = FALSE)
 ff                  <- forecast(run_no1, 6, exogenous_forecast = ilo_exogenous_forecasts)
 
 set.seed(1)
 suppressMessages(
-  ff2              <- ilo_cubic_panel |>
+  ff2              <- ilo_dynamic_panel |>
     specify_bvarPANEL$new(exogenous = ilo_exogenous_variables) |>
     estimate(S = 3, thin = 1, show_progress = FALSE) |>
     forecast(horizon = 6, exogenous_forecast = ilo_exogenous_forecasts)
@@ -135,3 +135,4 @@ expect_error(
   pattern = "values",
   info = "exogenous forecast: provided exogenous forecasts contain missing values."
 )
+

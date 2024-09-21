@@ -91,14 +91,14 @@ of these exogenous variables in the argument \code{exogenous_forecast} of the
 \code{\link{forecast.PosteriorBVARPANEL}} function.
 }
 \examples{
-data(ilo_cubic_panel)                                   # load the data
+data(ilo_dynamic_panel)                                 # load the data
 data(ilo_exogenous_variables)                           # load the exogenous variables
 data(ilo_exogenous_forecasts)                           # load the exogenous forecast
 set.seed(123)
 
 # specify the model
-specification = specify_bvarPANEL$new(ilo_cubic_panel, exogenous = ilo_exogenous_variables)
-burn_in       = estimate(specification, 10)             # run the burn-in; use say S = 5000
+specification = specify_bvarPANEL$new(ilo_dynamic_panel, exogenous = ilo_exogenous_variables)
+burn_in       = estimate(specification, 10)             # run the burn-in; use say S = 10000
 posterior     = estimate(burn_in, 10)                   # estimate the model; use say S = 10000
 
 # forecast 6 years ahead
@@ -107,7 +107,7 @@ predictive    = forecast(posterior, 6, exogenous_forecast = ilo_exogenous_foreca
 # workflow with the pipe |>
 ############################################################
 set.seed(123)
-ilo_cubic_panel |>
+ilo_dynamic_panel |>
   specify_bvarPANEL$new() |>
   estimate(S = 10) |> 
   estimate(S = 20) |> 
@@ -118,8 +118,8 @@ ilo_cubic_panel |>
 #  growth rate
 ############################################################
 data(ilo_conditional_forecasts)                        # load the conditional forecasts of dgdp
-specification = specify_bvarPANEL$new(ilo_cubic_panel)    # specify the model
-burn_in       = estimate(specification, 10)            # run the burn-in; use say S = 5000
+specification = specify_bvarPANEL$new(ilo_dynamic_panel)   # specify the model
+burn_in       = estimate(specification, 10)            # run the burn-in; use say S = 10000
 posterior     = estimate(burn_in, 10)                  # estimate the model; use say S = 10000
 # forecast 6 years ahead
 predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_forecasts)
@@ -127,7 +127,7 @@ predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_fo
 # workflow with the pipe |>
 ############################################################
 set.seed(123)
-ilo_cubic_panel |>
+ilo_dynamic_panel |>
   specify_bvarPANEL$new() |>
   estimate(S = 10) |> 
   estimate(S = 20) |> 
