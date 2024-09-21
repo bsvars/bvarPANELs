@@ -8,6 +8,37 @@ using namespace arma;
 
 // [[Rcpp::interfaces(cpp)]]
 // [[Rcpp::export]]
+arma::vec mvnrnd_cond_rest (
+    arma::vec x,        // Nx1 with NAs or without
+    arma::vec mu,       // Nx1 mean vector
+    arma::mat Sigma     // NxN covariance matrix
+) {
+  int   N         = x.n_elem;
+  uvec  ind       = find_finite(x);
+  uvec  ind_nan   = find_nan(x);
+  mat   aj        = eye(N, N);
+  
+  vec   x2        = x(ind); 
+  
+  vec   mu1       = mu(ind_nan);
+  vec   mu2       = mu(ind);
+  mat   Sigma11   = Sigma(ind_nan, ind_nan);
+  mat   Sigma12   = Sigma(ind_nan, ind);
+  mat   Sigma22   = Sigma(ind, ind);
+  mat   Sigma22_inv = inv_sympd(Sigma22);
+  
+  vec   mu_cond     = mu1 + Sigma12 * Sigma22_inv * (x2 - mu2);
+  mat   Sigma_cond  = Sigma11 - Sigma12 * Sigma22_inv * Sigma12.t();
+  
+  vec   draw = mvnrnd( mu_cond, Sigma_cond);
+  
+  vec   out = aj.cols(ind_nan) * draw + aj.cols(ind) * x2;
+  return out;
+} // END mvnrnd_cond
+
+
+// [[Rcpp::interfaces(cpp)]]
+// [[Rcpp::export]]
 Rcpp::List forecast_bvarPANEL (
     arma::field<arma::cube>&  posterior_A_c_cpp,      // (S)(K, N, C)
     arma::field<arma::cube>&  posterior_Sigma_c_cpp,  // (S)(N, N, C)

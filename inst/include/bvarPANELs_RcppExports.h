@@ -25,6 +25,27 @@ namespace bvarPANELs {
         }
     }
 
+    inline arma::vec mvnrnd_cond_rest(arma::vec x, arma::vec mu, arma::mat Sigma) {
+        typedef SEXP(*Ptr_mvnrnd_cond_rest)(SEXP,SEXP,SEXP);
+        static Ptr_mvnrnd_cond_rest p_mvnrnd_cond_rest = NULL;
+        if (p_mvnrnd_cond_rest == NULL) {
+            validateSignature("arma::vec(*mvnrnd_cond_rest)(arma::vec,arma::vec,arma::mat)");
+            p_mvnrnd_cond_rest = (Ptr_mvnrnd_cond_rest)R_GetCCallable("bvarPANELs", "_bvarPANELs_mvnrnd_cond_rest");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_mvnrnd_cond_rest(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(mu)), Shield<SEXP>(Rcpp::wrap(Sigma)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<arma::vec >(rcpp_result_gen);
+    }
+
     inline Rcpp::List forecast_bvarPANEL(arma::field<arma::cube>& posterior_A_c_cpp, arma::field<arma::cube>& posterior_Sigma_c_cpp, Rcpp::List& X_c, Rcpp::List& cond_forecasts, Rcpp::List& exog_forecasts, const int horizon) {
         typedef SEXP(*Ptr_forecast_bvarPANEL)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_forecast_bvarPANEL p_forecast_bvarPANEL = NULL;
