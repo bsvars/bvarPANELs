@@ -89,6 +89,13 @@ Forecasting with models for which specification argument
 \code{exogenous_variables} was specified required providing the future values
 of these exogenous variables in the argument \code{exogenous_forecast} of the
 \code{\link{forecast.PosteriorBVARPANEL}} function.
+
+\strong{Truncated forecasts for variables of type 'rates'.}
+The package provides the option to truncate the forecasts for variables of 
+for which the corresponding element of argument \code{type} of the function 
+\code{specify_bvarPANEL$new()} is set to \code{"rates"}. The one-period-ahead
+predictive normal density for such variables is truncated to values from 
+interval  \eqn{[0,100]}.
 }
 \examples{
 data(ilo_dynamic_panel)                                 # load the data
@@ -115,10 +122,13 @@ ilo_dynamic_panel |>
 
 # conditional forecasting 6 years ahead conditioning on 
 #  provided future values for the Gross Domestic Product 
-#  growth rate
+#  and truncated forecasts for the rates
 ############################################################
 data(ilo_conditional_forecasts)                        # load the conditional forecasts of dgdp
-specification = specify_bvarPANEL$new(ilo_dynamic_panel)   # specify the model
+specification = specify_bvarPANEL$new(
+                  ilo_dynamic_panel,
+                  type = c("real", rep("rates", 3))
+                )   # specify the model
 burn_in       = estimate(specification, 10)            # run the burn-in; use say S = 10000
 posterior     = estimate(burn_in, 10)                  # estimate the model; use say S = 10000
 # forecast 6 years ahead
@@ -128,7 +138,7 @@ predictive    = forecast(posterior, 6, conditional_forecast = ilo_conditional_fo
 ############################################################
 set.seed(123)
 ilo_dynamic_panel |>
-  specify_bvarPANEL$new() |>
+  specify_bvarPANEL$new(type = c("real", rep("rates", 3))) |>
   estimate(S = 10) |> 
   estimate(S = 20) |> 
   forecast(
@@ -144,7 +154,7 @@ Conditional forecasts in dynamic multivariate models,
 \doi{10.1162/003465399558508}.
 }
 \seealso{
-\code{\link{estimate.PosteriorBVARPANEL}}, 
+\code{\link{specify_bvarPANEL}}, \code{\link{estimate.PosteriorBVARPANEL}}, 
 \code{\link{summary.ForecastsPANEL}}, \code{\link{plot.ForecastsPANEL}}
 }
 \author{
