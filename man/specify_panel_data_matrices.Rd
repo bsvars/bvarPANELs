@@ -32,7 +32,7 @@ dependent variables, \eqn{\mathbf{Y}_c}.}
 \item{\code{X}}{a list with \code{C} elements with \code{T_c x K} matrices of 
 regressors, \eqn{\mathbf{X}_c}.}
 
-\item{\code{type}}{an \code{N} character vector with elements set to "rates" or "real"
+\item{\code{type}}{an \code{N} character vector with elements set to "rate" or "real"
 determining the truncation of the predictive density to \code{[0, 100]} and
 \code{(-Inf, Inf)} (no truncation) for each of the variables.}
 }
@@ -72,7 +72,7 @@ time series data.}
 country-specific of exogenous variables. This matrix should not include a 
 constant term.}
 
-\item{\code{type}}{an \code{N} character vector with elements set to "rates" or "real"
+\item{\code{type}}{an \code{N} character vector with elements set to "rate" or "real"
 determining the truncation of the predictive density to \code{[0, 100]} and
 \code{(-Inf, Inf)} (no truncation) for each of the variables.}
 }
