@@ -170,13 +170,20 @@ plot.PosteriorFEVDPANEL = function(
   N         = dim(x[[which_c]])[1]
   shock_names = 1:N
   
+  
+  if ( missing(cols) ) {
+    fc          = grDevices::colorRampPalette(c("#1A003F", "#1614B1"))
+    cols        = fc(N)
+  }
+  
+  
   if (is.numeric(which_c)) {
     c_name = names(x)[which_c]
   } else if (is.character(which_c)) {
     c_name = which_c
   }
   
-  if ( missing(main) ) main = paste("Forecasts for", c_name)
+  if ( missing(main) ) main = paste("Forecast Error Variance Decompositions for", c_name)
   
   plot(
     x[[which_c]],
