@@ -358,7 +358,19 @@ specify_panel_data_matrices = R6::R6Class(
       for (c in 1:C) {
         TT            = nrow(data[[c]])
         T_c           = TT - p
-        self$Y[[c]]   = data[[c]][(p + 1):TT,]
+        
+        Y             = data[[c]][(p + 1):TT,]
+        rownames(Y)   = 1:T_c
+        colnames(Y)   = paste0("v", 1:ncol(Y))
+        
+        if ( any(class(data[[c]]) == "ts") ) {
+          rownames(Y) = as.numeric(time(data[[c]]))[(p + 1):TT]
+        }  
+        if ( !is.null(colnames(data[[c]])) ) {
+          colnames(Y) = colnames(data[[c]])
+        }
+        
+        self$Y[[c]]   = Y
         
         X             = matrix(0, T_c, 0)
         for (i in 1:p) {
