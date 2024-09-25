@@ -52,7 +52,7 @@ plot.ForecastsPANEL = function(
     which_c,
     probability = 0.9,
     data_in_plot = 1,
-    col = "#ff69b4",
+    col = "#1614B1",
     main,
     xlab,
     mar.multi = c(1, 4.6, 0, 2.1),
@@ -69,6 +69,14 @@ plot.ForecastsPANEL = function(
   } else {
     stop("Argument which_c must be either a positive integer or a character string.")
   }
+  
+  if (is.numeric(which_c)) {
+    c_name = names(x)[which_c]
+  } else if (is.character(which_c)) {
+    c_name = which_c
+  }
+  
+  if ( missing(main) ) main = paste("Forecasts for", c_name)
   
   plot(
     x[[which_c]],
@@ -159,8 +167,20 @@ plot.PosteriorFEVDPANEL = function(
     stop("Argument which_c must be either a positive integer or a character string.")
   }
   
+  N         = dim(x[[which_c]])[1]
+  shock_names = 1:N
+  
+  if (is.numeric(which_c)) {
+    c_name = names(x)[which_c]
+  } else if (is.character(which_c)) {
+    c_name = which_c
+  }
+  
+  if ( missing(main) ) main = paste("Forecasts for", c_name)
+  
   plot(
     x[[which_c]],
+    shock_names,
     cols,
     main,
     xlab,

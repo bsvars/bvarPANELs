@@ -9,7 +9,7 @@
   which_c,
   probability = 0.9,
   data_in_plot = 1,
-  col = "#ff69b4",
+  col = "#1614B1",
   main,
   xlab,
   mar.multi = c(1, 4.6, 0, 2.1),
