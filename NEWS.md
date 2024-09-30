@@ -1,4 +1,4 @@
-# bvarPANELs 0.0.1.9000
+# bvarPANELs 0.1
 
 1. This package is alive! [#1](https://github.com/bsvars/bvarPANELs/issues/1)
 2. The package includes the Gibbs sampler for a Bayesian Hierarchical Panel Vector Autoregression model. [#2](https://github.com/bsvars/bvarPANELs/issues/2)
