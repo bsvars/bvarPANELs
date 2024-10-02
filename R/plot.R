@@ -176,7 +176,6 @@ plot.PosteriorFEVDPANEL = function(
     cols        = fc(N)
   }
   
-  
   if (is.numeric(which_c)) {
     c_name = names(x)[which_c]
   } else if (is.character(which_c)) {
@@ -184,6 +183,7 @@ plot.PosteriorFEVDPANEL = function(
   }
   
   if ( missing(main) ) main = paste("Forecast Error Variance Decompositions for", c_name)
+  if ( missing(xlab) ) xlab = "horizon"
   
   plot(
     x[[which_c]],
