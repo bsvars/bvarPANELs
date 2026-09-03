@@ -113,7 +113,7 @@ with time series data.</p></dd>
       <dt><code>stationary</code></dt>
 <dd><p>an <code>N</code> logical vector - its element set to
 <code>FALSE</code> sets the prior mean for the autoregressive parameters of the
-<code>N</code>th equation to the white noise process, otherwise to random walk.</p></dd>
+<code>N</code>th equation to the random walk process, otherwise to white noise.</p></dd>
 
       <dt><code>type</code></dt>
 <dd><p>an <code>N</code> character vector with elements set to "rate" or "real"
@@ -336,19 +336,19 @@ start adapting, the initial scaling rate</p></dd>
 <span class="r-in"><span><span class="va">spec</span><span class="op">$</span><span class="fu">get_starting_values</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;StartingValuesBVARPANEL&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Public:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     A: 1.00002856983661 0.000556813279676288 -0.000871550986501 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     A_c: 0.000901073662582485 0.000488376109910613 0.000251360621 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Sigma: 2.56406509385184 -1.36276136574522 -1.6181897099567 1.54 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Sigma_c: 20.1947451296186 0.255871461894969 -0.769782672712918 3. ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     V: 3.31014477256531 -0.225848931479533 -1.60832841221006 -1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     A: 0.999463878068241 0.000947572361694866 -0.00015305540707 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     A_c: -0.00105628276684326 7.12388682242224e-05 0.000456818115 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Sigma: 6.41479853213676 2.36011044851184 5.0437994003115 0.4655 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Sigma_c: 3.16181962277807 1.38660946434405 -0.469317919000166 2.0 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     V: 5.46766642771586 -0.120313566772152 -2.08958990471528 -1 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     clone: function (deep = FALSE) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     get_starting_values: function () </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     initialize: function (C, N, p, d = 0) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     m: -0.000308875986828218</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     m: 0.00114286748395067</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     nu: 5.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     s: 1.56945678044725</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     s: 0.0875809713298965</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     set_starting_values: function (last_draw) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     w: 4.28338766549359</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     w: 0.299067478176223</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
@@ -403,7 +403,7 @@ start adapting, the initial scaling rate</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

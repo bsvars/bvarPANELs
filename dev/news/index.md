@@ -4,6 +4,8 @@
 
 ## bpvars 2.0
 
+CRAN release: 2026-06-16
+
 1.  The package includes a vignette!
 2.  A new truncated normal sampler is used
     [\#42](https://github.com/bsvars/bpvars/issues/42)

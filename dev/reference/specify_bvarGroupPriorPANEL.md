@@ -109,8 +109,8 @@ empty.
 - `stationary`:
 
   an `N` logical vector - its element set to `FALSE` sets the prior mean
-  for the autoregressive parameters of the `N`th equation to the white
-  noise process, otherwise to random walk.
+  for the autoregressive parameters of the `N`th equation to the random
+  walk process, otherwise to white noise.
 
 - `type`:
 
@@ -338,19 +338,19 @@ spec = specify_bvarPANEL$new(
 spec$get_starting_values()
 #> <StartingValuesBVARPANEL>
 #>   Public:
-#>     A: 1.00000244092332 0.000129398126714484 3.78152260149318e- ...
-#>     A_c: 0.000625296501496419 0.00267023254439966 -0.000616732381 ...
-#>     Sigma: 2.64265799181655 0.505351709639012 1.57111176570946 -0.8 ...
-#>     Sigma_c: 6.38763159725748 -3.7930760633855 4.32609414234876 -1.13 ...
-#>     V: 1.44072134322129 1.26025650493167 0.730363092499547 0.53 ...
+#>     A: 1.00116165770763 0.000278610576251996 0.0004603944288530 ...
+#>     A_c: 0.000961575795264991 0.000465729787011991 0.000901217167 ...
+#>     Sigma: 0.957294128849276 -0.894005328637003 0.611378256564174 0 ...
+#>     Sigma_c: 2.73878583772208 -3.18613427139964 2.12132858657354 -3.1 ...
+#>     V: 7.64473455219002 0.20870502349516 -0.709831326477997 -0. ...
 #>     clone: function (deep = FALSE) 
 #>     get_starting_values: function () 
 #>     initialize: function (C, N, p, d = 0) 
-#>     m: -0.000340138019109545
+#>     m: -0.000806155390666568
 #>     nu: 5.1
-#>     s: 0.0520897076446432
+#>     s: 0.0493133345701443
 #>     set_starting_values: function (last_draw) 
-#>     w: 0.625348280934418
+#>     w: 1.97055002989595
 
 
 ## ------------------------------------------------

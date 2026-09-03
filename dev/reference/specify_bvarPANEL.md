@@ -100,8 +100,8 @@ Create a new specification of the Bayesian Panel VAR model BVARPANEL.
 - `stationary`:
 
   an `N` logical vector - its element set to `FALSE` sets the prior mean
-  for the autoregressive parameters of the `N`th equation to the white
-  noise process, otherwise to random walk.
+  for the autoregressive parameters of the `N`th equation to the random
+  walk process, otherwise to white noise.
 
 - `type`:
 
@@ -343,19 +343,19 @@ spec = specify_bvarPANEL$new(
 spec$get_starting_values()
 #> <StartingValuesBVARPANEL>
 #>   Public:
-#>     A: 0.999644847315468 -0.000393076699841797 0.00039198952501 ...
-#>     A_c: -0.000242098654480205 -0.000110357149275322 -0.002406337 ...
-#>     Sigma: 0.618382413238166 0.615300283664068 -0.203514086173813 0 ...
-#>     Sigma_c: 5.38259864866312 0.600442334743289 -2.07672692519934 4.4 ...
-#>     V: 11.3518148555494 1.79879883157062 -3.54057188914075 2.50 ...
+#>     A: 0.997754037109657 -0.000423835907009905 -6.1932740730671 ...
+#>     A_c: 0.00164229858684123 -0.000139758321123161 0.000729969440 ...
+#>     Sigma: 6.20624295852711 0.220604762489741 1.99876110021032 -1.1 ...
+#>     Sigma_c: 3.44528607420808 -2.51613085850537 0.399326418676065 0.4 ...
+#>     V: 7.07913277311316 -3.91204706711624 -1.51783357946632 -0. ...
 #>     clone: function (deep = FALSE) 
 #>     get_starting_values: function () 
 #>     initialize: function (C, N, p, d = 0) 
-#>     m: 0.000428683218260504
+#>     m: -0.000314940687504978
 #>     nu: 5.1
-#>     s: 0.485419444032885
+#>     s: 0.197289542155412
 #>     set_starting_values: function (last_draw) 
-#>     w: 1.73284423372513
+#>     w: 0.490511207907454
 
 
 ## ------------------------------------------------
