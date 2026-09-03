@@ -79,7 +79,7 @@ specify_prior_bvarPANEL = R6::R6Class(
     #' @param d a positive integer - the number of \code{exogenous} variables in the model.
     #' @param stationary an \code{N} logical vector - its element set to 
     #' \code{FALSE} sets the prior mean for the autoregressive parameters of the 
-    #' \code{N}th equation to the white noise process, otherwise to random walk.
+    #' \code{N}th equation to the random walk process, otherwise to white noise.
     #' @return A new prior specification PriorBVARPANEL.
     #' @examples 
     #' # a prior for 2-country, 3-variable example with one lag and stationary data
@@ -479,7 +479,7 @@ specify_bvarPANEL = R6::R6Class(
     #' @param exogenous a \code{(T+p)xd} matrix of exogenous variables. 
     #' @param stationary an \code{N} logical vector - its element set to 
     #' \code{FALSE} sets the prior mean for the autoregressive parameters of the 
-    #' \code{N}th equation to the white noise process, otherwise to random walk.
+    #' \code{N}th equation to the random walk process, otherwise to white noise.
     #' @param type an \code{N} character vector with elements set to "rate" or "real"
     #' determining the truncation of the predictive density to \code{[0, 100]} and
     #' \code{(-Inf, Inf)} (no truncation) for each of the variables.
