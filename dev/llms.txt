@@ -149,14 +149,18 @@ website](reference/figures/logo.png)](https://bsvars.org/bpvars/)
 > **Youtube Recordings**  
 > \[[International Labour Organization
 > 2026-03](https://www.ilo.org/meetings-and-events/forecasting-labour-market-outcomes-using-bayesian-hierarchical-panel-vars)
-> [youtube recording](https://www.youtube.com/watch?v=ef3eXbqNbr8)\]
+> [youtube recording](https://www.youtube.com/watch?v=ef3eXbqNbr8)\]  
 >
 > **Presentations**  
+> \[[Workshops for
+> Ukraine](https://sites.google.com/view/dariia-mykhailyshyna/main/r-workshops-for-ukraine)
+> [2026-09 featuring **bpvars**
+> 2.0](http://bsvars.org/2026-09-bpvars-w4UKR/)\]  
 > \[[International Labour Organization](https://www.ilo.org/) [2026-03
 > featuring **bpvars** 1.0](https://bsvars.org/2026-03-bpvars-ilo/)\]  
 > \[[International Labour Organization](https://www.ilo.org/) [2025-03
 > featuring **bvarPANELs**
-> 0.2](https://bsvars.org/2025-03-bvarPANELs-ilo/)\]
+> 0.2](https://bsvars.org/2025-03-bvarPANELs-ilo/)\]  
 
 ## Start your Bayesian analysis of data
 
